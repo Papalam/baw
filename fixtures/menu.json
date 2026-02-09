@@ -1,0 +1,142 @@
+File tracking disabled
+[
+{
+  "model": "content.menu",
+  "pk": 1,
+  "fields": {
+    "order": 0,
+    "is_active": true,
+    "title": "Главное меню"
+  }
+},
+{
+  "model": "content.menu",
+  "pk": 2,
+  "fields": {
+    "order": 0,
+    "is_active": true,
+    "title": "Подменю на странице BAW"
+  }
+},
+{
+  "model": "content.menuitem",
+  "pk": 1,
+  "fields": {
+    "order": 500,
+    "is_active": true,
+    "title": "Модельный ряд",
+    "url": "/",
+    "menu": 1
+  }
+},
+{
+  "model": "content.menuitem",
+  "pk": 2,
+  "fields": {
+    "order": 1000,
+    "is_active": true,
+    "title": "Мир BAW",
+    "url": "/",
+    "menu": 1
+  }
+},
+{
+  "model": "content.menuitem",
+  "pk": 3,
+  "fields": {
+    "order": 1500,
+    "is_active": true,
+    "title": "Покупателям",
+    "url": "/",
+    "menu": 1
+  }
+},
+{
+  "model": "content.menuitem",
+  "pk": 4,
+  "fields": {
+    "order": 2000,
+    "is_active": true,
+    "title": "Конфигуратор",
+    "url": "/",
+    "menu": 1
+  }
+},
+{
+  "model": "content.menuitem",
+  "pk": 5,
+  "fields": {
+    "order": 2500,
+    "is_active": true,
+    "title": "Акции",
+    "url": "/",
+    "menu": 1
+  }
+},
+{
+  "model": "content.menuitem",
+  "pk": 6,
+  "fields": {
+    "order": 3000,
+    "is_active": true,
+    "title": "Дилер",
+    "url": "/",
+    "menu": 1
+  }
+},
+{
+  "model": "content.menuitem",
+  "pk": 7,
+  "fields": {
+    "order": 0,
+    "is_active": true,
+    "title": "Особенности",
+    "url": "#",
+    "menu": 2
+  }
+},
+{
+  "model": "content.menuitem",
+  "pk": 8,
+  "fields": {
+    "order": 500,
+    "is_active": true,
+    "title": "Комлектации и цены",
+    "url": "#",
+    "menu": 2
+  }
+},
+{
+  "model": "content.menuitem",
+  "pk": 9,
+  "fields": {
+    "order": 1000,
+    "is_active": true,
+    "title": "Технические характеристики",
+    "url": "#",
+    "menu": 2
+  }
+},
+{
+  "model": "content.menuitem",
+  "pk": 10,
+  "fields": {
+    "order": 1500,
+    "is_active": true,
+    "title": "Конфигуратор",
+    "url": "#",
+    "menu": 2
+  }
+},
+{
+  "model": "content.menuitem",
+  "pk": 11,
+  "fields": {
+    "order": 2000,
+    "is_active": true,
+    "title": "Оборудование",
+    "url": "#",
+    "menu": 2
+  }
+}
+]

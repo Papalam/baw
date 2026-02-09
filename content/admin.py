@@ -5,12 +5,19 @@ from .models import Menu, MenuItem, HeroSection, HTMLContent
 from .widgets import RichTextEditorWidget
 
 
+class MenuItemInline(admin.TabularInline):
+    model = MenuItem
+    extra = 1
+    fields = ('title', 'url', 'order', 'is_active')
+
+
 @admin.register(Menu)
 class MenuAdmin(admin.ModelAdmin):
     list_display = ['title', 'id', 'is_active']
     readonly_fields = ['id']
     search_fields = ['title']
     ordering = ['order', 'id']
+    inlines = [MenuItemInline]
     fieldsets = (
         ('Основная информация', {
             'fields': ('title', 'id')

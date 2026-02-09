@@ -52,6 +52,9 @@ class MenuItem(BaseModel):
         verbose_name="Меню"
     )
 
+    def __str__(self):
+        return self.title
+
     class Meta:
         verbose_name = "Пункт меню"
         verbose_name_plural = "Пункты меню"
