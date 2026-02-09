@@ -154,3 +154,11 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'  # URL-префикс для медиа
 MEDIA_ROOT = BASE_DIR / 'media'  # абсолютный путь к папке media
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://baw.papalam.ru',
+]
+
+# Для правильной работы за прокси
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
