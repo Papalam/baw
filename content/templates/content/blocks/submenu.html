@@ -1,0 +1,16 @@
+<div class="page-nav">
+    <div class="container">
+        <div class="page-nav__inner _flex-between">
+            <div class="page-nav__links">
+                {% for submenu_item in submenu_items %}
+                    <a href="{{ submenu_item.url }}" class="page-nav__link _active">
+                        <span>{{ submenu_item.title }}</span>
+                    </a>
+                {% endfor %}
+            </div>
+            <button class="page-nav__btn m-btn m-btn-white-outline">
+                <span>связаться со мной</span>
+            </button>
+        </div>
+    </div>
+</div>

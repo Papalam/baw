@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Главная страница
+{% endblock %}
+
+{% block content %}
+    {% include 'content/blocks/submenu.html' %}
+    
+    <div class="main">
+        <div class="container">
+            {% include 'content/blocks/hero_sections.html' %}
+        </div>
+    </div>
+{% endblock %}

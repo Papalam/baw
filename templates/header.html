@@ -1,0 +1,53 @@
+{% load static %}
+<header class="header">
+    <div class="container">
+        <div class="header__inner">
+            <div class="header__left _flex">
+                <button class="burger _toggle-menu">
+                    <img src="{% static 'img/burger.svg' %}" alt="Иконка мобильного меню" />
+                </button>
+                <a href="" class="header__logo">
+                    <img src="{% static 'img/logo.svg' %}" alt="Логотип" class="_view1" />
+                    <img src="{% static 'img/logo-mob.svg' %}" alt="Логотип" class="_view2" />
+                </a>
+            </div>
+
+            <div class="menu">
+                <div class="menu__top">
+                    <a href="" class="header__logo">
+                        <img src="{% static 'img/logo-mob.svg' %}" alt="Логотип" />
+                    </a>
+                    <button class="menu__close _toggle-menu">
+                        <img src="{% static 'img/close.svg' %}" alt="Кнопка свернуть меню" />
+                    </button>
+                </div>
+                <div class="menu__scroll">
+                    <nav class="nav">
+                        {% for header_menu_item in header_menu_items %}
+                        	<a href="{{ header_menu_item.url }}" class="nav__link">
+                                {{ header_menu_item.title }}
+                            </a>
+                        {% endfor %}
+                        
+                    </nav>
+                    <div class="menu__nav">
+                        <a href="" class="menu__btn m-btn m-btn--cut m-btn-white">
+                            <span>Cвязаться со мной</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="menu__bg _toggle-menu"></div>
+            </div>
+
+            <div class="header-action">
+                <button class="header-action__phone m-btn m-btn-white2">
+                    <img src="{% static 'img/phone.svg' %}" alt="Иконка телефона" />
+                </button>
+                <button class="header-action__btn m-btn m-btn--cut m-btn-white2">
+                    <span>ТЕСТ – ДРАЙВ</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</header>

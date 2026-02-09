@@ -1,0 +1,11 @@
+{% extends "admin/base.html" %}
+{% load static %}
+{% block extrahead %}
+    {{ block.super }}
+    <script src="{% static 'ckeditor/ckeditor.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            CKEDITOR.replaceAll('.ckeditor');
+        });
+    </script>
+{% endblock %}
