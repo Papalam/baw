@@ -1,0 +1,31 @@
+<div class="faq">
+    <div class="container">
+        <div class="h1 text-center">
+            отвечаем честно
+        </div>
+        <div class="faq__items">
+            {% for question in questions %}
+                <div class="qa-card">
+                    <div class="qa-card__show">
+                        <div class="qa-card__title h3 text20-tablet regular-text-tablet">
+                            {{ question.question|capfirst }}
+                        </div>
+                        <div class="qa-card__btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="14" viewBox="0 0 23 14"
+                                 fill="none">
+                                <path d="M1.06055 1.06055L11.0605 11.0605L21.0605 1.06055" stroke="#242422"
+                                      stroke-width="3"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="qa-card__hidden">
+                        <div class="qa-card__text">
+                            {{ question.answer|safe|capfirst }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>

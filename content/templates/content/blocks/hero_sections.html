@@ -1,44 +1,48 @@
-{% for hero_section in hero_sections %}
-    {% if hero_section.is_active %}
-        <div class="main-top">
-            <div class="main-top__inner">
-                <div class="main-top__name">
-                    {{ hero_section.car_model }}
+<div class="main">
+    <div class="container">
+        {% for hero_section in hero_sections %}
+            {% if hero_section.is_active %}
+                <div class="main-top">
+                    <div class="main-top__inner">
+                        <div class="main-top__name">
+                            {{ hero_section.car_model }}
+                        </div>
+                        <div class="h1">
+                            {{ hero_section.main_title }}
+                        </div>
+                        <div class="main-top__price">
+                            <div class="main-top__price-title h3">{{ hero_section.price_title }}</div>
+                            <div class="main-top__price-num h1">{{ hero_section.price_value }}</div>
+                        </div>
+                        <div class="main-top__nav">
+                            <a href="{{ hero_section.button_url }}" class="main-top__btn m-btn m-btn--cut m-btn-brown">
+                                <span>{{ hero_section.button_text }}</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="main-top__video m-backdrop">
+                        <video autoplay muted playsinline loop class="_autoplay-video"
+                               src="{{ hero_section.video_file.url }}">
+                        </video>
+                    </div>
                 </div>
-                <div class="h1">
-                    {{ hero_section.main_title }}
+                <div class="main-bottom">
+                    <div class="h1">
+                        {{ hero_section.bottom_title_text }}
+                    </div>
+                    <div class="main-bottom__desc">
+                        <div class="body-l white-text3">
+                            {{ hero_section.bottom_description_text|safe }}
+                        </div>
+                    </div>
+                    <div class="main-bottom__nav">
+                        <a href="{{ hero_section.bottom_button_url }}"
+                           class="main-bottom__btn m-btn m-btn--cut m-btn-white">
+                            <span>{{ hero_section.bottom_button_text }}</span>
+                        </a>
+                    </div>
                 </div>
-                <div class="main-top__price">
-                    <div class="main-top__price-title h3">{{ hero_section.price_title }}</div>
-                    <div class="main-top__price-num h1">{{ hero_section.price_value }}</div>
-                </div>
-                <div class="main-top__nav">
-                    <a href="{{ hero_section.button_url }}" class="main-top__btn m-btn m-btn--cut m-btn-brown">
-                        <span>{{ hero_section.button_text }}</span>
-                    </a>
-                </div>
-            </div>
-            <div class="main-top__video m-backdrop">
-                <video autoplay muted playsinline loop class="_autoplay-video"
-                       src="{{ hero_section.video_file.url }}">
-                </video>
-            </div>
-        </div>
-        <div class="main-bottom">
-            <div class="h1">
-                {{ hero_section.bottom_title_text }}
-            </div>
-            <div class="main-bottom__desc">
-                <div class="body-l white-text3">
-                    {{ hero_section.bottom_description_text|safe }}
-                </div>
-            </div>
-            <div class="main-bottom__nav">
-                <a href="{{ hero_section.bottom_button_url }}"
-                   class="main-bottom__btn m-btn m-btn--cut m-btn-white">
-                    <span>{{ hero_section.bottom_button_text }}</span>
-                </a>
-            </div>
-        </div>
-    {% endif %}
-{% endfor %}
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>

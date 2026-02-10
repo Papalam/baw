@@ -162,3 +162,7 @@ CSRF_TRUSTED_ORIGINS = [
 # Для правильной работы за прокси
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+LOGIN_URL = '/admin/login/'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/'

@@ -1,21 +1,8 @@
 from django.core.validators import FileExtensionValidator
 from django.db import models
 
-
-class BaseModel(models.Model):
-    """Абстрактная базовая модель с сортировкой и активностью"""
-    order = models.PositiveSmallIntegerField(
-        default=0,
-        verbose_name="Порядок сортировки"
-    )
-    is_active = models.BooleanField(
-        default=True,
-        verbose_name="Активен"
-    )
-
-    class Meta:
-        abstract = True  # Не создает таблицу в БД
-        ordering = ['order']
+from catalog.models import Configuration
+from content.base import BaseModel
 
 
 class Menu(BaseModel):
@@ -241,3 +228,107 @@ class HeroSection(BaseModel):
 
     def __str__(self):
         return f"{self.car_model} - {self.main_title}"
+
+
+class CardConfiguration(BaseModel):
+    title = models.TextField(
+        verbose_name='Описание'
+    )
+    configuration = models.ForeignKey(
+        Configuration,
+        on_delete=models.CASCADE,
+        related_name='cards',
+        verbose_name='Комплектация'
+    )
+
+    def __str__(self):
+        return f'{self.configuration}'
+
+    class Meta:
+        verbose_name = 'карточка комплектаций'
+        verbose_name_plural = 'Карточки комплектаций'
+
+
+class CardConfigurationFeature(BaseModel):
+    card_configuration = models.ForeignKey(
+        CardConfiguration,
+        on_delete=models.CASCADE,
+        related_name='features',
+        verbose_name='Карточка комплектации'
+    )
+    title = models.CharField(
+        max_length=200,
+        verbose_name='Заголовок'
+    )
+    icon = models.FileField(
+        upload_to='cards/icons/',
+        validators=[FileExtensionValidator(allowed_extensions=['svg'])],
+        verbose_name='Иконка'
+    )
+    value = models.CharField(
+        max_length=100,
+        verbose_name='Значение'
+    )
+    unit = models.CharField(
+        max_length=50,
+        blank=True,
+        verbose_name='Единица измерения',
+        help_text='Например Л.С'
+    )
+
+    def __str__(self):
+        return f'{self.title}'
+
+    class Meta:
+        verbose_name = 'особенность комплектации'
+        verbose_name_plural = 'Особенности комплектации'
+
+
+class CardConfigurationImage(BaseModel):
+    card_configuration = models.ForeignKey(
+        CardConfiguration,
+        on_delete=models.CASCADE,
+        related_name='images',
+        verbose_name='Карточка комплектации'
+    )
+    title = models.TextField(
+        max_length=100,
+        verbose_name='Заголовок'
+    )
+    description = models.TextField(
+        verbose_name="Описание"
+    )
+    image = models.ImageField(
+        upload_to='cards/images/original/',
+        validators=[FileExtensionValidator(allowed_extensions=['jpeg', 'png', 'jpg'])],
+        verbose_name='Изображение'
+    )
+    webp_image = models.ImageField(
+        upload_to='cards/webp/',
+        blank=True,
+        null=True,
+    )
+    alt = models.CharField(
+        max_length=255,
+        blank=True,
+    )
+
+
+class Question(BaseModel):
+    """Блок вопросов и ответов"""
+    question = models.TextField(
+        max_length=255,
+        verbose_name='Вопрос',
+        help_text='Максимальная длина вопроса 255 символов',
+    )
+    answer = models.TextField(
+        verbose_name='Ответ',
+        help_text='Максимальная длина не ограничена'
+    )
+
+    def __str__(self):
+        return f'{self.question}'
+
+    class Meta:
+        verbose_name = 'вопрос-ответ'
+        verbose_name_plural = 'Вопросы и ответы'

@@ -1,12 +1,9 @@
-import os
-from io import BytesIO
-
-from PIL import Image
-from django.core.files import File
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from catalog.models import ConfigurationImage, Configuration
+from catalog.models import ConfigurationImage
+from content.models import CardConfigurationImage
+from catalog.utils import generate_webp
 
 
 @receiver(post_save, sender=ConfigurationImage)
@@ -30,29 +27,8 @@ def handle_configuration_image(sender, instance, created, **kwargs):
         generate_webp(instance)
 
 
-def generate_webp(instance):
-    """Создает дополнительное WebP фото"""
-    try:
-        # Открываем оригинал
-        with Image.open(instance.image.path) as img:
-            # Конвертируем в RGB (требуется для WebP)
-            if img.mode != 'RGB':
-                img = img.convert('RGB')
-
-            # Буферизируем WebP
-            buffer = BytesIO()
-            img.save(
-                buffer,
-                format='WEBP',
-                quality=85,
-                optimize=True
-            )
-
-            # Сохраняем как дополнительное поле
-            filename = os.path.splitext(os.path.basename(instance.image.name))[0] + '.webp'
-            instance.webp_image.save(filename, File(buffer), save=False)
-            instance.save(update_fields=['webp_image'])
-
-    except Exception:
-        # Если ошибка - оставляем оригинал
-        pass
+@receiver(post_save, sender=CardConfigurationImage)
+def handle_configuration_card(sender, instance, created, **kwargs):
+    """Сохранение фото в формате webp"""
+    if created and not instance.webp_image:
+        generate_webp(instance)

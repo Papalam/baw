@@ -1,6 +1,6 @@
 from django.db import models
 
-from content.models import BaseModel
+from content.base import BaseModel
 
 
 class Group(BaseModel):

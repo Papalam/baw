@@ -1,7 +1,9 @@
 from django.contrib import admin
 from django.db import models
+from django.utils.html import format_html
 
-from .models import Menu, MenuItem, HeroSection, HTMLContent
+from .models import Menu, MenuItem, HeroSection, HTMLContent, CardConfiguration, CardConfigurationFeature, \
+    CardConfigurationImage, Question
 from .widgets import RichTextEditorWidget
 
 
@@ -9,6 +11,40 @@ class MenuItemInline(admin.TabularInline):
     model = MenuItem
     extra = 1
     fields = ('title', 'url', 'order', 'is_active')
+
+
+class CardConfigurationFeatureInline(admin.TabularInline):
+    model = CardConfigurationFeature
+    extra = 1
+    fields = ('title', 'icon', 'preview', 'value', 'unit', 'order', 'is_active')
+    readonly_fields = ('id', 'preview')
+
+    def preview(self, obj):
+        if obj.pk and obj.icon:
+            return format_html(
+                '<img src="{}" style="max-height:60px; max-width:80px; background-color:black;" />',
+                obj.icon.url
+            )
+        return "Фото"
+
+    preview.short_description = "Превью"
+
+
+class CardConfigurationImageInline(admin.TabularInline):
+    model = CardConfigurationImage
+    extra = 1
+    fields = ('title', 'description', 'image', 'preview', 'alt', 'order', 'is_active')
+    readonly_fields = ('id', 'preview')
+
+    def preview(self, obj):
+        if obj.pk and obj.image:
+            return format_html(
+                '<img src="{}" style="max-height:60px; max-width:80px;" />',
+                obj.image.url
+            )
+        return "Фото"
+
+    preview.short_description = "Превью"
 
 
 @admin.register(Menu)
@@ -79,6 +115,38 @@ class HTMLContentAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {'widget': RichTextEditorWidget}
     }
+
+
+@admin.register(CardConfiguration)
+class CardConfigurationAdmin(admin.ModelAdmin):
+    list_display = ['configuration', 'id', 'order', 'is_active']
+    readonly_fields = ('id',)
+    inlines = [CardConfigurationFeatureInline, CardConfigurationImageInline]
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('title', 'configuration')
+        }),
+        ('Активность и сортировка', {
+            'fields': ('order', 'is_active')
+        })
+    )
+
+
+@admin.register(Question)
+class QuestionAdmin(admin.ModelAdmin):
+    list_display = ['question', 'id', 'order', 'is_active']
+    list_display_links = ['question', 'id', 'order', 'is_active']
+    readonly_fields = ['id']
+    search_fields = ['question']
+    ordering = ['order', 'id']
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('question', 'answer')
+        }),
+        ('Активность и сортировка', {
+            'fields': ('order', 'is_active')
+        })
+    )
 
 
 admin.site.site_header = "Администрирование сайта Baw"

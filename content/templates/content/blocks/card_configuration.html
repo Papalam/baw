@@ -1,0 +1,72 @@
+{% load static %}
+
+<div class="adventurer m-section">
+    <div class="container">
+        {% for card in card_configuration %}
+            <div class="adventurer__desc">
+                <div class="body-l">
+                    {{ card.title|safe }}
+                </div>
+            </div>
+            <div class="advantages__items grid4">
+                {% for feature in card.features.all %}
+                    <div class="advantage-item">
+                        <div class="advantage-item__top">
+                            <div class="advantage-item__icon">
+                                <img src="{{ feature.icon.url|safe }}" alt="">
+                            </div>
+                            <div class="advantage-item__title">
+                                {{ feature.value }}
+                            </div>
+                            <div class="advantage-item__measure">
+                                {{ feature.unit }}
+                            </div>
+                        </div>
+                        <div class="body-l white-text3">
+                            {{ feature.title }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="challenges-slider slider">
+                <div class="slider__wrap">
+                    <div class="swiper-container">
+                        <div class="swiper-wrapper">
+                            {% for image in card.images.all %}
+                                <div class="swiper-slide">
+                                    <div class="challenge-card">
+                                        <div class="challenge-card__img">
+                                            <img src="{{ image.webp_image.url }}" alt="">
+                                        </div>
+                                        <div class="challenge-card__content">
+                                            <div class="challenge-card__title h3">
+                                                {{ image.title }}
+                                            </div>
+                                            <div class="challenge-card__desc body-l white-text3">
+                                                {{ image.description }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="slider__nav">
+                    <div class="swiper-pagination"></div>
+                </div>
+                <div class="challenges-slider__nav">
+                    <div class="swiper-button swiper-button-prev">
+                        <img src="{% static 'img/prev.svg' %}" alt="">
+                    </div>
+                    <div class="h1">
+                        {{ card.configuration }}
+                    </div>
+                    <div class="swiper-button swiper-button-next">
+                        <img src="{% static 'img/next.svg' %}" alt="">
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>

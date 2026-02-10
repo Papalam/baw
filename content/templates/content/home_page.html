@@ -6,10 +6,10 @@
 
 {% block content %}
     {% include 'content/blocks/submenu.html' %}
-    
-    <div class="main">
-        <div class="container">
-            {% include 'content/blocks/hero_sections.html' %}
-        </div>
-    </div>
+
+    {% include 'content/blocks/hero_sections.html' %}
+    {% include 'content/blocks/card_configuration.html' %}
+    {% include 'content/blocks/choose_baw.html' %}
+
+    {% include 'content/blocks/question.html' %}
 {% endblock %}
