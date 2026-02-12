@@ -1,8 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Prefetch
 from django.views.generic import TemplateView
 
-from catalog.models import Configuration
-from content.models import MenuItem, HeroSection, CardConfiguration, HTMLContent, Question
+from catalog.models import Configuration, ConfigurationCharacteristic, ConfigurationImage
+from content.models import MenuItem, HeroSection, CardConfiguration, Question, BawComparison, \
+    BawComparisonConfiguration
 
 
 class HomePageView(LoginRequiredMixin, TemplateView):
@@ -19,17 +21,40 @@ class HomePageView(LoginRequiredMixin, TemplateView):
                               .prefetch_related('features', 'images')
                               .order_by('order')
                               )
-        block_baw_choices_title = HTMLContent.objects.get(key='block_baw_choices_title')
-        configurations = Configuration.objects.filter(is_active=True, car__pk=1).prefetch_related(
-            'characteristics').order_by('order')
+        block_baw_comparison = BawComparison.objects.prefetch_related(
+            Prefetch(
+                'configurations',  # BawComparisonConfiguration
+                queryset=BawComparisonConfiguration.objects.prefetch_related(
+                    Prefetch(
+                        'configuration__characteristics',
+                        queryset=ConfigurationCharacteristic.objects.filter(
+                            is_active=True
+                        ).select_related('characteristic').filter(
+                            characteristic__group__key='comparison'
+                        ).order_by(
+                            'characteristic__order', 'order'
+                        ),
+                        to_attr='active_characteristics'
+                    ),
+                    Prefetch(
+                        'configuration__images',
+                        queryset=ConfigurationImage.objects.filter(
+                            is_active=True,
+                            is_main=True
+                        ).order_by('order'),
+                        to_attr='main_images'
+                    )
+                ).filter(form_id=1),
+                to_attr='comparison_configs'
+            )
+        ).get(pk=1)
 
         block_questions = Question.objects.filter(is_active=True)
 
         context['submenu_items'] = submenu
         context['hero_sections'] = hero_sections
         context['card_configuration'] = card_configuration
-        context['block_baw_choices_title'] = block_baw_choices_title
-        context['configurations'] = configurations
+        context['block_baw_comparison'] = block_baw_comparison
         context['questions'] = block_questions
 
         return context

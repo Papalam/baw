@@ -62,12 +62,13 @@ class CarAdmin(admin.ModelAdmin):
 
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
-    list_display = ['name', 'id', 'order', 'is_active']
+    list_display = ['name', 'id', 'is_visible', 'key', 'order', 'is_active']
+    list_display_links = ['name', 'id', 'key']
     readonly_fields = ('id',)
     ordering = ('order', 'id')
     fieldsets = (
         ('Основная информация', {
-            'fields': ('name', 'id')
+            'fields': ('name', 'id', 'is_visible', 'key')
         }),
         ('Активность и сортировка', {
             'fields': ('order', 'is_active')
@@ -81,6 +82,7 @@ class CharacteristicAdmin(admin.ModelAdmin):
     readonly_fields = ('id',)
     ordering = ('order', 'id')
     search_fields = ['name']
+    list_filter = ('group',)
     fieldsets = (
         ('Основная информация', {
             'fields': ('name', 'id', 'group')
@@ -96,30 +98,65 @@ class ConfigurationAdmin(admin.ModelAdmin):
     list_display = ['name', 'id', 'order', 'is_active']
     readonly_fields = ('id', 'get_main_image_preview')
     search_fields = ['characteristic__name']
+    prepopulated_fields = {'slug': ('name',)}
     ordering = ('order', 'id')
     inlines = [ConfigurationCharacteristicInline, ConfigurationImageInline]
     fieldsets = (
         ('Основная информация', {
-            'fields': ('car', 'name', 'price', 'get_main_image_preview', 'id')
+            'fields': ('car', 'name', 'price', 'get_main_image_preview', 'id', 'slug')
         }),
         ('Активность и сортировка', {
             'fields': ('order', 'is_active')
         })
     )
+    actions = ['duplicate_characteristics']
 
+    @admin.action(description='Скопировать характеристики из первой комплектации')
     def duplicate_characteristics(self, request, queryset):
         """Копирует характеристики из первой комплектации"""
-        first = queryset.first()
-        for config in queryset[1:]:
-            for char_val in first.char_values.all():
-                ConfigurationCharacteristic.objects.get_or_create(
-                    configuration=config,
-                    characteristic=char_val.characteristic,
-                    defaults={'value': char_val.value}
-                )
+        try:
+            # Получаем источник - Configuration с pk=1
+            source_config = Configuration.objects.get(pk=1)
+        except Configuration.DoesNotExist:
+            self.message_user(
+                request,
+                'Комплектация с id=1 не найдена!',
+                level='error'
+            )
+            return
 
-    duplicate_characteristics.short_description = "Скопировать характеристики из первой комплектации"
-    actions = ['duplicate_characteristics']
+            # Получаем все характеристики источника
+        source_characteristics = list(source_config.characteristics.select_related('characteristic'))
+
+        if not source_characteristics:
+            self.message_user(
+                request,
+                f'У комплектации "{source_config}" нет характеристик для копирования!',
+                level='warning'
+            )
+            return
+
+        updated_count = 0
+
+        # Копируем в каждую выбранную комплектацию
+        for config in queryset:
+            if config.pk == 1:
+                continue  # Пропускаем саму исходную
+
+            # Удаляем существующие характеристики
+            config.characteristics.all().delete()
+
+            # Создаем копии
+            for source_cc in source_characteristics:
+                ConfigurationCharacteristic.objects.create(
+                    configuration=config,
+                    characteristic=source_cc.characteristic,
+                    value=source_cc.value
+                )
+            updated_count += 1
+
+        msg = f'Характеристики из комплектации "{source_config}" (#{source_config.pk}) скопированы в {updated_count} комплектаций.'
+        self.message_user(request, msg, level='success')
 
     def get_main_image_preview(self, obj):
         main_img = obj.images.filter(is_main=True).first()
@@ -131,18 +168,3 @@ class ConfigurationAdmin(admin.ModelAdmin):
         return "Нет фото"
 
     get_main_image_preview.short_description = "Основное фото"
-
-
-@admin.register(ConfigurationCharacteristic)
-class ConfigurationCharacteristicAdmin(admin.ModelAdmin):
-    list_display = ['configuration', 'characteristic', 'id', 'order', 'is_active']
-    readonly_fields = ('id',)
-    ordering = ('order', 'id')
-    fieldsets = (
-        ('Основная информация', {
-            'fields': ('configuration', 'characteristic', 'id')
-        }),
-        ('Активность и сортировка', {
-            'fields': ('order', 'is_active')
-        })
-    )

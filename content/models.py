@@ -250,6 +250,7 @@ class CardConfiguration(BaseModel):
 
 
 class CardConfigurationFeature(BaseModel):
+    """Свойства для блока карточки комплектаций"""
     card_configuration = models.ForeignKey(
         CardConfiguration,
         on_delete=models.CASCADE,
@@ -285,6 +286,7 @@ class CardConfigurationFeature(BaseModel):
 
 
 class CardConfigurationImage(BaseModel):
+    """Изображения для блока с карточками комплектаций"""
     card_configuration = models.ForeignKey(
         CardConfiguration,
         on_delete=models.CASCADE,
@@ -332,3 +334,82 @@ class Question(BaseModel):
     class Meta:
         verbose_name = 'вопрос-ответ'
         verbose_name_plural = 'Вопросы и ответы'
+
+
+class BawComparison(BaseModel):
+    title = models.CharField(
+        max_length=200,
+        verbose_name='Заголовок',
+        help_text='Заголовок блока'
+    )
+    title_form = models.CharField(
+        max_length=200,
+        verbose_name='Заголовок формы'
+    )
+    sub_title_form = models.CharField(
+        max_length=255,
+        verbose_name='Подзаголовок формы'
+    )
+    text_form = models.TextField(
+        verbose_name='Текст формы'
+    )
+    text_red_button = models.CharField(
+        max_length=100,
+        verbose_name='Текст красной кнопки'
+    )
+    url_red_button = models.CharField(
+        max_length=50,
+        verbose_name='Url красной кнопки'
+    )
+    text_black_button = models.CharField(
+        max_length=100,
+        verbose_name='Текст черной кнопки'
+    )
+    url_black_button = models.CharField(
+        max_length=50,
+        verbose_name='Url черной кнопки'
+    )
+    image = models.ImageField(
+        upload_to='comparisons/original/',
+        blank=True,
+        null=True,
+        verbose_name='Изображение блока'
+    )
+    webp_image = models.ImageField(
+        upload_to='comparisons/webp/',
+        blank=True,
+        null=True,
+    )
+    alt = models.CharField(
+        max_length=255,
+        blank=True,
+    )
+
+    def __str__(self):
+        return f'Форма сравнения #{self.pk}'
+
+    class Meta:
+        verbose_name = 'форма'
+        verbose_name_plural = 'Формы сравнения'
+
+
+class BawComparisonConfiguration(BaseModel):
+    form = models.ForeignKey(
+        BawComparison,
+        on_delete=models.CASCADE,
+        related_name='configurations',
+
+    )
+    configuration = models.ForeignKey(
+        Configuration,
+        on_delete=models.CASCADE,
+        related_name='comparisons',
+        verbose_name='Комплектация'
+    )
+
+    def __str__(self):
+        return f'{self.form} - {self.configuration}'
+
+    class Meta:
+        verbose_name = 'конфигурацию'
+        verbose_name_plural = 'Сравнение конфигураций'

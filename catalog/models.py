@@ -8,6 +8,17 @@ class Group(BaseModel):
     name = models.CharField(
         max_length=255,
         unique=True,
+        verbose_name='Название группы'
+    )
+    is_visible = models.BooleanField(
+        default=True,
+        verbose_name='Видимость'
+    )
+    key = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name='Ключ',
+        help_text='Используется в сочетании с видимостью, нужно для выбора группы характеристик по ключу'
     )
 
     def __str__(self):
@@ -78,10 +89,14 @@ class Configuration(BaseModel):
     )
     price = models.DecimalField(
         max_digits=14,
-        decimal_places=2,
+        decimal_places=0,
         blank=True,
         null=True,
         verbose_name='цена'
+    )
+    slug = models.SlugField(
+        unique=True,
+        blank=True,
     )
 
     def __str__(self):

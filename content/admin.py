@@ -3,7 +3,7 @@ from django.db import models
 from django.utils.html import format_html
 
 from .models import Menu, MenuItem, HeroSection, HTMLContent, CardConfiguration, CardConfigurationFeature, \
-    CardConfigurationImage, Question
+    CardConfigurationImage, Question, BawComparison, BawComparisonConfiguration
 from .widgets import RichTextEditorWidget
 
 
@@ -45,6 +45,12 @@ class CardConfigurationImageInline(admin.TabularInline):
         return "Фото"
 
     preview.short_description = "Превью"
+
+
+class BawComparisonConfigurationInline(admin.TabularInline):
+    model = BawComparisonConfiguration
+    extra = 1
+    fields = ('configuration', 'order', 'is_active')
 
 
 @admin.register(Menu)
@@ -147,6 +153,35 @@ class QuestionAdmin(admin.ModelAdmin):
             'fields': ('order', 'is_active')
         })
     )
+
+
+@admin.register(BawComparison)
+class BawComparisonAdmin(admin.ModelAdmin):
+    list_display = ['title', 'id', 'order', 'is_active']
+    list_display_links = ['title', 'id']
+    readonly_fields = ('id', 'preview')
+    inlines = (BawComparisonConfigurationInline, )
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('title', 'id', 'title_form', 'sub_title_form', 'text_form', 'image', 'preview', 'alt')
+        }),
+        ('Кнопки', {
+            'fields': ('text_red_button', 'url_red_button', 'text_black_button', 'url_black_button')
+        }),
+        ('Активность и сортировка', {
+            'fields': ('order', 'is_active')
+        })
+    )
+
+    def preview(self, obj):
+        if obj.pk and obj.image:
+            return format_html(
+                '<img src="{}" style="max-height:60px; max-width:80px;" />',
+                obj.image.url
+            )
+        return "Фото"
+
+    preview.short_description = "Превью"
 
 
 admin.site.site_header = "Администрирование сайта Baw"
