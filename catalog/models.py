@@ -1,5 +1,8 @@
+import uuid
+
 from django.db import models
 
+from catalog.utils import default_configuration_slug
 from content.base import BaseModel
 
 
@@ -97,6 +100,7 @@ class Configuration(BaseModel):
     slug = models.SlugField(
         unique=True,
         blank=True,
+        default=default_configuration_slug,
     )
 
     def __str__(self):

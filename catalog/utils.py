@@ -1,4 +1,5 @@
 import os
+import uuid
 from io import BytesIO
 
 from PIL import Image
@@ -31,3 +32,8 @@ def generate_webp(instance):
     except Exception:
         # Если ошибка - оставляем оригинал
         pass
+
+
+def default_configuration_slug():
+    """Функция используется для генерации поле slug в модели Configuration"""
+    return f'config-{uuid.uuid4().hex[:8]}'
