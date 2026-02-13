@@ -4,7 +4,7 @@ from django.utils.html import format_html
 
 from .models import Menu, MenuItem, HeroSection, HTMLContent, CardConfiguration, CardConfigurationFeature, \
     CardConfigurationImage, Question, BawComparison, BawComparisonConfiguration, BawTesting, BawTestingImage, \
-    BawTestingFeature, BawTestingItems
+    BawTestingFeature, BawTestingItems, VideoCardContent, VideoCard
 from .widgets import RichTextEditorWidget
 
 
@@ -235,6 +235,37 @@ class BawTestingAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Основная информация', {
             'fields': ('title', 'id', 'description', 'video', 'subtitle', 'title_full_control', 'image', 'alt')
+        }),
+        ('Активность и сортировка', {
+            'fields': ('order', 'is_active')
+        })
+    )
+
+
+class VideoCardContentInline(admin.TabularInline):
+    model = VideoCardContent
+    extra = 1
+    fields = ['image', 'preview', 'alt', 'video']
+    readonly_fields = ('preview',)
+
+    def preview(self, obj):
+        if obj.pk and obj.image:
+            return format_html(
+                '<img src="{}" style="max-height:60px; max-width:80px;" />',
+                obj.image.url
+            )
+        return "Фото"
+
+
+@admin.register(VideoCard)
+class VideoCardAdmin(admin.ModelAdmin):
+    list_display = ['title', 'id', 'order', 'is_active']
+    readonly_fields = ('id', )
+    inlines = [VideoCardContentInline]
+    ordering = ['order', 'id']
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('title', 'id')
         }),
         ('Активность и сортировка', {
             'fields': ('order', 'is_active')

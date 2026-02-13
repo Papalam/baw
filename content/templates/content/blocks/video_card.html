@@ -1,0 +1,39 @@
+{% load static %}
+
+<div class="videos-collection m-section">
+    <div class="container">
+        <div class="h1 text-center">
+            {{ video_card.title|upper }}
+        </div>
+        <div class="video-slider slider">
+            <div class="slider__wrap">
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        {% for content in video_card.content.all %}
+                            <div class="swiper-slide">
+                                <a href="{{ content.video.url }}" data-fancybox class="video-card">
+                                    <div class="video-card__img">
+                                        <img src="{{ content.webp_image.url }}" alt="{{ content.alt }}">
+                                    </div>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="slider__nav">
+                <div class="swiper-nav">
+                    <div class="swiper-button swiper-button-prev">
+                        <img src="{% static 'img/prev.svg' %}" alt="">
+                    </div>
+                    <div class="swiper-button swiper-button-next swiper-button-disabled">
+                        <img src="{% static 'img/next.svg' %}" alt="">
+                    </div>
+                </div>
+                <div class="swiper-pagination _black swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal">
+                    <span class="swiper-pagination-bullet"></span><span
+                        class="swiper-pagination-bullet swiper-pagination-bullet-active"></span></div>
+            </div>
+        </div>
+    </div>
+</div>

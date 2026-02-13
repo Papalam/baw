@@ -558,3 +558,44 @@ class BawTestingItems(BaseModel):
     class Meta:
         verbose_name = 'Пункты блока механика'
         verbose_name_plural = 'Механика под полным контролем'
+
+
+class VideoCard(BaseModel):
+    title = models.CharField(
+        max_length=255,
+        verbose_name='Заголовок'
+    )
+
+    def __str__(self):
+        return f'{self.title}'
+
+    class Meta:
+        verbose_name = 'блок'
+        verbose_name_plural = 'Видеоблок'
+
+
+class VideoCardContent(BaseModel):
+    block = models.ForeignKey(
+        VideoCard,
+        on_delete=models.CASCADE,
+        related_name='content',
+        verbose_name='Блок'
+    )
+    image = models.ImageField(
+        upload_to='video-blocks/images/',
+        verbose_name='Превью'
+    )
+    webp_image = models.ImageField(
+        upload_to='video-blocks/webp/',
+        blank=True,
+        null=True,
+    )
+    alt = models.CharField(
+        max_length=50,
+        blank=True,
+    )
+    video = models.FileField(
+        upload_to='video-blocks/video/',
+        validators=[FileExtensionValidator(allowed_extensions=['mp4'])],
+        verbose_name='Видео'
+    )
