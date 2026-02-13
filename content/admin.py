@@ -3,7 +3,8 @@ from django.db import models
 from django.utils.html import format_html
 
 from .models import Menu, MenuItem, HeroSection, HTMLContent, CardConfiguration, CardConfigurationFeature, \
-    CardConfigurationImage, Question, BawComparison, BawComparisonConfiguration
+    CardConfigurationImage, Question, BawComparison, BawComparisonConfiguration, BawTesting, BawTestingImage, \
+    BawTestingFeature, BawTestingItems
 from .widgets import RichTextEditorWidget
 
 
@@ -45,6 +46,46 @@ class CardConfigurationImageInline(admin.TabularInline):
         return "Фото"
 
     preview.short_description = "Превью"
+
+
+class BawTestingFeatureInline(admin.TabularInline):
+    model = BawTestingFeature
+    extra = 0
+    fields = ('title', 'icon', 'value', 'unit', 'preview')
+    readonly_fields = ('id', 'preview')
+
+    def preview(self, obj):
+        if obj.pk and obj.icon:
+            return format_html(
+                '<img src="{}" style="max-height:60px; max-width:80px;" />',
+                obj.icon.url
+            )
+        return "Иконка"
+
+    preview.short_description = "Превью"
+
+
+class BawTestingImageInline(admin.TabularInline):
+    model = BawTestingImage
+    extra = 1
+    fields = ('title', 'description', 'image', 'preview', 'alt', 'order', 'is_active')
+    readonly_fields = ('id', 'preview')
+
+    def preview(self, obj):
+        if obj.pk and obj.image:
+            return format_html(
+                '<img src="{}" style="max-height:60px; max-width:80px;" />',
+                obj.image.url
+            )
+        return "Фото"
+
+    preview.short_description = "Превью"
+
+
+class BawTestingItemsInline(admin.TabularInline):
+    model = BawTestingItems
+    extra = 1
+    fields = ('title', 'description', 'value')
 
 
 class BawComparisonConfigurationInline(admin.TabularInline):
@@ -160,7 +201,7 @@ class BawComparisonAdmin(admin.ModelAdmin):
     list_display = ['title', 'id', 'order', 'is_active']
     list_display_links = ['title', 'id']
     readonly_fields = ('id', 'preview')
-    inlines = (BawComparisonConfigurationInline, )
+    inlines = (BawComparisonConfigurationInline,)
     fieldsets = (
         ('Основная информация', {
             'fields': ('title', 'id', 'title_form', 'sub_title_form', 'text_form', 'image', 'preview', 'alt')
@@ -182,6 +223,23 @@ class BawComparisonAdmin(admin.ModelAdmin):
         return "Фото"
 
     preview.short_description = "Превью"
+
+
+@admin.register(BawTesting)
+class BawTestingAdmin(admin.ModelAdmin):
+    list_display = ['title', 'id', 'order', 'is_active']
+    list_display_links = ['title', 'id']
+    readonly_fields = ['id']
+    ordering = ['order', 'id']
+    inlines = (BawTestingFeatureInline, BawTestingImageInline, BawTestingItemsInline)
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('title', 'id', 'description', 'video', 'subtitle', 'title_full_control', 'image', 'alt')
+        }),
+        ('Активность и сортировка', {
+            'fields': ('order', 'is_active')
+        })
+    )
 
 
 admin.site.site_header = "Администрирование сайта Baw"

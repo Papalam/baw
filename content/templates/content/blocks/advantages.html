@@ -1,0 +1,107 @@
+{% load static %}
+<div class="advantages m-section">
+    <div class="container">
+        <div class="info-block">
+            <div class="h1">
+                {{ advantages.title }}
+            </div>
+            <div class="info-block__desc">
+                <div class="text18 white-text3">
+                    {{ advantages.description|safe }}
+                </div>
+            </div>
+        </div>
+        <div class="advantages__items grid4 _mt60">
+            {% for feature in advantages.features.all %}
+                <div class="advantage-item">
+                    <div class="advantage-item__top">
+                        <div class="advantage-item__icon">
+                            <img src="{{ feature.icon.url }}" alt="">
+                        </div>
+                        <div class="advantage-item__title">
+                            {{ feature.value|upper }}
+                        </div>
+                        <div class="advantage-item__measure">
+                            {{ feature.unit|upper }}
+                        </div>
+                    </div>
+                    <div class="body-l white-text3">
+                        {{ feature.title|capfirst }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="advantages__video">
+            <video autoplay muted playsinline class="_autoplay-video" src="{{ advantages.video.url }}"></video>
+        </div>
+        <div class="challenges">
+            <div class="h1 text-center">
+                {{ advantages.subtitle|upper }}
+            </div>
+            <div class="challenges-slider slider">
+                <div class="slider__wrap">
+                    <div class="swiper-container">
+                        <div class="swiper-wrapper">
+                            {% for image in advantages.images.all %}
+                                <div class="swiper-slide">
+                                    <div class="challenge-card">
+                                        <div class="challenge-card__img">
+                                            <img src="{{ image.webp_image.url }}" alt="{{ image.alt }}">
+                                        </div>
+                                        <div class="challenge-card__content">
+                                            <div class="challenge-card__title h3">
+                                                {{ image.title|upper }}
+                                            </div>
+                                            <div class="challenge-card__desc body-l white-text3">
+                                                {{ image.description|capfirst }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="slider__nav">
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mechanic">
+            <div class="h1 text-center">
+                {{ advantages.title_full_control|upper }}
+            </div>
+            <div class="mechanic-slider slider">
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        {% for item in advantages.items.all %}
+                            <div class="swiper-slide">
+                                <div class="mechanic-card">
+                                    <div class="mechanic-card__top">
+                                        <div class="mechanic-card__title h3">
+                                            {{ item.title }}
+                                        </div>
+                                    </div>
+                                    <div class="mechanic-card__desc">
+                                        <div class="body-l">
+                                            {{ item.description }}
+                                        </div>
+                                    </div>
+                                    <div class="mechanic-card__num">
+                                        <span>{{ item.value }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="slider__nav">
+                    <div class="swiper-pagination"></div>
+                </div>
+                <img src="{{ advantages.image.url }}" alt="" class="mechanic__img">
+            </div>
+        </div>
+    </div>
+
+</div>

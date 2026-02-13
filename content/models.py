@@ -337,6 +337,7 @@ class Question(BaseModel):
 
 
 class BawComparison(BaseModel):
+    """Блок сравнение комплектаций Baw"""
     title = models.CharField(
         max_length=200,
         verbose_name='Заголовок',
@@ -413,3 +414,147 @@ class BawComparisonConfiguration(BaseModel):
     class Meta:
         verbose_name = 'конфигурацию'
         verbose_name_plural = 'Сравнение конфигураций'
+
+
+class BawTesting(BaseModel):
+    """Блок испытаний Baw"""
+    title = models.CharField(
+        max_length=255,
+        verbose_name='Заголовок блока'
+    )
+    description = models.TextField(
+        verbose_name='Описание',
+        help_text='Текст под заголовком'
+    )
+    video = models.FileField(
+        upload_to='testing/video/',
+        validators=[FileExtensionValidator(allowed_extensions=['mp4'])],
+        verbose_name='Фоновое видео MP4'
+    )
+    subtitle = models.CharField(
+        max_length=255,
+        verbose_name='Второй заголовок',
+        help_text='Заголовок под блоком видео',
+    )
+    title_full_control = models.CharField(
+        max_length=255,
+        verbose_name='Третий заголовок',
+        help_text='Заголовок под блоком с 3 фото'
+    )
+    image = models.FileField(
+        upload_to='testing/images/',
+        validators=[FileExtensionValidator(allowed_extensions=['svg'])],
+        verbose_name='Изображение',
+        help_text='Изображение в блоке полного контроля'
+    )
+    alt = models.CharField(
+        max_length=50,
+        blank=True,
+    )
+
+    def __str__(self):
+        return f'{self.title}'
+
+    class Meta:
+        verbose_name = 'блок'
+        verbose_name_plural = 'Блок проходимости (контроль)'
+
+
+class BawTestingFeature(BaseModel):
+    block = models.ForeignKey(
+        BawTesting,
+        on_delete=models.CASCADE,
+        related_name='features',
+        verbose_name='Блок проходимости'
+    )
+    title = models.CharField(
+        max_length=200,
+        verbose_name='Заголовок'
+    )
+    icon = models.FileField(
+        upload_to='testing/icons/',
+        validators=[FileExtensionValidator(allowed_extensions=['svg'])],
+        verbose_name='Иконка'
+    )
+    value = models.CharField(
+        max_length=100,
+        verbose_name='Значение'
+    )
+    unit = models.CharField(
+        max_length=50,
+        blank=True,
+        verbose_name='Единица измерения',
+        help_text='Например Л.С'
+    )
+
+    def __str__(self):
+        return f'{self.title}'
+
+    class Meta:
+        verbose_name = 'особенность'
+        verbose_name_plural = 'Особенности'
+
+
+class BawTestingImage(BaseModel):
+    block = models.ForeignKey(
+        BawTesting,
+        on_delete=models.CASCADE,
+        related_name='images',
+        verbose_name='Блок'
+    )
+    title = models.CharField(
+        max_length=200,
+        verbose_name='Заголовок'
+    )
+    description = models.TextField(
+        verbose_name='Описание'
+    )
+    image = models.ImageField(
+        upload_to='testing/images/',
+        verbose_name='Изображение'
+    )
+    webp_image = models.ImageField(
+        upload_to='testing/webp/',
+        blank=True,
+        null=True,
+    )
+    alt = models.CharField(
+        max_length=50,
+        blank=True,
+    )
+
+    def __str__(self):
+        return f'{self.title}'
+
+    class Meta:
+        verbose_name = 'изображение'
+        verbose_name_plural = 'Изображения'
+
+
+class BawTestingItems(BaseModel):
+    """Пункты для блока МЕХАНИКА ПОД ПОЛНЫМ КОНТРОЛЕМ"""
+    block = models.ForeignKey(
+        BawTesting,
+        on_delete=models.CASCADE,
+        related_name='items',
+        verbose_name='Блок'
+    )
+    title = models.CharField(
+        max_length=200,
+        verbose_name='Заголовок'
+    )
+    description = models.TextField(
+        verbose_name='Описание'
+    )
+    value = models.CharField(
+        max_length=10,
+        verbose_name='Обозначение',
+        help_text='Например 2H или 4L'
+    )
+
+    def __str__(self):
+        return f'{self.title}'
+
+    class Meta:
+        verbose_name = 'Пункты блока механика'
+        verbose_name_plural = 'Механика под полным контролем'
