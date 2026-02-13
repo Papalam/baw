@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 
 from catalog.models import Configuration, ConfigurationCharacteristic, ConfigurationImage
 from content.models import MenuItem, HeroSection, CardConfiguration, Question, BawComparison, \
-    BawComparisonConfiguration, BawTesting, VideoCard, TechnologyBlock, ServicesBlock
+    BawComparisonConfiguration, BawTesting, VideoCard, TechnologyBlock, ServicesBlock, NewsVideo, NewsArticle
 
 
 class HomePageView(LoginRequiredMixin, TemplateView):
@@ -53,6 +53,8 @@ class HomePageView(LoginRequiredMixin, TemplateView):
         video_card = VideoCard.objects.prefetch_related('content').get(pk=1)
         technology = TechnologyBlock.objects.prefetch_related('content').get(pk=1)
         services = ServicesBlock.objects.filter(is_active=True).order_by('order')
+        news_video = NewsVideo.objects.filter(is_active=True).order_by('order', 'created_at')
+        news_article = NewsArticle.objects.filter(is_active=True).order_by('order', 'created_at')
         block_questions = Question.objects.filter(is_active=True)
 
         context['submenu_items'] = submenu
@@ -63,6 +65,8 @@ class HomePageView(LoginRequiredMixin, TemplateView):
         context['video_card'] = video_card
         context['technology'] = technology
         context['services'] = services
+        context['news_video'] = news_video
+        context['news_article'] = news_article
         context['questions'] = block_questions
 
         return context

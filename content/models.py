@@ -679,3 +679,60 @@ class ServicesBlock(BaseModel):
     class Meta:
         verbose_name = 'сервис'
         verbose_name_plural = 'Сервисы'
+
+
+class NewsBase(BaseModel):
+    """Базовая модель новости"""
+    title = models.CharField(
+        max_length=255,
+        verbose_name='Заголовок'
+    )
+    description = models.TextField(
+        verbose_name='Текст новости'
+    )
+    slug = models.SlugField(
+        unique=True,
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Создано'
+    )
+
+    class Meta:
+        abstract = True
+
+
+class NewsArticle(NewsBase):
+    """Новости в статьях"""
+    image = models.ImageField(
+        upload_to='news/images/',
+        validators=[FileExtensionValidator(allowed_extensions=['png', 'jpg', 'jpeg'])],
+        verbose_name='Изображение'
+    )
+    webp_image = models.ImageField(
+        upload_to='news/webp/',
+        blank=True,
+        null=True,
+    )
+
+    def __str__(self):
+        return f'{self.title}'
+
+    class Meta:
+        verbose_name = 'новость'
+        verbose_name_plural = 'Новости (статьи)'
+        unique_together = (('title', 'created_at'),)
+
+
+class NewsVideo(NewsBase):
+    """Новостные видеоролики"""
+    video = models.FileField(
+        upload_to='news/video/',
+        validators=[FileExtensionValidator(allowed_extensions=['mp4'])],
+        verbose_name='Видео'
+    )
+
+    class Meta:
+        verbose_name = 'новость'
+        verbose_name_plural = 'Новости (видео)'
+        unique_together = (('title', 'created_at'),)

@@ -1,0 +1,43 @@
+{% load static %}
+
+<div class="blog-slider slider">
+    <div class="slider__wrap">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                {% for news_post in news_video %}
+                    <div class="swiper-slide">
+                        <div class="blog-card">
+                            <video autoplay muted playsinline class="_autoplay-video"
+                                   src="{{ news_post.video_file.url }}">
+                            </video>
+{#                            <a href="" class="blog-card__img _scale-img">#}
+{##}
+{#                            </a>#}
+                            <div class="blog-card__content">
+                                <div class="h3 ">
+                                    {{ news_post.title }}
+                                    {#                                    <a href=""></a>#}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="slider__nav">
+        <div class="swiper-nav">
+            <div class="swiper-button swiper-button-prev">
+                <img src="{% static 'img/prev.svg' %}" alt="">
+            </div>
+            <div class="swiper-button swiper-button-next">
+                <img src="{% static 'img/next.svg' %}" alt="">
+            </div>
+        </div>
+
+        <a href="" class="slider__link m-btn m-btn-black-outline">
+            <span>Узнать больше </span>
+        </a>
+    </div>
+</div>

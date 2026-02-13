@@ -1,0 +1,47 @@
+{% load static %}
+
+<div class="blog-slider2 slider">
+    <div class="slider__wrap">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                {% for article in news_article %}
+                    <div class="swiper-slide">
+                        <div class="blog-card">
+                            <a href="{{ article.slug }}" class="blog-card__img _scale-img">
+                                <img src="{{ article.webp_image.url }}" alt="">
+                            </a>
+                            <div class="blog-card__content">
+                                <div class="h3">
+                                    <a href="{{ article.slug }}">
+                                        {{ article.title }}
+                                    </a>
+                                </div>
+                                <div class="blog-card__desc body-m">
+                                    {{ article.description|truncatechars:150 }}
+                                </div>
+                                <div class="blog-card__date body-m">
+                                    {{ article.created_at|date:"d.m.Y" }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="slider__nav">
+        <div class="swiper-nav">
+            <div class="swiper-button swiper-button-prev">
+                <img src="{% static 'img/prev.svg' %}" alt="">
+            </div>
+            <div class="swiper-button swiper-button-next">
+                <img src="{% static 'img/next.svg' %}" alt="">
+            </div>
+        </div>
+
+        <a href="" class="slider__link m-btn m-btn-black-outline">
+            <span>Узнать больше </span>
+        </a>
+    </div>
+</div>

@@ -5,7 +5,7 @@ from django.utils.html import format_html
 from .models import Menu, MenuItem, HeroSection, HTMLContent, CardConfiguration, CardConfigurationFeature, \
     CardConfigurationImage, Question, BawComparison, BawComparisonConfiguration, BawTesting, BawTestingImage, \
     BawTestingFeature, BawTestingItems, VideoCardContent, VideoCard, TechnologyBlockContent, TechnologyBlock, \
-    ServicesBlock
+    ServicesBlock, NewsArticle, NewsVideo
 from .widgets import RichTextEditorWidget
 
 
@@ -327,6 +327,48 @@ class ServicesBlockAdmin(admin.ModelAdmin):
                 obj.image.url
             )
         return 'Иконка'
+
+
+@admin.register(NewsArticle)
+class NewsArticleAdmin(admin.ModelAdmin):
+    list_display = ['title', 'id', 'created_at', 'order', 'is_active']
+    list_display_links = ['title', 'id']
+    readonly_fields = ('id', 'preview')
+    prepopulated_fields = {'slug': ('title',)}
+    ordering = ['order', 'created_at']
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('title', 'id', 'description', 'image', 'preview', 'slug')
+        }),
+        ('Активность и сортировка', {
+            'fields': ('order', 'is_active')
+        })
+    )
+
+    def preview(self, obj):
+        if obj.pk and obj.image:
+            return format_html(
+                '<img src="{}" style="max-height:60px; max-width:80px;" />',
+                obj.image.url
+            )
+        return 'Изображение'
+
+
+@admin.register(NewsVideo)
+class NewsVideoAdmin(admin.ModelAdmin):
+    list_display = ['title', 'id', 'created_at', 'order', 'is_active']
+    list_display_links = ['title', 'id']
+    readonly_fields = ('id',)
+    prepopulated_fields = {'slug': ('title',)}
+    ordering = ['order', 'created_at']
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('title', 'id', 'description', 'video', 'slug')
+        }),
+        ('Активность и сортировка', {
+            'fields': ('order', 'is_active')
+        })
+    )
 
 
 admin.site.site_header = "Администрирование сайта Baw"
