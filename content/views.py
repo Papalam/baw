@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 
 from catalog.models import Configuration, ConfigurationCharacteristic, ConfigurationImage
 from content.models import MenuItem, HeroSection, CardConfiguration, Question, BawComparison, \
-    BawComparisonConfiguration, BawTesting, VideoCard
+    BawComparisonConfiguration, BawTesting, VideoCard, TechnologyBlock
 
 
 class HomePageView(LoginRequiredMixin, TemplateView):
@@ -51,7 +51,7 @@ class HomePageView(LoginRequiredMixin, TemplateView):
 
         advantages = BawTesting.objects.prefetch_related('features', 'images', 'items').get(pk=1)
         video_card = VideoCard.objects.prefetch_related('content').get(pk=1)
-
+        technology = TechnologyBlock.objects.prefetch_related('content').get(pk=1)
         block_questions = Question.objects.filter(is_active=True)
 
         context['submenu_items'] = submenu
@@ -60,6 +60,7 @@ class HomePageView(LoginRequiredMixin, TemplateView):
         context['block_baw_comparison'] = block_baw_comparison
         context['advantages'] = advantages
         context['video_card'] = video_card
+        context['technology'] = technology
         context['questions'] = block_questions
 
         return context

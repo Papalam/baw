@@ -2,7 +2,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from catalog.models import ConfigurationImage
-from content.models import CardConfigurationImage, BawComparison, BawTesting, BawTestingImage, VideoCardContent
+from content.models import CardConfigurationImage, BawComparison, BawTesting, BawTestingImage, VideoCardContent, \
+    TechnologyBlockContent
 from catalog.utils import generate_webp
 
 
@@ -31,6 +32,7 @@ def handle_configuration_image(sender, instance, created, **kwargs):
 @receiver(post_save, sender=BawComparison)
 @receiver(post_save, sender=BawTestingImage)
 @receiver(post_save, sender=VideoCardContent)
+@receiver(post_save, sender=TechnologyBlockContent)
 def handle_configuration_card(sender, instance, created, **kwargs):
     """Сохранение фото в формате webp"""
     if created and not instance.webp_image and hasattr(instance, 'image'):

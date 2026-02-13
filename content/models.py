@@ -599,3 +599,58 @@ class VideoCardContent(BaseModel):
         validators=[FileExtensionValidator(allowed_extensions=['mp4'])],
         verbose_name='Видео'
     )
+
+
+class TechnologyBlock(BaseModel):
+    title = models.CharField(
+        max_length=255,
+        verbose_name='Заголовок'
+    )
+    description = models.TextField(
+        verbose_name='Текст',
+        help_text='Расположен под заголовком'
+    )
+
+    def __str__(self):
+        return f'{self.title}'
+
+    class Meta:
+        verbose_name = 'блок'
+        verbose_name_plural = 'Технологии'
+
+
+class TechnologyBlockContent(BaseModel):
+    block = models.ForeignKey(
+        TechnologyBlock,
+        on_delete=models.CASCADE,
+        related_name='content',
+        verbose_name='блок'
+    )
+    title = models.CharField(
+        max_length=255,
+        verbose_name='Заголовок'
+    )
+    description = models.TextField(
+        verbose_name='Текст'
+    )
+    image = models.ImageField(
+        upload_to='technology-blocks/images/',
+        validators=[FileExtensionValidator(allowed_extensions=['jpeg', 'png', 'jpg'])],
+        verbose_name='Изображение'
+    )
+    webp_image = models.ImageField(
+        upload_to='technology-blocks/webp/',
+        blank=True,
+        null=True,
+    )
+    alt = models.CharField(
+        max_length=50,
+        blank=True,
+    )
+
+    def __str__(self):
+        return f'{self.title}'
+
+    class Meta:
+        verbose_name = 'карточка'
+        verbose_name_plural = 'Карточки технологий'

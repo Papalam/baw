@@ -4,7 +4,7 @@ from django.utils.html import format_html
 
 from .models import Menu, MenuItem, HeroSection, HTMLContent, CardConfiguration, CardConfigurationFeature, \
     CardConfigurationImage, Question, BawComparison, BawComparisonConfiguration, BawTesting, BawTestingImage, \
-    BawTestingFeature, BawTestingItems, VideoCardContent, VideoCard
+    BawTestingFeature, BawTestingItems, VideoCardContent, VideoCard, TechnologyBlockContent, TechnologyBlock
 from .widgets import RichTextEditorWidget
 
 
@@ -260,12 +260,43 @@ class VideoCardContentInline(admin.TabularInline):
 @admin.register(VideoCard)
 class VideoCardAdmin(admin.ModelAdmin):
     list_display = ['title', 'id', 'order', 'is_active']
-    readonly_fields = ('id', )
+    readonly_fields = ('id',)
     inlines = [VideoCardContentInline]
     ordering = ['order', 'id']
     fieldsets = (
         ('Основная информация', {
             'fields': ('title', 'id')
+        }),
+        ('Активность и сортировка', {
+            'fields': ('order', 'is_active')
+        })
+    )
+
+
+class TechnologyBlockContentInline(admin.TabularInline):
+    model = TechnologyBlockContent
+    extra = 1
+    fields = ['title', 'description', 'image', 'preview', 'alt']
+    readonly_fields = ('preview',)
+
+    def preview(self, obj):
+        if obj.pk and obj.image:
+            return format_html(
+                '<img src="{}" style="max-height:60px; max-width:80px;" />',
+                obj.image.url
+            )
+        return "Фото"
+
+
+@admin.register(TechnologyBlock)
+class TechnologyBlockAdmin(admin.ModelAdmin):
+    list_display = ['title', 'id', 'order', 'is_active']
+    readonly_fields = ('id',)
+    inlines = [TechnologyBlockContentInline]
+    ordering = ['order', 'id']
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('title', 'id', 'description')
         }),
         ('Активность и сортировка', {
             'fields': ('order', 'is_active')

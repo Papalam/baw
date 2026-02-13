@@ -1,0 +1,55 @@
+<div class="technology m-section">
+    {% load static %}
+
+    <div class="container">
+        <div class="info-block">
+            <div class="h1">
+                {{ technology.title|upper }}
+            </div>
+            <div class="info-block__desc">
+                <div class="text18 white-text3">
+                    {{ technology.description }}
+                </div>
+            </div>
+        </div>
+
+        <div class="technology-slider slider">
+            <div class="slider__wrap">
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        {% for content in technology.content.all %}
+                            <div class="swiper-slide">
+                                <div class="technology-card">
+                                    <div class="technology-card__img">
+                                        <img src="{{ content.webp_image.url }}" alt="">
+                                    </div>
+                                    <div class="technology-card__content">
+                                        <div class="technology-card__title h3">
+                                            {{ content.title|upper }}
+                                        </div>
+                                        <div class="technology-card__desc body-l white-text3">
+                                            {{ content.description }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="slider__nav">
+                <div class="swiper-nav">
+                    <div class="swiper-button swiper-button-prev">
+                        <img src="{% static 'img/prev.svg' %}" alt="">
+                    </div>
+                    <div class="swiper-button swiper-button-next">
+                        <img src="{% static 'img/next.svg' %}" alt="">
+                    </div>
+                </div>
+
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
