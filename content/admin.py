@@ -4,7 +4,8 @@ from django.utils.html import format_html
 
 from .models import Menu, MenuItem, HeroSection, HTMLContent, CardConfiguration, CardConfigurationFeature, \
     CardConfigurationImage, Question, BawComparison, BawComparisonConfiguration, BawTesting, BawTestingImage, \
-    BawTestingFeature, BawTestingItems, VideoCardContent, VideoCard, TechnologyBlockContent, TechnologyBlock
+    BawTestingFeature, BawTestingItems, VideoCardContent, VideoCard, TechnologyBlockContent, TechnologyBlock, \
+    ServicesBlock
 from .widgets import RichTextEditorWidget
 
 
@@ -302,6 +303,30 @@ class TechnologyBlockAdmin(admin.ModelAdmin):
             'fields': ('order', 'is_active')
         })
     )
+
+
+@admin.register(ServicesBlock)
+class ServicesBlockAdmin(admin.ModelAdmin):
+    list_display = ['title', 'id', 'order', 'is_active']
+    readonly_fields = ('id', 'preview')
+    ordering = ['order', 'id']
+    prepopulated_fields = {'slug': ('title',)}
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('title', 'id', 'description', 'icon', 'preview', 'slug')
+        }),
+        ('Активность и сортировка', {
+            'fields': ('order', 'is_active')
+        })
+    )
+
+    def preview(self, obj):
+        if obj.pk and obj.image:
+            return format_html(
+                '<img src="{}" style="max-height:60px; max-width:80px;" />',
+                obj.image.url
+            )
+        return 'Иконка'
 
 
 admin.site.site_header = "Администрирование сайта Baw"

@@ -654,3 +654,28 @@ class TechnologyBlockContent(BaseModel):
     class Meta:
         verbose_name = 'карточка'
         verbose_name_plural = 'Карточки технологий'
+
+
+class ServicesBlock(BaseModel):
+    title = models.CharField(
+        max_length=255,
+        verbose_name='Заголовок'
+    )
+    description = models.TextField(
+        verbose_name='Описание'
+    )
+    icon = models.FileField(
+        upload_to='services/icons/',
+        validators=[FileExtensionValidator(allowed_extensions=['svg'])],
+        verbose_name='Иконка'
+    )
+    slug = models.SlugField(
+        unique=True,
+    )
+
+    def __str__(self):
+        return f'{self.title}'
+
+    class Meta:
+        verbose_name = 'сервис'
+        verbose_name_plural = 'Сервисы'

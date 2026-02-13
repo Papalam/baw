@@ -1,0 +1,26 @@
+{% load static %}
+
+<div class="services m-section">
+    <div class="container">
+        <div class="services__grid grid4">
+            {% for service in services %}
+                <div class="service-card">
+                    <img src="{{ service.icon.url }}" alt="" class="service-card__icon">
+                    <div class="service-card__title">
+{#                        АВТОМОБИЛИ <span class='no-wrap'>В НАЛИЧИИ</span>#}
+                        {{ service.title|safe|upper }}
+                    </div>
+                    <div class="service-card__desc">
+                        {{ service.description|safe }}
+                    </div>
+                    <div class="service-card__nav">
+                        <a href="{{ service.slug }}" class="service-card__link">
+                            <span>Подобрать</span>
+                            <img src="{% static 'img/arrow-right.svg' %}" alt="">
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
