@@ -1,8 +1,10 @@
 from django.contrib import admin
 from django.contrib.admin.widgets import AutocompleteSelect
+from django.forms import TextInput
 from django.utils.html import format_html
 
-from catalog.models import Car, Group, Characteristic, Configuration, ConfigurationCharacteristic, ConfigurationImage
+from catalog.models import Car, Group, Characteristic, Configuration, ConfigurationCharacteristic, ConfigurationImage, \
+    Color, CarImage
 
 
 class ConfigurationCharacteristicInline(admin.TabularInline):
@@ -168,3 +170,43 @@ class ConfigurationAdmin(admin.ModelAdmin):
         return "Нет фото"
 
     get_main_image_preview.short_description = "Основное фото"
+
+
+@admin.register(Color)
+class ColorAdmin(admin.ModelAdmin):
+    list_display = ['name', 'id', 'color_type', 'order', 'is_active']
+    list_display_links = ['name']
+    list_filter = ('color_type', )
+    readonly_fields = ('id', )
+    ordering = ('order', 'id')
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('name', 'id', 'color_type', 'hex_code')
+        }),
+        ('Активность и сортировка', {
+            'fields': ('order', 'is_active')
+        })
+    )
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        """Изменяем поле hex_code на html5 color"""
+        if db_field.name == 'hex_code':
+            kwargs['widget'] = TextInput(attrs={'type': 'color'})
+        return super().formfield_for_dbfield(db_field, request, **kwargs)
+
+
+@admin.register(CarImage)
+class CarImageAdmin(admin.ModelAdmin):
+    list_display = ['car', 'image_type', 'color', 'id', 'order', 'is_active']
+    list_display_links = ['car', 'image_type', 'color']
+    list_filter = ('image_type', )
+    readonly_fields = ('id', )
+    ordering = ('order', 'id')
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('car', 'id', 'image_type', 'color', 'image')
+        }),
+        ('Активность и сортировка', {
+            'fields': ('order', 'is_active')
+        })
+    )

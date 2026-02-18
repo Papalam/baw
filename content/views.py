@@ -49,9 +49,9 @@ class HomePageView(LoginRequiredMixin, TemplateView):
             )
         ).get(pk=1)
 
-        advantages = BawTesting.objects.prefetch_related('features', 'images', 'items').get(pk=1)
-        video_card = VideoCard.objects.prefetch_related('content').get(pk=1)
-        technology = TechnologyBlock.objects.prefetch_related('content').get(pk=1)
+        advantages = BawTesting.objects.prefetch_related('features', 'images', 'items').first()
+        video_card = VideoCard.objects.prefetch_related('content').first()
+        technology = TechnologyBlock.objects.prefetch_related('content').first()
         services = ServicesBlock.objects.filter(is_active=True).order_by('order')
         news_video = NewsVideo.objects.filter(is_active=True).order_by('order', 'created_at')
         news_article = NewsArticle.objects.filter(is_active=True).order_by('order', 'created_at')

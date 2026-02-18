@@ -1,9 +1,15 @@
 import uuid
 
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from catalog.utils import default_configuration_slug
 from content.base import BaseModel
+
+COLOR_TYPE_CHOICE = [
+    ('exterior', 'Экстерьер'),
+    ('interior', 'Интерьер')
+]
 
 
 class Group(BaseModel):
@@ -171,3 +177,73 @@ class ConfigurationImage(BaseModel):
         verbose_name = 'изображение'
         verbose_name_plural = 'Изображения'
         ordering = ['order']
+
+
+class Color(BaseModel):
+    """Цвета для интерьера и экстерьера"""
+    name = models.CharField(
+        max_length=100,
+        unique=True,
+        verbose_name='Название цвета'
+    )
+    color_type = models.CharField(
+        max_length=8,
+        choices=COLOR_TYPE_CHOICE,
+        verbose_name='Тип цвета'
+    )
+    hex_code = models.CharField(
+        max_length=7,
+        blank=True,
+        verbose_name='Цвет',
+        help_text='#FF0000'
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'цвет'
+        verbose_name_plural = 'Цвета'
+        unique_together = ['color_type', 'name']
+
+
+class CarImage(BaseModel):
+    """Фото автомобиля с привязкой к цвету"""
+    car = models.ForeignKey(
+        Car,
+        on_delete=models.CASCADE,
+        related_name='images',
+        verbose_name='Автомобиль'
+    )
+    image_type = models.CharField(
+        max_length=8,
+        choices=COLOR_TYPE_CHOICE,
+        verbose_name='Тип фото'
+    )
+    color = models.ForeignKey(
+        Color,
+        on_delete=models.PROTECT,
+        related_name='images',
+        verbose_name='Цвет'
+    )
+    image = models.ImageField(
+        upload_to='cars/original/%Y/%m/%d',
+        verbose_name='Фото автомобиля'
+    )
+    webp_image = models.ImageField(
+        upload_to='cars/webp/%Y/%m/%d',
+        blank=True,
+        null=True,
+    )
+
+    def __str__(self):
+        return f'{self.car.name} - {self.color.name} ({self.get_image_type_display()})'
+
+    def clean(self):
+        """Проверка соответствия типов"""
+        if not self.image_type == self.color.color_type:
+            raise ValidationError('Тип фото должен совпадать с типом цвета')
+
+    class Meta:
+        verbose_name = 'фото автомобиля'
+        verbose_name_plural = 'Фото автомобилей'
