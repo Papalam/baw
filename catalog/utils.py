@@ -29,9 +29,9 @@ def generate_webp(instance):
             instance.webp_image.save(filename, File(buffer), save=False)
             instance.save(update_fields=['webp_image'])
 
-    except Exception:
+    except Exception as e:
         # Если ошибка - оставляем оригинал
-        pass
+        print(f"WebP generation failed: {e}")
 
 
 def default_configuration_slug():
