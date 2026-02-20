@@ -247,3 +247,54 @@ class CarImage(BaseModel):
     class Meta:
         verbose_name = 'фото автомобиля'
         verbose_name_plural = 'Фото автомобилей'
+
+
+class CarAdvantages(BaseModel):
+    car = models.ForeignKey(
+        Car,
+        on_delete=models.CASCADE,
+        related_name='advantages',
+        verbose_name='Автомобиль'
+    )
+    title = models.CharField(
+        max_length=255,
+        verbose_name='Заголовок'
+    )
+    description = models.TextField(
+        verbose_name='Описание'
+    )
+    image = models.ImageField(
+        upload_to='advantages/original/%Y/%m/%d',
+        verbose_name='Изображение'
+    )
+    webp_image = models.ImageField(
+        upload_to='advantages/webp/%Y/%m/%d',
+        blank=True,
+        null=True
+    )
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'преимущество'
+        verbose_name_plural = 'Преимущества'
+
+
+class CarAdvantagesItem(BaseModel):
+    car_advantages = models.ForeignKey(
+        CarAdvantages,
+        on_delete=models.CASCADE,
+        related_name='items',
+        verbose_name='Пункт преимущества'
+    )
+    title = models.CharField(
+        max_length=255,
+        verbose_name='Заголовок'
+    )
+    description = models.TextField(
+        verbose_name='Описание'
+    )
+
+    def __str__(self):
+        return f'{self.car_advantages} - преимущество № {self.pk}'

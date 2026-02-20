@@ -4,7 +4,7 @@ from django.forms import TextInput
 from django.utils.html import format_html
 
 from catalog.models import Car, Group, Characteristic, Configuration, ConfigurationCharacteristic, ConfigurationImage, \
-    Color, CarImage
+    Color, CarImage, CarAdvantages, CarAdvantagesItem
 
 
 class ConfigurationCharacteristicInline(admin.TabularInline):
@@ -45,6 +45,12 @@ class ConfigurationImageInline(admin.TabularInline):
         return "Фото"
 
     preview.short_description = "Превью"
+
+
+class CarAdvantagesItemInline(admin.TabularInline):
+    model = CarAdvantagesItem
+    extra = 1
+    fields = ['title', 'description', 'order', 'is_active']
 
 
 @admin.register(Car)
@@ -176,8 +182,8 @@ class ConfigurationAdmin(admin.ModelAdmin):
 class ColorAdmin(admin.ModelAdmin):
     list_display = ['name', 'id', 'color_type', 'order', 'is_active']
     list_display_links = ['name']
-    list_filter = ('color_type', )
-    readonly_fields = ('id', )
+    list_filter = ('color_type',)
+    readonly_fields = ('id',)
     ordering = ('order', 'id')
     fieldsets = (
         ('Основная информация', {
@@ -199,12 +205,30 @@ class ColorAdmin(admin.ModelAdmin):
 class CarImageAdmin(admin.ModelAdmin):
     list_display = ['car', 'image_type', 'color', 'id', 'order', 'is_active']
     list_display_links = ['car', 'image_type', 'color']
-    list_filter = ('image_type', )
-    readonly_fields = ('id', )
+    list_filter = ('image_type',)
+    readonly_fields = ('id',)
     ordering = ('order', 'id')
     fieldsets = (
         ('Основная информация', {
             'fields': ('car', 'id', 'image_type', 'color', 'image')
+        }),
+        ('Активность и сортировка', {
+            'fields': ('order', 'is_active')
+        })
+    )
+
+
+@admin.register(CarAdvantages)
+class CarAdvantagesAdmin(admin.ModelAdmin):
+    list_display = ['car', 'title', 'order', 'is_active']
+    list_display_links = ['car', 'title']
+    list_filter = ('car',)
+    readonly_fields = ('id',)
+    ordering = ('order', 'id')
+    inlines = [CarAdvantagesItemInline]
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('car', 'id', 'title', 'description', 'image')
         }),
         ('Активность и сортировка', {
             'fields': ('order', 'is_active')

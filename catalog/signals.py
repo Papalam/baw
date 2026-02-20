@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
-from catalog.models import ConfigurationImage, CarImage
+from catalog.models import ConfigurationImage, CarImage, CarAdvantages
 from content.models import CardConfigurationImage, BawComparison, BawTestingImage, VideoCardContent, \
     TechnologyBlockContent, NewsArticle
 from catalog.utils import generate_webp
@@ -14,6 +14,7 @@ from catalog.utils import generate_webp
 @receiver(pre_save, sender=TechnologyBlockContent)
 @receiver(pre_save, sender=NewsArticle)
 @receiver(pre_save, sender=CarImage)
+@receiver(pre_save, sender=CarAdvantages)
 def detect_image_changes(sender, instance, **kwargs):
     """Определяем что изображение поменялось"""
     if instance.pk:
@@ -30,6 +31,7 @@ def detect_image_changes(sender, instance, **kwargs):
 @receiver(post_save, sender=TechnologyBlockContent)
 @receiver(post_save, sender=NewsArticle)
 @receiver(post_save, sender=CarImage)
+@receiver(post_save, sender=CarAdvantages)
 def handle_configuration_card(sender, instance, update_fields, **kwargs):
     """Сохранение фото в формате webp"""
     if update_fields and 'webp_image' in update_fields:

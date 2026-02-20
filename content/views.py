@@ -1,8 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Prefetch
+from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
-from catalog.models import Configuration, ConfigurationCharacteristic, ConfigurationImage
+from catalog.models import Configuration, ConfigurationCharacteristic, ConfigurationImage, CarImage, Car, CarAdvantages
 from content.models import MenuItem, HeroSection, CardConfiguration, Question, BawComparison, \
     BawComparisonConfiguration, BawTesting, VideoCard, TechnologyBlock, ServicesBlock, NewsVideo, NewsArticle
 
@@ -51,11 +52,32 @@ class HomePageView(LoginRequiredMixin, TemplateView):
 
         advantages = BawTesting.objects.prefetch_related('features', 'images', 'items').first()
         video_card = VideoCard.objects.prefetch_related('content').first()
+
+        # Галерея
+        images_prefetch = Prefetch(
+            'images',
+            queryset=CarImage.objects.filter(is_active=True)
+            .select_related('color')
+            .order_by('color__order', 'color__id', 'order'),
+            to_attr='active_images'
+        )
+
+        car = get_object_or_404(Car.objects.prefetch_related(images_prefetch))
+
+        gallery = {'exterior': {}, 'interior': {}}
+
+        for img in car.active_images:
+            ctype = img.image_type
+            if img.color not in gallery[ctype]:
+                gallery[ctype][img.color] = []
+            gallery[ctype][img.color].append(img)
+
+        advantages = CarAdvantages.objects.prefetch_related('items').filter(is_active=True)
         technology = TechnologyBlock.objects.prefetch_related('content').first()
         services = ServicesBlock.objects.filter(is_active=True).order_by('order')
         news_video = NewsVideo.objects.filter(is_active=True).order_by('order', 'created_at')
         news_article = NewsArticle.objects.filter(is_active=True).order_by('order', 'created_at')
-        block_questions = Question.objects.filter(is_active=True)
+        block_questions = Question.objects.filter(is_active=True).order_by('order', 'pk')
 
         context['submenu_items'] = submenu
         context['hero_sections'] = hero_sections
@@ -63,6 +85,8 @@ class HomePageView(LoginRequiredMixin, TemplateView):
         context['block_baw_comparison'] = block_baw_comparison
         context['advantages'] = advantages
         context['video_card'] = video_card
+        context['gallery'] = gallery
+        context['advantages'] = advantages
         context['technology'] = technology
         context['services'] = services
         context['news_video'] = news_video

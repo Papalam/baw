@@ -1,0 +1,63 @@
+{% load static %}
+
+<div class="character _tabs-parent">
+    <div class="character__view">
+        <button data-tab="_tab_ext" class="character__view-btn _tab _active m-btn m-btn--cut m-btn-white2">
+            <span>ВЫБРАТЬ ЦВЕТ кузова</span>
+        </button>
+        <button data-tab="_tab_int" class="character__view-btn _tab m-btn m-btn--cut m-btn-white2">
+            <span>ВЫБРАТЬ ЦВЕТ САЛОНА</span>
+        </button>
+    </div>
+
+    {% for type_key, colors_dict in gallery.items %}
+        <div class="tab-content _tab_{{ type_key|slice:":3" }} {% if forloop.first %}_active{% endif %}">
+
+            <!-- Сетка иконок цветов -->
+            <div class="character__colors">
+                {% for color, images in colors_dict.items %}
+                    <div class="character-color {% if forloop.first %}_active{% endif %}"
+                         data-color="color_{{ color.id }}">
+                        <div class="character-color__top">
+                            <div class="character-color__bg" style="background: {{ color.hex_code }};"></div>
+                        </div>
+                        <div class="character-color__title">{{ color.name }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Слайдеры для каждого цвета -->
+            {% for color, images in colors_dict.items %}
+                <div class="color-tab-content color_{{ color.id }} {% if forloop.first %}_active{% endif %}">
+                    <div class="character-slider slider">
+                        <div class="slider__wrap">
+                            <div class="swiper-container">
+                                <div class="swiper-wrapper">
+                                    {% for img in images %}
+                                        <div class="swiper-slide">
+                                            <div class="character-card__img">
+                                                <img src="{{ img.webp_image.url|default:img.image.url }}"
+                                                     alt="{{ color.name }}">
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slider__nav">
+                            <div class="swiper-nav">
+                                <div class="swiper-button swiper-button-prev">
+                                    <img src="{% static 'img/prev.svg' %}" alt="">
+                                </div>
+                                <div class="swiper-button swiper-button-next">
+                                    <img src="{% static 'img/next.svg' %}" alt="">
+                                </div>
+                            </div>
+                            <div class="swiper-pagination"></div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>

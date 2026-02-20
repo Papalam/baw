@@ -1,0 +1,37 @@
+{% load static %}
+
+<div class="auto-info">
+    {% for advantage in advantages %}
+        <div class="auto-info__row">
+            <div class="auto-info__col">
+                <img src="{{ advantage.webp_image.url }}" alt="" class="auto-info__img">
+            </div>
+            <div class="auto-info__col2">
+                <div class="h1">
+                    {{ advantage.title|upper }}
+                </div>
+                <div class="auto-info__desc">
+                    <div class="body-l text16-tablet white-text3">
+                        {{ advantage.description|capfirst }}
+                    </div>
+                </div>
+                <div class="auto-info__props">
+                    {% for item in advantage.items.all %}
+                    	<div class="prop-item">
+                        <div class="prop-item__top">
+                            <div class="prop-item__title">
+                                {{ item.title|upper }}
+                            </div>
+                        </div>
+                        <div class="prop-item__bottom">
+                            <div class="prop-item__desc">
+                                {{ item.description|capfirst }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
