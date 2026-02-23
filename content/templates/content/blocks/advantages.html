@@ -3,16 +3,16 @@
     <div class="container">
         <div class="info-block">
             <div class="h1">
-                {{ advantages.title }}
+                {{ features.title }}
             </div>
             <div class="info-block__desc">
                 <div class="text18 white-text3">
-                    {{ advantages.description|safe }}
+                    {{ features.description|safe }}
                 </div>
             </div>
         </div>
         <div class="advantages__items grid4 _mt60">
-            {% for feature in advantages.features.all %}
+            {% for feature in features.features.all %}
                 <div class="advantage-item">
                     <div class="advantage-item__top">
                         <div class="advantage-item__icon">
@@ -32,17 +32,17 @@
             {% endfor %}
         </div>
         <div class="advantages__video">
-            <video autoplay muted playsinline class="_autoplay-video" src="{{ advantages.video.url }}"></video>
+            <video autoplay muted playsinline class="_autoplay-video" src="{{ features.video.url }}"></video>
         </div>
         <div class="challenges">
             <div class="h1 text-center">
-                {{ advantages.subtitle|upper }}
+                {{ features.subtitle|upper }}
             </div>
             <div class="challenges-slider slider">
                 <div class="slider__wrap">
                     <div class="swiper-container">
                         <div class="swiper-wrapper">
-                            {% for image in advantages.images.all %}
+                            {% for image in features.images.all %}
                                 <div class="swiper-slide">
                                     <div class="challenge-card">
                                         <div class="challenge-card__img">
@@ -70,12 +70,12 @@
 
         <div class="mechanic">
             <div class="h1 text-center">
-                {{ advantages.title_full_control|upper }}
+                {{ features.title_full_control|upper }}
             </div>
             <div class="mechanic-slider slider">
                 <div class="swiper-container">
                     <div class="swiper-wrapper">
-                        {% for item in advantages.items.all %}
+                        {% for item in features.items.all %}
                             <div class="swiper-slide">
                                 <div class="mechanic-card">
                                     <div class="mechanic-card__top">
@@ -99,7 +99,7 @@
                 <div class="slider__nav">
                     <div class="swiper-pagination"></div>
                 </div>
-                <img src="{{ advantages.image.url }}" alt="" class="mechanic__img">
+                <img src="{{ features.image.url }}" alt="" class="mechanic__img">
             </div>
         </div>
     </div>

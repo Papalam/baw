@@ -1,9 +1,12 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Prefetch
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import TemplateView
 
-from catalog.models import Configuration, ConfigurationCharacteristic, ConfigurationImage, CarImage, Car, CarAdvantages
+from catalog.models import Configuration, ConfigurationCharacteristic, ConfigurationImage, CarImage, Car, CarAdvantages, \
+    Color
+from content.forms import CarApplicationForm
 from content.models import MenuItem, HeroSection, CardConfiguration, Question, BawComparison, \
     BawComparisonConfiguration, BawTesting, VideoCard, TechnologyBlock, ServicesBlock, NewsVideo, NewsArticle
 
@@ -50,7 +53,7 @@ class HomePageView(LoginRequiredMixin, TemplateView):
             )
         ).get(pk=1)
 
-        advantages = BawTesting.objects.prefetch_related('features', 'images', 'items').first()
+        features = BawTesting.objects.prefetch_related('features', 'images', 'items').first()
         video_card = VideoCard.objects.prefetch_related('content').first()
 
         # Галерея
@@ -75,22 +78,43 @@ class HomePageView(LoginRequiredMixin, TemplateView):
         advantages = CarAdvantages.objects.prefetch_related('items').filter(is_active=True)
         technology = TechnologyBlock.objects.prefetch_related('content').first()
         services = ServicesBlock.objects.filter(is_active=True).order_by('order')
+        outside_colors = Color.objects.filter(is_active=True, color_type='exterior').order_by('order')
+        inside_colors = Color.objects.filter(is_active=True, color_type='interior').order_by('order')
         news_video = NewsVideo.objects.filter(is_active=True).order_by('order', 'created_at')
         news_article = NewsArticle.objects.filter(is_active=True).order_by('order', 'created_at')
         block_questions = Question.objects.filter(is_active=True).order_by('order', 'pk')
+
+        configurations = Configuration.objects.filter(is_active=True).order_by('order', 'pk')
 
         context['submenu_items'] = submenu
         context['hero_sections'] = hero_sections
         context['card_configuration'] = card_configuration
         context['block_baw_comparison'] = block_baw_comparison
-        context['advantages'] = advantages
+        context['features'] = features
         context['video_card'] = video_card
         context['gallery'] = gallery
         context['advantages'] = advantages
         context['technology'] = technology
         context['services'] = services
+        context['configurations'] = configurations
+        context['outside_colors'] = outside_colors
+        context['inside_colors'] = inside_colors
         context['news_video'] = news_video
         context['news_article'] = news_article
         context['questions'] = block_questions
 
         return context
+
+    def post(self, request, *args, **kwargs):
+        """Обработка отправки формы"""
+        form = CarApplicationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # Добавляем сообщение об успехе
+            messages.success(request, 'Ваша заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.')
+            # Редирект после успешной отправки (Post/Redirect/Get pattern)
+            return redirect('home')  # или имя вашей success-страницы
+
+        # Если форма невалидна, возвращаем страницу с формой и ошибками
+        messages.error(request, 'Произошла ошибка. Проверьте правильность заполнения полей.')
+        return self.render_to_response(self.get_context_data(form=form))

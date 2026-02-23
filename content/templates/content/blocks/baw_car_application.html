@@ -1,0 +1,153 @@
+{% load static %}
+
+<div class="req">
+    <div class="container">
+        <div class="req__inner">
+            <div class="h1 text-center">
+                Оставьте заявку на BAW 212
+            </div>
+            <form class="req-form" method="post" action="{% url 'home' %}">
+                {% csrf_token %}
+                <div class="req-equip">
+                    <div class="h5">ВЫБЕРИТЕ КОМПЛЕКТАЦИЮ</div>
+                    <div class="fg">
+                        <select>
+                            <option selected hidden disabled>Выберите из списка</option>
+                            <option>ADVENTURER RUS</option>
+                            <option>ADVENTURER RUS</option>
+                            <option>ADVENTURER RUS</option>
+                        </select>
+                    </div>
+                    <div class="req-equip__items">
+                        {% for config in configurations %}
+                            <div class="req-equip__item _abs-input">
+                                <input type="radio"
+                                       name="configuration"
+                                       value="{{ config.id }}"
+                                       id="config_{{ config.id }}"
+                                       {% if forloop.first %}checked{% endif %}
+                                >
+                                <label for="config_{{ config.id }}">
+                                    <span class="h5">{{ config.name }}</span>
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% if form.configuration.errors %}
+                        <div class="error-block">{{ form.configuration.errors|join:", " }}</div>
+                    {% endif %}
+                </div>
+                <div class="req-form__colors">
+                    <!-- Цвет кузова -->
+                    <div class="req-equip">
+                        <div class="h5">ЦВЕТ КУЗОВА:
+                            <span class="_js-color-output">{{ outside_colors|first }}</span>
+                        </div>
+                        <div class="req-equip__items">
+                            {% for color in outside_colors %}
+                                <div class="req-equip__item _abs-input">
+                                    <input type="radio"
+                                           name="outside_color"
+                                           value="{{ color.id }}"
+                                           id="out_{{ color.id }}"
+                                           data-value="{{ color.name }}"
+                                           {% if forloop.first %}checked{% endif %}
+                                    >
+                                    <label for="out_{{ color.id }}" style="background: {{ color.hex_code }};"></label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <!-- Цвет салона -->
+                    <div class="req-equip">
+                        <div class="h5">ЦВЕТ САЛОНА:
+                            <span class="_js-color-output2">{{ inside_colors|first }}</span>
+                        </div>
+                        <div class="req-equip__items">
+                            {% for color in inside_colors %}
+                                <div class="req-equip__item _abs-input">
+                                    <input type="radio"
+                                           name="inside_color"
+                                           value="{{ color.id }}"
+                                           id="in_{{ color.id }}"
+                                           data-value="{{ color.name }}"
+                                           {% if forloop.first %}checked{% endif %}
+                                    >
+                                    <label for="in_{{ color.id }}" style="background: {{ color.hex_code }};"></label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <!-- Дилер -->
+                <div class="req-dealer">
+                    <div class="h5">ВЫБЕРИТЕ ДИЛЕРСКИЙ ЦЕНТР</div>
+                    <div class="req-dealer__grid">
+                        <div class="fg">
+                            <select name="dealer">
+                                <option selected hidden disabled>Выберите из списка</option>
+                                <option value="г. Москва">г. Москва</option>
+                                <option value="г. Казань">г. Казань</option>
+                                <option value="г. Самара">г. Самара</option>
+                            </select>
+                            {% if form.dealer.errors %}
+                                <div class="error-block">{{ form.dealer.errors|join:", " }}</div>
+                            {% endif %}
+                        </div>
+                        <button type="button" class="req-dealer__btn caps-text m-btn m-btn--cut m-btn-black">
+                            <img src="{% static 'img/target.svg' %}">
+                            <span>Поблизости</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="req-contacts">
+                    <div class="h5">
+                        КОНТАКТНАЯ ИНФОРМАЦИЯ
+                    </div>
+                    <div class="req-contacts__fields">
+                        <div class="fg">
+                            <input type="text" placeholder="Имя" name="first_name">
+                        </div>
+                        <div class="fg">
+                            <input type="text" placeholder="Фамилия" name="last_name">
+                        </div>
+                        <div class="fg">
+                            <input type="tel" placeholder="+ 7 ( _ _ _ ) _ _ - _ _ - ___" name="phone">
+                            {% if form.phone.errors %}
+                                <div class="error-block">{{ form.phone.errors|join:", " }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="req-contacts__textarea fg">
+                            <textarea placeholder="Ваш комментарий" name="comment"></textarea>
+                        </div>
+                        <div class="m-check">
+                            <input type="checkbox" name="agreement" id="id_agreement">
+                            <label for="id_agreement">
+                                <span>
+                                Я даю согласие на обработку персональных данных; предоставление персональных  данных третьим лицам и коммуникацию; ознакомлен с политикой конфиденциальности.
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="req-contacts__nav">
+                        <button class="req-contacts__btn m-btn m-btn--cut m-btn-brown">
+                            <span>ОТПРАВИТЬ ЗАЯВКУ</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Ждем 5 секунд и плавно скрываем сообщения
+    setTimeout(function () {
+        const messages = document.querySelectorAll('.alert');
+        messages.forEach(function (msg) {
+            msg.style.transition = "opacity 0.5s ease";
+            msg.style.opacity = "0";
+            setTimeout(() => msg.remove(), 500);
+        });
+    }, 5000);
+</script>

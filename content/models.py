@@ -1,7 +1,7 @@
 from django.core.validators import FileExtensionValidator
 from django.db import models
 
-from catalog.models import Configuration
+from catalog.models import Configuration, Color
 from content.base import BaseModel
 
 
@@ -736,3 +736,60 @@ class NewsVideo(NewsBase):
         verbose_name = 'новость'
         verbose_name_plural = 'Новости (видео)'
         unique_together = (('title', 'created_at'),)
+
+
+class CarApplication(models.Model):
+    configuration = models.ForeignKey(
+        Configuration,
+        on_delete=models.PROTECT,
+        related_name='car_applications',
+        verbose_name='Комплектация'
+    )
+    outside_color = models.ForeignKey(
+        Color,
+        on_delete=models.PROTECT,
+        limit_choices_to={'color_type': 'exterior'},
+        related_name='outside_applications',
+        verbose_name='Цвет экстерьера'
+    )
+    inside_color = models.ForeignKey(
+        Color,
+        on_delete=models.PROTECT,
+        limit_choices_to={'color_type': 'interior'},
+        related_name='inside_applications',
+        verbose_name='Цвет интерьера'
+    )
+    dealer = models.CharField(
+        max_length=255,
+        verbose_name='Дилер'
+    )
+    first_name = models.CharField(
+        max_length=50,
+        blank=True,
+        verbose_name='Имя'
+    )
+    last_name = models.CharField(
+        max_length=50,
+        blank=True,
+        verbose_name='Фамилия'
+    )
+    comment = models.TextField(
+        blank=True,
+        verbose_name='Комментарий'
+    )
+    phone = models.CharField(
+        max_length=20,
+        verbose_name='Телефон'
+    )
+    agreement = models.BooleanField(
+        default=False,
+        verbose_name='Согласие на обработку персональных данных'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'
+
+    class Meta:
+        verbose_name = 'заявка'
+        verbose_name_plural = 'Заявки'
