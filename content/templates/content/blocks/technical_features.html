@@ -39,126 +39,18 @@
                         </td>
                     {% endfor %}
                 </tr>
-                <tr>
-                    <td>
-                        <div class="text18">Расход топлива в городском цикле л. / 100 км.</div>
-                    </td>
-                    <td>
-                        <div class="text18">13,5</div>
-                    </td>
-                    <td>
-                        <div class="text18">13,5</div>
-                    </td>
-                    <td>
-                        <div class="text18">13,5</div>
-                    </td>
-                    <td>
-                        <div class="text18">13,5</div>
-                    </td>
-                    <td>
-                        <div class="text18">13,5</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="text18">Клиренс (дорожный просвет), мм.</div>
-                    </td>
-                    <td>
-                        <div class="text18">1936</div>
-                    </td>
-                    <td>
-                        <div class="text18">1936</div>
-                    </td>
-                    <td>
-                        <div class="text18">1936</div>
-                    </td>
-                    <td>
-                        <div class="text18">1936</div>
-                    </td>
-                    <td>
-                        <div class="text18">1936</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="text18">Передняя и задняя подвеска с неразрезным мостом</div>
-                    </td>
-                    <td>
-                        <div class="text18">1936</div>
-                    </td>
-                    <td>
-                        <div class="text18">1936</div>
-                    </td>
-                    <td>
-                        <div class="text18">1936</div>
-                    </td>
-                    <td>
-                        <div class="text18">1936</div>
-                    </td>
-                    <td>
-                        <div class="text18">1936</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="text18">Клиренс (дорожный просвет), мм.</div>
-                    </td>
-                    <td>
-                        <div class="text18">1936</div>
-                    </td>
-                    <td>
-                        <div class="text18">1936</div>
-                    </td>
-                    <td>
-                        <div class="text18">1936</div>
-                    </td>
-                    <td>
-                        <div class="text18">1936</div>
-                    </td>
-                    <td>
-                        <div class="text18">1936</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="text18">Расход топлива в городском цикле л. / 100 км.</div>
-                    </td>
-                    <td>
-                        <div class="text18">13,5</div>
-                    </td>
-                    <td>
-                        <div class="text18">13,5</div>
-                    </td>
-                    <td>
-                        <div class="text18">13,5</div>
-                    </td>
-                    <td>
-                        <div class="text18">13,5</div>
-                    </td>
-                    <td>
-                        <div class="text18">13,5</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="text18">Передняя и задняя подвеска с неразрезным мостом</div>
-                    </td>
-                    <td>
-                        <div class="text18">1936</div>
-                    </td>
-                    <td>
-                        <div class="text18">1936</div>
-                    </td>
-                    <td>
-                        <div class="text18">1936</div>
-                    </td>
-                    <td>
-                        <div class="text18">1936</div>
-                    </td>
-                    <td>
-                        <div class="text18">1936</div>
-                    </td>
-                </tr>
+                {% for main_feature in main_features %}
+                    <tr>
+                        <td>
+                            <div class="text18">{{ main_feature.name }}</div>
+                        </td>
+                        {% for configuration in configurations %}
+                            <td>
+                            <div class="text18">{% feature_value values_dict main_feature.id configuration.id %}</div>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div>

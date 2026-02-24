@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import TemplateView
 
 from catalog.models import Configuration, ConfigurationCharacteristic, ConfigurationImage, CarImage, Car, CarAdvantages, \
-    Color
+    Color, Characteristic
 from content.forms import CarApplicationForm
 from content.models import MenuItem, HeroSection, CardConfiguration, Question, BawComparison, \
     BawComparisonConfiguration, BawTesting, VideoCard, TechnologyBlock, ServicesBlock, NewsVideo, NewsArticle
@@ -78,6 +78,7 @@ class HomePageView(LoginRequiredMixin, TemplateView):
         advantages = CarAdvantages.objects.prefetch_related('items').filter(is_active=True)
         technology = TechnologyBlock.objects.prefetch_related('content').first()
         services = ServicesBlock.objects.filter(is_active=True).order_by('order')
+        main_features = Characteristic.objects.filter(is_active=True, group__key='main')
         outside_colors = Color.objects.filter(is_active=True, color_type='exterior').order_by('order')
         inside_colors = Color.objects.filter(is_active=True, color_type='interior').order_by('order')
         news_video = NewsVideo.objects.filter(is_active=True).order_by('order', 'created_at')
@@ -85,6 +86,11 @@ class HomePageView(LoginRequiredMixin, TemplateView):
         block_questions = Question.objects.filter(is_active=True).order_by('order', 'pk')
 
         configurations = Configuration.objects.filter(is_active=True).order_by('order', 'pk')
+
+        values_dict = {(v[0], v[1]): v[2]
+                       for v in ConfigurationCharacteristic.objects.filter(is_active=True)
+                       .values_list('characteristic_id', 'configuration_id', 'value')
+                       }
 
         context['submenu_items'] = submenu
         context['hero_sections'] = hero_sections
@@ -97,6 +103,8 @@ class HomePageView(LoginRequiredMixin, TemplateView):
         context['technology'] = technology
         context['services'] = services
         context['configurations'] = configurations
+        context['main_features'] = main_features
+        context['values_dict'] = values_dict
         context['outside_colors'] = outside_colors
         context['inside_colors'] = inside_colors
         context['news_video'] = news_video
