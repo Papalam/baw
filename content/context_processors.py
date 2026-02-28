@@ -1,3 +1,4 @@
+from baw import settings
 from .models import MenuItem
 
 
@@ -6,4 +7,10 @@ def header_menu(request):
 
     return {
         'header_menu_items': menu_items,
+    }
+
+
+def static_version(request):
+    return {
+        'staticfiles_version': getattr(settings, 'STATICFILES_VERSION', '1.0'),
     }

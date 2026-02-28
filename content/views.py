@@ -78,7 +78,7 @@ class HomePageView(LoginRequiredMixin, TemplateView):
         advantages = CarAdvantages.objects.prefetch_related('items').filter(is_active=True)
         technology = TechnologyBlock.objects.prefetch_related('content').first()
         services = ServicesBlock.objects.filter(is_active=True).order_by('order')
-        main_features = Characteristic.objects.filter(is_active=True, group__key='main')
+        main_features = Characteristic.objects.filter(is_active=True, group__key='main').order_by('order')
         outside_colors = Color.objects.filter(is_active=True, color_type='exterior').order_by('order')
         inside_colors = Color.objects.filter(is_active=True, color_type='interior').order_by('order')
         news_video = NewsVideo.objects.filter(is_active=True).order_by('order', 'created_at')
@@ -126,3 +126,7 @@ class HomePageView(LoginRequiredMixin, TemplateView):
         # Если форма невалидна, возвращаем страницу с формой и ошибками
         messages.error(request, 'Произошла ошибка. Проверьте правильность заполнения полей.')
         return self.render_to_response(self.get_context_data(form=form))
+
+
+class OurWorld(TemplateView):
+    template_name = 'content/our_world.html'
