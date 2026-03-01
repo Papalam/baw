@@ -1,0 +1,46 @@
+{% load static %}
+
+<div class="events-slider slider">
+    <div class="slider__wrap">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                {% for news in news_main %}
+                    <div class="swiper-slide">
+                        <div class="event-card grid2">
+                            <div class="event-card__col">
+                                <div class="event-card__img">
+                                    <img src="{{ news.webp_image.url }}" alt="">
+                                </div>
+                            </div>
+                            <div class="event-card__col2">
+                                <div class="event-card__top">
+                                    <div class="event-card__date">{{ news.created_at|date:"j E Y" }}</div>
+                                    <div class="event-card__title">
+                                        <a href="">{{ news.title }}</a>
+                                    </div>
+                                    <div class="event-card__desc">{{ news.description }}</div>
+                                </div>
+                                <div class="event-card__bottom">
+                                    <a href="" class="event-card__link">
+                                        Читать полностью
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="slider__nav">
+        <div class="swiper-nav">
+            <div class="swiper-button swiper-button-prev">
+                <img src="{% static 'img/prev.svg' %}" alt="">
+            </div>
+            <div class="swiper-button swiper-button-next">
+                <img src="{% static 'img/next.svg' %}" alt="">
+            </div>
+        </div>
+        <div class="swiper-pagination _black"></div>
+    </div>
+</div>

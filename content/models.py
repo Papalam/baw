@@ -714,6 +714,10 @@ class NewsArticle(NewsBase):
         blank=True,
         null=True,
     )
+    is_main = models.BooleanField(
+        default=False,
+        verbose_name='Показывать на главной странице'
+    )
 
     def __str__(self):
         return f'{self.title}'
@@ -793,3 +797,160 @@ class CarApplication(models.Model):
     class Meta:
         verbose_name = 'заявка'
         verbose_name_plural = 'Заявки'
+
+
+class OurAdventure(BaseModel):
+    title = models.CharField(
+        max_length=255,
+        verbose_name='Заголовок'
+    )
+    slug = models.SlugField(
+        unique=True,
+    )
+    name = models.CharField(
+        max_length=255,
+        verbose_name='Название'
+    )
+    description = models.TextField(
+        verbose_name='Описание'
+    )
+    image = models.ImageField(
+        upload_to='our_adventure/images/',
+        validators=[FileExtensionValidator(allowed_extensions=['png', 'jpg', 'jpeg'])],
+        verbose_name='Обложка'
+    )
+    webp_image = models.ImageField(
+        upload_to='our_adventure/webp/',
+        blank=True,
+        null=True
+    )
+    video = models.FileField(
+        upload_to='our_adventure/video/',
+        validators=[FileExtensionValidator(allowed_extensions=['mp4'])],
+        verbose_name='Видео'
+    )
+
+    def __str__(self):
+        return f'{self.title}'
+
+    class Meta:
+        verbose_name = 'приключение'
+        verbose_name_plural = 'Наши приключения'
+
+
+class History(BaseModel):
+    title = models.CharField(
+        max_length=100,
+        verbose_name='Заголовок'
+    )
+    city = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name='Город'
+    )
+    description = models.TextField(
+        verbose_name='Отзыв'
+    )
+    image = models.ImageField(
+        upload_to='history/images/',
+        validators=[FileExtensionValidator(allowed_extensions=['png', 'jpg', 'jpeg'])],
+        blank=True,
+        null=True,
+        verbose_name='Изображение'
+    )
+    webp_image = models.ImageField(
+        upload_to='history/webp/',
+        blank=True,
+        null=True
+    )
+
+    def __str__(self):
+        return f'{self.title} - {self.city}'
+
+    class Meta:
+        verbose_name = 'отзыв'
+        verbose_name_plural = 'Отзывы клиентов'
+
+
+class Society(BaseModel):
+    key = models.CharField(
+        max_length=255,
+        unique=True,
+        verbose_name='Ключ записи'
+    )
+    title = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name='Заголовок'
+    )
+    description = models.TextField(
+        blank=True,
+        verbose_name='Описание'
+    )
+    button_title = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name='Заголовок кнопки'
+    )
+    button_text = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name='Текст кнопки'
+    )
+    button_url = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name='URL кнопки'
+    )
+    image = models.ImageField(
+        upload_to='society/images/',
+        validators=[FileExtensionValidator(allowed_extensions=['png', 'jpg', 'jpeg'])],
+        blank=True,
+        null=True,
+        verbose_name='Изображение'
+    )
+    webp_image = models.ImageField(
+        upload_to='society/webp/',
+        blank=True,
+        null=True
+    )
+
+    def __str__(self):
+        return f'{self.title} - {self.key}'
+
+    class Meta:
+        verbose_name = 'сообщество'
+        verbose_name_plural = 'Сообщества'
+
+
+class Banner(BaseModel):
+    key = models.CharField(
+        max_length=50,
+        unique=True,
+        verbose_name='Ключ баннера'
+    )
+    title = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name='Заголовок'
+    )
+    description = models.TextField(
+        blank=True,
+        verbose_name='Описание'
+    )
+    image = models.ImageField(
+        upload_to='banner/images/',
+        validators=[FileExtensionValidator(allowed_extensions=['png', 'jpg', 'jpeg'])],
+    )
+    webp_image = models.ImageField(
+        upload_to='banner/webp/',
+        blank=True,
+        null=True
+    )
+
+    def __str__(self):
+        return f'{self.title} - {self.key}'
+
+    class Meta:
+        verbose_name = 'баннер'
+        verbose_name_plural = 'Баннеры'

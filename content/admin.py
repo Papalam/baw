@@ -5,7 +5,7 @@ from django.utils.html import format_html
 from .models import Menu, MenuItem, HeroSection, HTMLContent, CardConfiguration, CardConfigurationFeature, \
     CardConfigurationImage, Question, BawComparison, BawComparisonConfiguration, BawTesting, BawTestingImage, \
     BawTestingFeature, BawTestingItems, VideoCardContent, VideoCard, TechnologyBlockContent, TechnologyBlock, \
-    ServicesBlock, NewsArticle, NewsVideo
+    ServicesBlock, NewsArticle, NewsVideo, OurAdventure, History, Society, Banner
 from .widgets import RichTextEditorWidget
 
 
@@ -333,12 +333,12 @@ class ServicesBlockAdmin(admin.ModelAdmin):
 class NewsArticleAdmin(admin.ModelAdmin):
     list_display = ['title', 'id', 'created_at', 'order', 'is_active']
     list_display_links = ['title', 'id']
-    readonly_fields = ('id', 'preview')
+    readonly_fields = ('id', 'preview', 'created_at')
     prepopulated_fields = {'slug': ('title',)}
     ordering = ['order', 'created_at']
     fieldsets = (
         ('Основная информация', {
-            'fields': ('title', 'id', 'description', 'image', 'preview', 'slug')
+            'fields': ('title', 'id', 'description', 'image', 'preview', 'slug', 'is_main', 'created_at')
         }),
         ('Активность и сортировка', {
             'fields': ('order', 'is_active')
@@ -369,6 +369,104 @@ class NewsVideoAdmin(admin.ModelAdmin):
             'fields': ('order', 'is_active')
         })
     )
+
+
+@admin.register(OurAdventure)
+class OurAdventureAdmin(admin.ModelAdmin):
+    list_display = ['title', 'id', 'name', 'order', 'is_active']
+    list_display_links = ['title', 'id']
+    readonly_fields = ('id', 'preview')
+    prepopulated_fields = {'slug': ('title',)}
+    ordering = ['order', 'id']
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('title', 'id', 'name', 'description', 'image', 'preview', 'video', 'slug')
+        }),
+        ('Активность и сортировка', {
+            'fields': ('order', 'is_active')
+        })
+    )
+
+    def preview(self, obj):
+        if obj.pk and obj.image:
+            return format_html(
+                '<img src="{}" style="max-height:60px; max-width:80px;" />',
+                obj.image.url
+            )
+        return 'Обложка'
+
+
+@admin.register(History)
+class HistoryAdmin(admin.ModelAdmin):
+    list_display = ['title', 'id', 'city', 'order', 'is_active']
+    list_display_links = ['title', 'id']
+    readonly_fields = ('id', 'preview')
+    ordering = ['order', 'id']
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('title', 'id', 'city', 'description', 'image', 'preview')
+        }),
+        ('Активность и сортировка', {
+            'fields': ('order', 'is_active')
+        })
+    )
+
+    def preview(self, obj):
+        if obj.pk and obj.image:
+            return format_html(
+                '<img src="{}" style="max-height:60px; max-width:80px;" />',
+                obj.image.url
+            )
+        return 'Изображение'
+
+
+@admin.register(Society)
+class SocietyAdmin(admin.ModelAdmin):
+    list_display = ['title', 'id', 'key', 'order', 'is_active']
+    list_display_links = ['title', 'id', 'key']
+    readonly_fields = ('id', 'preview')
+    ordering = ['order', 'id']
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('title', 'id', 'key', 'description', 'button_title',
+                       'button_text', 'button_url', 'image', 'preview')
+        }),
+        ('Активность и сортировка', {
+            'fields': ('order', 'is_active')
+        })
+    )
+
+    def preview(self, obj):
+        if obj.pk and obj.image:
+            return format_html(
+                '<img src="{}" style="max-height:60px; max-width:80px;" />',
+                obj.image.url
+            )
+        return 'Изображение'
+
+
+@admin.register(Banner)
+class BannerAdmin(admin.ModelAdmin):
+    list_display = ['title', 'id', 'key', 'order', 'is_active']
+    list_display_links = ['title', 'id', 'key']
+    readonly_fields = ('id', 'preview')
+    ordering = ['order', 'id']
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('title', 'id', 'key', 'description', 'image', 'preview')
+        }),
+        ('Активность и сортировка', {
+            'fields': ('order', 'is_active')
+        })
+    )
+
+    def preview(self, obj):
+        if obj.pk and obj.image:
+            return format_html(
+                '<img src="{}" style="max-height:60px; max-width:80px;" />',
+                obj.image.url
+            )
+        return 'Изображение'
 
 
 admin.site.site_header = "Администрирование сайта Baw"

@@ -4,11 +4,12 @@ from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import TemplateView
 
-from catalog.models import Configuration, ConfigurationCharacteristic, ConfigurationImage, CarImage, Car, CarAdvantages, \
-    Color, Characteristic
+from catalog.models import Configuration, ConfigurationCharacteristic, ConfigurationImage, CarImage, Car, \
+    CarAdvantages, Color, Characteristic
 from content.forms import CarApplicationForm
 from content.models import MenuItem, HeroSection, CardConfiguration, Question, BawComparison, \
-    BawComparisonConfiguration, BawTesting, VideoCard, TechnologyBlock, ServicesBlock, NewsVideo, NewsArticle
+    BawComparisonConfiguration, BawTesting, VideoCard, TechnologyBlock, ServicesBlock, NewsVideo, NewsArticle, Banner, \
+    OurAdventure, History
 
 
 class HomePageView(LoginRequiredMixin, TemplateView):
@@ -130,3 +131,20 @@ class HomePageView(LoginRequiredMixin, TemplateView):
 
 class OurWorld(TemplateView):
     template_name = 'content/our_world.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        banner = Banner.objects.get(key='our-world')
+        news_main = NewsArticle.objects.filter(is_active=True, is_main=True).order_by('order', 'created_at')
+        news = NewsArticle.objects.filter(is_active=True, is_main=False).order_by('order', 'created_at')
+        adventures = OurAdventure.objects.filter(is_active=True).order_by('order', 'id')
+        history = History.objects.filter(is_active=True).order_by('order', 'id')
+
+        context['banner'] = banner
+        context['news_main'] = news_main
+        context['news'] = news
+        context['adventures'] = adventures
+        context['history'] = history
+
+        return context
