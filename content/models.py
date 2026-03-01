@@ -735,6 +735,16 @@ class NewsVideo(NewsBase):
         validators=[FileExtensionValidator(allowed_extensions=['mp4'])],
         verbose_name='Видео'
     )
+    image = models.ImageField(
+        upload_to='news/images/',
+        validators=[FileExtensionValidator(allowed_extensions=['png', 'jpg', 'jpeg'])],
+        verbose_name='Обложка'
+    )
+    webp_image = models.ImageField(
+        upload_to='news/webp/',
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         verbose_name = 'новость'
@@ -913,6 +923,12 @@ class Society(BaseModel):
         upload_to='society/webp/',
         blank=True,
         null=True
+    )
+    webp_image_mobile = models.ImageField(
+        upload_to='society/webp/',
+        validators=[FileExtensionValidator(allowed_extensions=['webp'])],
+        verbose_name='Изображение для мобильной версии',
+        help_text='Вертикальное изображение используется строго для мобильной версии'
     )
 
     def __str__(self):

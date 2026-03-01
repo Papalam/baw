@@ -1,0 +1,50 @@
+{% load static %}
+
+<div class="main-blog">
+    <div class="container">
+        <div class="h1">
+            СМОТРИТЕ ВИДЕО
+        </div>
+        <div class="blog-slider slider">
+            <div class="slider__wrap">
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        {% for video in news_video %}
+                            <div class="swiper-slide">
+                                <div class="blog-card blog-card--video">
+                                    <a href="{{ video.video.url }}" data-fancybox class="blog-card__img _scale-img">
+                                        <img src="{{ video.webp_image.url }}" alt="">
+                                    </a>
+                                    <div class="blog-card__content">
+                                        <div class="h3 ">
+                                            <a href="">
+                                                {{ video.title }}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="slider__nav">
+                <div class="swiper-nav">
+                    <div class="swiper-button swiper-button-prev">
+                        <img src="{% static 'img/prev.svg' %}" alt="">
+                    </div>
+                    <div class="swiper-button swiper-button-next">
+                        <img src="{% static 'img/next.svg' %}" alt="">
+                    </div>
+                </div>
+
+                <a href="" class="slider__link m-btn m-btn-brown">
+                    <span>Узнать больше </span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>

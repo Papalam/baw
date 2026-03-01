@@ -9,7 +9,7 @@ from catalog.models import Configuration, ConfigurationCharacteristic, Configura
 from content.forms import CarApplicationForm
 from content.models import MenuItem, HeroSection, CardConfiguration, Question, BawComparison, \
     BawComparisonConfiguration, BawTesting, VideoCard, TechnologyBlock, ServicesBlock, NewsVideo, NewsArticle, Banner, \
-    OurAdventure, History
+    OurAdventure, History, Society
 
 
 class HomePageView(LoginRequiredMixin, TemplateView):
@@ -140,11 +140,15 @@ class OurWorld(TemplateView):
         news = NewsArticle.objects.filter(is_active=True, is_main=False).order_by('order', 'created_at')
         adventures = OurAdventure.objects.filter(is_active=True).order_by('order', 'id')
         history = History.objects.filter(is_active=True).order_by('order', 'id')
+        society = Society.objects.get(key='our-world')
+        news_video = NewsVideo.objects.filter(is_active=True).order_by('order', 'created_at')
 
         context['banner'] = banner
         context['news_main'] = news_main
         context['news'] = news
         context['adventures'] = adventures
         context['history'] = history
+        context['society'] = society
+        context['news_video'] = news_video
 
         return context

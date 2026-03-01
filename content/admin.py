@@ -358,17 +358,25 @@ class NewsArticleAdmin(admin.ModelAdmin):
 class NewsVideoAdmin(admin.ModelAdmin):
     list_display = ['title', 'id', 'created_at', 'order', 'is_active']
     list_display_links = ['title', 'id']
-    readonly_fields = ('id',)
+    readonly_fields = ('id', 'preview')
     prepopulated_fields = {'slug': ('title',)}
     ordering = ['order', 'created_at']
     fieldsets = (
         ('Основная информация', {
-            'fields': ('title', 'id', 'description', 'video', 'slug')
+            'fields': ('title', 'id', 'description', 'video', 'image', 'preview', 'slug')
         }),
         ('Активность и сортировка', {
             'fields': ('order', 'is_active')
         })
     )
+
+    def preview(self, obj):
+        if obj.pk and obj.image:
+            return format_html(
+                '<img src="{}" style="max-height:60px; max-width:80px;" />',
+                obj.image.url
+            )
+        return 'Изображение'
 
 
 @admin.register(OurAdventure)
@@ -429,7 +437,7 @@ class SocietyAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Основная информация', {
             'fields': ('title', 'id', 'key', 'description', 'button_title',
-                       'button_text', 'button_url', 'image', 'preview')
+                       'button_text', 'button_url', 'image', 'preview', 'webp_image_mobile')
         }),
         ('Активность и сортировка', {
             'fields': ('order', 'is_active')

@@ -3,7 +3,7 @@ from django.dispatch import receiver
 
 from catalog.models import ConfigurationImage, CarImage, CarAdvantages
 from content.models import CardConfigurationImage, BawComparison, BawTestingImage, VideoCardContent, \
-    TechnologyBlockContent, NewsArticle, History, Society, Banner, OurAdventure
+    TechnologyBlockContent, NewsArticle, History, Society, Banner, OurAdventure, NewsVideo
 from catalog.utils import generate_webp
 
 
@@ -13,6 +13,7 @@ from catalog.utils import generate_webp
 @receiver(pre_save, sender=VideoCardContent)
 @receiver(pre_save, sender=TechnologyBlockContent)
 @receiver(pre_save, sender=NewsArticle)
+@receiver(pre_save, sender=NewsVideo)
 @receiver(pre_save, sender=CarImage)
 @receiver(pre_save, sender=CarAdvantages)
 @receiver(pre_save, sender=History)
@@ -34,6 +35,7 @@ def detect_image_changes(sender, instance, **kwargs):
 @receiver(post_save, sender=VideoCardContent)
 @receiver(post_save, sender=TechnologyBlockContent)
 @receiver(post_save, sender=NewsArticle)
+@receiver(post_save, sender=NewsVideo)
 @receiver(post_save, sender=CarImage)
 @receiver(post_save, sender=CarAdvantages)
 @receiver(post_save, sender=History)

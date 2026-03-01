@@ -1,0 +1,32 @@
+<div class="community">
+    <div class="container">
+        <div class="community__inner">
+            <div class="community__col">
+                <div class="community__img">
+                    <img src="{{ society.webp_image.url }}" alt="" class="_view1">
+                    <img src="{{ society.webp_image_mobile.url }}" alt="" class="_view2">
+                </div>
+            </div>
+            <div class="community__col2">
+                <div class="h1 h1--small">
+                    {{ society.title|safe }}
+                </div>
+                <div class="community__desc">
+                    <div class="text26 text24-tablet text16-mob _lsp01">
+                        {{ society.description|safe }}
+                    </div>
+                </div>
+                <div class="community__bottom">
+                    <div class="text18 text16-mob _lsp01">
+                        {{ society.button_title }}
+                    </div>
+                    <div class="community__nav">
+                        <a href="{{ society.button_url }}" class="community__link m-btn m-btn-brown m-btn--cut">
+                            <span>{{ society.button_text }}</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
