@@ -1,4 +1,4 @@
-from django.core.validators import FileExtensionValidator
+from django.core.validators import FileExtensionValidator, MinValueValidator, MaxValueValidator
 from django.db import models
 
 from catalog.models import Configuration, Color
@@ -11,6 +11,10 @@ class Menu(BaseModel):
         max_length=255,
         unique=True,
         verbose_name="Название меню"
+    )
+    key = models.CharField(
+        max_length=20,
+        verbose_name='Код страницы'
     )
 
     class Meta:
@@ -970,3 +974,37 @@ class Banner(BaseModel):
     class Meta:
         verbose_name = 'баннер'
         verbose_name_plural = 'Баннеры'
+
+
+class HistoryBaw(BaseModel):
+    period = models.CharField(
+        max_length=20,
+        blank=True,
+        verbose_name='Период'
+    )
+    year = models.IntegerField(
+        validators=[MinValueValidator(1900), MaxValueValidator(2050)],
+        verbose_name='Год'
+    )
+    description = models.TextField(
+        verbose_name='Описание'
+    )
+    image = models.ImageField(
+        upload_to='history/images/',
+        validators=[FileExtensionValidator(allowed_extensions=['png', 'jpg', 'jpeg'])],
+        verbose_name='Изображение'
+    )
+    webp_image = models.ImageField(
+        upload_to='history/webp/',
+        blank=True,
+        null=True
+    )
+
+    def __str__(self):
+        return f'{self.year} - {self.period}'
+
+    class Meta:
+        verbose_name = 'веха'
+        verbose_name_plural = 'Вехи истории'
+
+

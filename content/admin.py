@@ -5,7 +5,7 @@ from django.utils.html import format_html
 from .models import Menu, MenuItem, HeroSection, HTMLContent, CardConfiguration, CardConfigurationFeature, \
     CardConfigurationImage, Question, BawComparison, BawComparisonConfiguration, BawTesting, BawTestingImage, \
     BawTestingFeature, BawTestingItems, VideoCardContent, VideoCard, TechnologyBlockContent, TechnologyBlock, \
-    ServicesBlock, NewsArticle, NewsVideo, OurAdventure, History, Society, Banner
+    ServicesBlock, NewsArticle, NewsVideo, OurAdventure, History, Society, Banner, HistoryBaw
 from .widgets import RichTextEditorWidget
 
 
@@ -104,7 +104,7 @@ class MenuAdmin(admin.ModelAdmin):
     inlines = [MenuItemInline]
     fieldsets = (
         ('Основная информация', {
-            'fields': ('title', 'id')
+            'fields': ('title', 'id', 'key')
         }),
         ('Активность и сортировка', {
             'fields': ('order', 'is_active')
@@ -462,6 +462,30 @@ class BannerAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Основная информация', {
             'fields': ('title', 'id', 'key', 'description', 'image', 'preview')
+        }),
+        ('Активность и сортировка', {
+            'fields': ('order', 'is_active')
+        })
+    )
+
+    def preview(self, obj):
+        if obj.pk and obj.image:
+            return format_html(
+                '<img src="{}" style="max-height:60px; max-width:80px;" />',
+                obj.image.url
+            )
+        return 'Изображение'
+
+
+@admin.register(HistoryBaw)
+class HistoryBawAdmin(admin.ModelAdmin):
+    list_display = ['year', 'id', 'period', 'order', 'is_active']
+    list_display_links = ['year', 'id', 'period']
+    readonly_fields = ('id', 'preview')
+    ordering = ['order', 'id']
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('year', 'id', 'period', 'description', 'image', 'preview')
         }),
         ('Активность и сортировка', {
             'fields': ('order', 'is_active')

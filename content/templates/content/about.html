@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ 'О бренде'|upper }}
+{% endblock %}
+
+{% block content %}
+    {% include 'content/blocks/submenu.html' %}
+    {% include 'content/blocks/about_banner.html' %}
+    {% include 'content/blocks/about_history.html' %}
+
+
+    {% include 'content/blocks/our_world_adventures.html' %}
+    
+{#    {% include 'content/blocks/our_world_banner.html' %}#}
+{#    {% include 'content/blocks/our_world_news_block.html' %}#}
+{#    {% include 'content/blocks/our_world_adventures.html' %}#}
+{#    {% include 'content/blocks/our_world_history.html' %}#}
+{#    {% include 'content/blocks/our_world_society.html' %}#}
+{#    {% include 'content/blocks/our_world_news_video.html' %}#}
+
+{#    {% include 'content/blocks/hero_sections.html' %}#}
+{#    {% include 'content/blocks/card_configuration.html' %}#}
+{#    {% include 'content/blocks/choose_baw.html' %}#}
+{#    {% include 'content/blocks/advantages.html' %}#}
+{#    {% include 'content/blocks/video_card.html' %}#}
+{#    {% include 'content/blocks/auto_section.html' %}#}
+{#    {% include 'content/blocks/technology.html' %}#}
+{#    {% include 'content/blocks/services.html' %}#}
+{#    {% include 'content/blocks/technical_features.html' %}#}
+{#    {% include 'content/blocks/baw_car_application.html' %}#}
+    {% include 'content/blocks/news_block.html' %}
+{#    {% include 'content/blocks/question.html' %}#}
+{% endblock %}

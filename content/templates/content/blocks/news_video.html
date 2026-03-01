@@ -6,17 +6,13 @@
             <div class="swiper-wrapper">
                 {% for news_post in news_video %}
                     <div class="swiper-slide">
-                        <div class="blog-card">
-                            <video autoplay muted playsinline class="_autoplay-video"
-                                   src="{{ news_post.video_file.url }}">
-                            </video>
-{#                            <a href="" class="blog-card__img _scale-img">#}
-{##}
-{#                            </a>#}
+                        <div class="blog-card blog-card--video">
+                            <a href="{{ news_post.video.url }}" data-fancybox class="blog-card__img _scale-img">
+                                <img src="{{ news_post.webp_image.url }}" alt="">
+                            </a>
                             <div class="blog-card__content">
                                 <div class="h3 ">
-                                    {{ news_post.title }}
-                                    {#                                    <a href=""></a>#}
+                                    <a href="">{{ news_post.title }} {{ news_post.description }}</a>
                                 </div>
                             </div>
                         </div>

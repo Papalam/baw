@@ -1,0 +1,57 @@
+{% load static %}
+
+<div class="history m-section">
+    <div class="container">
+        <div class="h1 text-center">
+            ГЛАВНЫЕ ВЕХИ РАЗВИТИЯ
+        </div>
+        <div class="history__desc">
+            <div class="body-l">
+                В разные периоды BAW выпускала как собственные автомобили, так и лицензионные модели — <span
+                    class="no-wrap">не только</span> советские, но и созданные на базе Toyota Land Cruiser Prado и Jeep
+                Cherokee.
+                <br>Сегодня в линейке BAW есть внедорожники, минивэны, пикапы, грузовички и компактные электромобили.
+            </div>
+        </div>
+        <div class="history-slider slider">
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    {% for story in history_baw %}
+                        <div class="swiper-slide">
+                            {% if story.period %}
+                                <div class="history-slider__year">
+                                    <div class="h1">{{ story.period }}</div>
+                                </div>
+                            {% endif %}
+                            <div class="history-card">
+                                <div class="history-card__img">
+                                    <img src="{{ story.webp_image.url }}" alt="">
+                                </div>
+                                <div class="history-card__content">
+                                    <div class="history-card__year">
+                                        {{ story.yaer }}
+                                    </div>
+                                    <div class="history-card__desc">
+                                        {{ story.description }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        
+            <div class="slider__nav">
+                <div class="swiper-nav">
+                    <div class="swiper-button swiper-button-prev">
+                        <img src="{% static 'img/prev.svg' %}" alt="">
+                    </div>
+                    <div class="swiper-button swiper-button-next">
+                        <img src="{% static 'img/next.svg' %}" alt="">
+                    </div>
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </div>
+</div>

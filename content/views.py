@@ -9,7 +9,7 @@ from catalog.models import Configuration, ConfigurationCharacteristic, Configura
 from content.forms import CarApplicationForm
 from content.models import MenuItem, HeroSection, CardConfiguration, Question, BawComparison, \
     BawComparisonConfiguration, BawTesting, VideoCard, TechnologyBlock, ServicesBlock, NewsVideo, NewsArticle, Banner, \
-    OurAdventure, History, Society
+    OurAdventure, History, Society, HistoryBaw
 
 
 class HomePageView(LoginRequiredMixin, TemplateView):
@@ -150,5 +150,32 @@ class OurWorld(TemplateView):
         context['history'] = history
         context['society'] = society
         context['news_video'] = news_video
+
+        return context
+
+
+class About(TemplateView):
+    template_name = 'content/about.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        submenu = MenuItem.objects.filter(menu__key='about', is_active=True)
+        banner = Banner.objects.get(key='about')
+        other_banners = Banner.objects.filter(key__regex=r'history-\d+$')
+        history_baw = HistoryBaw.objects.filter(is_active=True).order_by('order', 'id')
+
+        adventures = OurAdventure.objects.filter(is_active=True).order_by('order', 'id')
+        news_video = NewsVideo.objects.filter(is_active=True).order_by('order', 'created_at')
+        news_article = NewsArticle.objects.filter(is_active=True).order_by('order', 'created_at')
+
+        context['submenu_items'] = submenu
+        context['banner'] = banner
+        context['other_banners'] = other_banners
+
+        context['adventures'] = adventures
+        context['news_video'] = news_video
+        context['news_article'] = news_article
+        context['history_baw'] = history_baw
 
         return context
