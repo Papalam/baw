@@ -1,11 +1,14 @@
+{% load technical_features %}
+
 <div class="events-page">
     <div class="container">
-        <div class="breadcrumbs">
-            <ul>
-                <li><a href="{% url 'home' %}">Главная</a></li>
-                <li><span>Новости</span></li>
-            </ul>
-        </div>
+        {% breadcrumbs "Главная" "home" "Новости" "" %}
+{#        <div class="breadcrumbs">#}
+{#            <ul>#}
+{#                <li><a href="{% url 'home' %}">Главная</a></li>#}
+{#                <li><span>Новости</span></li>#}
+{#            </ul>#}
+{#        </div>#}
         <h1 class="h1">
             НОВОСТИ И СОБЫТИЯ
         </h1>
