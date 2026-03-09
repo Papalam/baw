@@ -1,8 +1,10 @@
+from collections import defaultdict
+
 from django.shortcuts import get_object_or_404
 
 from baw import settings
 from catalog.models import Dealership
-from .models import MenuItem, SocialNetwork
+from .models import MenuItem, SocialNetwork, CompanyInfo
 
 
 def header_menu(request):
@@ -16,6 +18,16 @@ def header_menu(request):
 def footer_menu(request):
     footer_dealerships = Dealership.objects.filter(is_active=True).order_by('order').values('city', 'address', 'slug')
     social_networks = SocialNetwork.objects.filter(is_active=True).order_by('order')
+    qs = CompanyInfo.objects.filter(is_active=True, key__isnull=False).exclude(key='').order_by('name')
+
+    company = {}
+    company_list = defaultdict(list)
+    for obj in qs:
+        company[obj.key] = obj
+        # Группируем по префиксу до первого "_" + цифры
+        # phone_1, phone_2 → group key = "phone"
+        base = obj.key.rstrip('_0123456789')
+        company_list[base].append(obj)
 
     def get_children(menu_key):
         return MenuItem.objects.filter(
@@ -30,6 +42,8 @@ def footer_menu(request):
         'footer_menu_baw_russia': get_children('footer_baw_russia'),
         'footer_dealerships': footer_dealerships,
         'social_networks': social_networks,
+        'company': company,
+        'company_list': dict(company_list),
     }
 
 

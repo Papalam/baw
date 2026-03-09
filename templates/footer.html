@@ -12,7 +12,7 @@
                 <div class="footer-nav__hidden">
                     <ul class="footer-nav__links">
                         {% for footer_menu_model in footer_menu_models %}
-                        	<li><a href="{{ footer_menu_model.url }}">{{ footer_menu_model.title }}</a></li>
+                            <li><a href="{{ footer_menu_model.url }}">{{ footer_menu_model.title }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -27,7 +27,7 @@
                 <div class="footer-nav__hidden">
                     <ul class="footer-nav__links">
                         {% for footer_menu_customer in footer_menu_customers %}
-                        	<li><a href="{{ footer_menu_customer.url }}">{{ footer_menu_customer.title }}</a></li>
+                            <li><a href="{{ footer_menu_customer.url }}">{{ footer_menu_customer.title }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -42,7 +42,7 @@
                 <div class="footer-nav__hidden">
                     <ul class="footer-nav__links">
                         {% for footer_menu_owner in footer_menu_owners %}
-                        	<li><a href="{{ footer_menu_owner.url }}">{{ footer_menu_owner.title }}</a></li>
+                            <li><a href="{{ footer_menu_owner.url }}">{{ footer_menu_owner.title }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -57,7 +57,7 @@
                 <div class="footer-nav__hidden">
                     <ul class="footer-nav__links">
                         {% for footer_menu_baw in footer_menu_baw_russia %}
-                        	<li><a href="{{ footer_menu_baw.url }}">{{ footer_menu_baw.title }}</a></li>
+                            <li><a href="{{ footer_menu_baw.url }}">{{ footer_menu_baw.title }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -70,7 +70,7 @@
                     </div>
                     <div class="footer-address__items">
                         {% for footer_dealership in footer_dealerships %}
-                        	<div class="footer-address__item">
+                            <div class="footer-address__item">
                                 {{ footer_dealership.city }} {{ footer_dealership.address }}
                             </div>
                         {% endfor %}
@@ -82,12 +82,13 @@
                         Позвоните нам в любое время
                     </div>
                     <div class="footer-contacts__phones">
-                        <a href="" class="footer-contacts__phone">
-                            8-800-222-07-22
-                        </a>
-                        <a href="" class="footer-contacts__phone">
-                            8-800-222-07-22
-                        </a>
+                        {% if company_list.phone %}
+                            {% for phone in company_list.phone %}
+                                <a href="tel:{{ phone.value }}" class="footer-contacts__phone">
+                                    {{ phone.value }}
+                                </a>
+                            {% endfor %}
+                        {% endif %}
                     </div>
                 </div>
 
@@ -103,14 +104,18 @@
                             </a>
                         {% endfor %}
                     </div>
-                    <a href="" class="footer-socials__site">
-                        Info bawrussia
-                    </a>
+                    {% if company.email %}
+                        <a href="mailto:{{ company.email.value }}" class="footer-socials__site">
+                            {{ company.email.value }}
+                        </a>
+                    {% endif %}
                 </div>
             </div>
 
             <div class="footer-links grid4">
-                <div class="footer-links__item footer-links__item--c">2026 ООО «Диллер-Азия»</div>
+                <div class="footer-links__item footer-links__item--c">
+                    2026 {{ company.name.value }}
+                </div>
                 <a href="" class="footer-links__item">Политика обработки персональных данных</a>
             </div>
         </div>

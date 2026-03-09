@@ -5,7 +5,8 @@ from django.utils.html import format_html
 from .models import Menu, MenuItem, HeroSection, HTMLContent, CardConfiguration, CardConfigurationFeature, \
     CardConfigurationImage, Question, BawComparison, BawComparisonConfiguration, BawTesting, BawTestingImage, \
     BawTestingFeature, BawTestingItems, VideoCardContent, VideoCard, TechnologyBlockContent, TechnologyBlock, \
-    ServicesBlock, NewsArticle, NewsVideo, OurAdventure, History, Society, Banner, HistoryBaw, SocialNetwork
+    ServicesBlock, NewsArticle, NewsVideo, OurAdventure, History, Society, Banner, HistoryBaw, SocialNetwork, \
+    CompanyInfo
 from .widgets import RichTextEditorWidget
 
 
@@ -522,6 +523,28 @@ class SocialNetworkAdmin(admin.ModelAdmin):
                 obj.icon.url
             )
         return 'Изображение'
+
+
+@admin.register(CompanyInfo)
+class CompanyInfoAdmin(admin.ModelAdmin):
+    list_display = ['name', 'key', 'value', 'is_display_in_company_details']
+    list_filter = ['is_display_in_company_details']
+    search_fields = ['name', 'key', 'value']
+    readonly_fields = ('id',)
+    fieldsets = (
+        ('Идентификация', {
+            'fields': ('id', 'key', 'name')
+        }),
+        ('Содержимое', {
+            'fields': ('value', 'desc')
+        }),
+        ('Отображение', {
+            'fields': ('is_display_in_company_details', 'microdata')
+        }),
+        ('Активность и сортировка', {
+            'fields': ('order', 'is_active')
+        }),
+    )
 
 
 admin.site.site_header = "Администрирование сайта Baw"
