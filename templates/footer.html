@@ -11,12 +11,9 @@
                 </div>
                 <div class="footer-nav__hidden">
                     <ul class="footer-nav__links">
-                        <li><a href="">BAW 212 Adventure Rus</a></li>
-                        <li><a href="">BAW 212 Adventure Rus</a></li>
-                        <li><a href="">BAW 212 Adventure Rus</a></li>
-                        <li><a href="">BAW 212 Adventure Rus</a></li>
-                        <li><a href="">MPV</a></li>
-                        <li><a href="">Автомобили в наличии</a></li>
+                        {% for footer_menu_model in footer_menu_models %}
+                        	<li><a href="{{ footer_menu_model.url }}">{{ footer_menu_model.title }}</a></li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>
@@ -29,11 +26,9 @@
                 </div>
                 <div class="footer-nav__hidden">
                     <ul class="footer-nav__links">
-                        <li><a href="">Тест-драйв Оценить трейд-ин</a></li>
-                        <li><a href="">Специальные предложения</a></li>
-                        <li><a href="">Каталоги и прайс-листы</a></li>
-                        <li><a href="">Аксессуары</a></li>
-                        <li><a href="">Найти дилера</a></li>
+                        {% for footer_menu_customer in footer_menu_customers %}
+                        	<li><a href="{{ footer_menu_customer.url }}">{{ footer_menu_customer.title }}</a></li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>
@@ -46,11 +41,9 @@
                 </div>
                 <div class="footer-nav__hidden">
                     <ul class="footer-nav__links">
-                        <li><a href="">Сервисное обслуживание</a></li>
-                        <li><a href="">Вопрос-ответ</a></li>
-                        <li><a href="">Калькулятор ТО </a></li>
-                        <li><a href="">Дополнительное оборудование</a></li>
-                        <li><a href="">Одежда и сувениры</a></li>
+                        {% for footer_menu_owner in footer_menu_owners %}
+                        	<li><a href="{{ footer_menu_owner.url }}">{{ footer_menu_owner.title }}</a></li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>
@@ -63,11 +56,9 @@
                 </div>
                 <div class="footer-nav__hidden">
                     <ul class="footer-nav__links">
-                        <li><a href="">О бренде Новости и события</a></li>
-                        <li><a href="">Мир BAW</a></li>
-                        <li><a href="">Контакты</a></li>
-                        <li><a href="">Информация для СМИ</a></li>
-                        <li><a href="">Вакансии</a></li>
+                        {% for footer_menu_baw in footer_menu_baw_russia %}
+                        	<li><a href="{{ footer_menu_baw.url }}">{{ footer_menu_baw.title }}</a></li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>
@@ -78,9 +69,11 @@
                         Адреса салонов: 
                     </div>
                     <div class="footer-address__items">
-                        <div class="footer-address__item">г. Москва, ул. Ташкенская, 21, 5 этаж</div>
-                        <div class="footer-address__item">Г. Чита, ул. Новая, 23</div>
-                        <div class="footer-address__item">Г. Омск, ул. Новая, 23</div>
+                        {% for footer_dealership in footer_dealerships %}
+                        	<div class="footer-address__item">
+                                {{ footer_dealership.city }} {{ footer_dealership.address }}
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
 
@@ -103,18 +96,12 @@
                         Будьте в курсе событий!
                     </div>
                     <div class="footer-socials__items">
-                        <a href="" class="footer-socials__item">
-                            <img src="{% static 'img/vk.svg' %}" alt="">
-                        </a>
-                        <a href="" class="footer-socials__item">
-                            <img src="{% static 'img/tg.svg' %}" alt="">
-                        </a>
-                        <a href="" class="footer-socials__item">
-                            <img src="{% static 'img/tg.svg' %}" alt="">
-                        </a>
-                        <a href="" class="footer-socials__item">
-                            <img src="{% static 'img/tg.svg' %}" alt="">
-                        </a>
+                        {% for social_network in social_networks %}
+                            <a href="{{ social_network.url }}" class="footer-socials__item">
+                                <img src="{{ social_network.icon.url }}"
+                                     alt="{{ social_network.get_platform_display }}">
+                            </a>
+                        {% endfor %}
                     </div>
                     <a href="" class="footer-socials__site">
                         Info bawrussia

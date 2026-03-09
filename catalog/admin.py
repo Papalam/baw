@@ -4,7 +4,7 @@ from django.forms import TextInput
 from django.utils.html import format_html
 
 from catalog.models import Car, Group, Characteristic, Configuration, ConfigurationCharacteristic, ConfigurationImage, \
-    Color, CarImage, CarAdvantages, CarAdvantagesItem
+    Color, CarImage, CarAdvantages, CarAdvantagesItem, Dealership
 
 
 class ConfigurationCharacteristicInline(admin.TabularInline):
@@ -233,4 +233,29 @@ class CarAdvantagesAdmin(admin.ModelAdmin):
         ('Активность и сортировка', {
             'fields': ('order', 'is_active')
         })
+    )
+
+
+@admin.register(Dealership)
+class DealershipAdmin(admin.ModelAdmin):
+    list_display = ('name', 'id', 'city', 'phone', 'is_active', 'order')
+    readonly_fields = ('id', 'created_at')
+    ordering = ('order', 'id')
+    prepopulated_fields = {'slug': ('name',)}
+    list_filter = ('city', 'is_active')
+    search_fields = ('name', 'city', 'phone', 'email')
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('id', 'name', 'slug', 'city', 'address')
+        }),
+        ('Контакты', {
+            'fields': ('phone', 'email', 'website')
+        }),
+        ('Активность и сортировка', {
+            'fields': ('order', 'is_active')
+        }),
+        ('Служебное', {
+            'fields': ('created_at',),
+            'classes': ('collapse',)
+        }),
     )

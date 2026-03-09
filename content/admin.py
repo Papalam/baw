@@ -5,7 +5,7 @@ from django.utils.html import format_html
 from .models import Menu, MenuItem, HeroSection, HTMLContent, CardConfiguration, CardConfigurationFeature, \
     CardConfigurationImage, Question, BawComparison, BawComparisonConfiguration, BawTesting, BawTestingImage, \
     BawTestingFeature, BawTestingItems, VideoCardContent, VideoCard, TechnologyBlockContent, TechnologyBlock, \
-    ServicesBlock, NewsArticle, NewsVideo, OurAdventure, History, Society, Banner, HistoryBaw
+    ServicesBlock, NewsArticle, NewsVideo, OurAdventure, History, Society, Banner, HistoryBaw, SocialNetwork
 from .widgets import RichTextEditorWidget
 
 
@@ -497,6 +497,29 @@ class HistoryBawAdmin(admin.ModelAdmin):
             return format_html(
                 '<img src="{}" style="max-height:60px; max-width:80px;" />',
                 obj.image.url
+            )
+        return 'Изображение'
+
+
+@admin.register(SocialNetwork)
+class SocialNetworkAdmin(admin.ModelAdmin):
+    list_display = ('platform', 'id', 'url', 'is_active', 'order')
+    readonly_fields = ('id', 'preview')
+    ordering = ('order', 'id')
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('id', 'platform', 'url', 'icon', 'preview')
+        }),
+        ('Активность и сортировка', {
+            'fields': ('order', 'is_active')
+        }),
+    )
+
+    def preview(self, obj):
+        if obj.pk and obj.icon:
+            return format_html(
+                '<img src="{}" style="max-height:60px; max-width:80px;" />',
+                obj.icon.url
             )
         return 'Изображение'
 

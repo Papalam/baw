@@ -2,6 +2,7 @@ import uuid
 
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils.text import slugify
 
 from catalog.utils import default_configuration_slug
 from content.base import BaseModel
@@ -298,3 +299,53 @@ class CarAdvantagesItem(BaseModel):
 
     def __str__(self):
         return f'{self.car_advantages} - преимущество № {self.pk}'
+
+
+class Dealership(BaseModel):
+    """Автосалон"""
+    name = models.CharField(
+        max_length=200,
+        verbose_name='Название'
+    )
+    slug = models.SlugField(
+        max_length=200,
+        unique=True,
+        blank=True,
+        verbose_name='Slug'
+    )
+    address = models.CharField(
+        max_length=300,
+        verbose_name='Адрес'
+    )
+    city = models.CharField(
+        max_length=100,
+        verbose_name='Город'
+    )
+    phone = models.CharField(
+        max_length=30,
+        verbose_name='Телефон'
+    )
+    email = models.EmailField(
+        blank=True,
+        verbose_name='Email'
+    )
+    website = models.URLField(
+        blank=True,
+        verbose_name='Сайт'
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Создан'
+    )
+
+    class Meta(BaseModel.Meta):
+        verbose_name = 'Автосалон'
+        verbose_name_plural = 'Автосалоны'
+
+    def __str__(self):
+        return f"{self.name} ({self.city})"
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(f"{self.name}-{self.city}")
+        super().save(*args, **kwargs)

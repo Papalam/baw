@@ -1008,3 +1008,40 @@ class HistoryBaw(BaseModel):
         verbose_name_plural = 'Вехи истории'
 
 
+class SocialNetwork(BaseModel):
+    """Социальные сети сайта"""
+
+    class Platform(models.TextChoices):
+        VK = 'vk', 'ВКонтакте'
+        TELEGRAM = 'telegram', 'Telegram'
+        YOUTUBE = 'youtube', 'YouTube'
+        INSTAGRAM = 'instagram', 'Instagram'
+        WHATSAPP = 'whatsapp', 'WhatsApp'
+        VIBER = 'viber', 'Viber'
+        OK = 'ok', 'Одноклассники'
+        OTHER = 'other', 'Другое'
+
+    platform = models.CharField(
+        max_length=20,
+        choices=Platform.choices,
+        unique=True,
+        verbose_name='Платформа'
+    )
+    url = models.URLField(
+        verbose_name='Ссылка'
+    )
+    icon = models.FileField(
+        upload_to='social/icons/',
+        blank=True,
+        null=True,
+        validators=[FileExtensionValidator(allowed_extensions=['svg'])],
+        verbose_name='Иконка (SVG)',
+        help_text='Загрузите файл в формате .svg'
+    )
+
+    class Meta(BaseModel.Meta):
+        verbose_name = 'Социальная сеть'
+        verbose_name_plural = 'Социальные сети'
+
+    def __str__(self):
+        return self.get_platform_display()

@@ -1,4 +1,6 @@
 {% load static %}
+
+
 <header class="header">
     <div class="container">
         <div class="header__inner">
@@ -6,7 +8,7 @@
                 <button class="burger _toggle-menu">
                     <img src="{% static 'img/burger.svg' %}" alt="Иконка мобильного меню" />
                 </button>
-                <a href="" class="header__logo">
+                <a href="{% url 'home' %}" class="header__logo">
                     <img src="{% static 'img/logo.svg' %}" alt="Логотип" class="_view1" />
                     <img src="{% static 'img/logo-mob.svg' %}" alt="Логотип" class="_view2" />
                 </a>
