@@ -18,7 +18,7 @@
                                    {{ article.created_at|date:"j E Y" }}
                                 </div>
                                 <div class="event-card__title">
-                                    <a href="">
+                                    <a href="{% url 'news_detail' slug=article.slug %}">
                                         {{ article.title }}
                                     </a>
                                 </div>
@@ -27,7 +27,7 @@
                                 </div>
                             </div>
                             <div class="event-card__bottom">
-                                <a href="" class="event-card__link">
+                                <a href="{% url 'news_detail' slug=article.slug %}" class="event-card__link">
                                     Читать полностью
                                 </a>
                             </div>

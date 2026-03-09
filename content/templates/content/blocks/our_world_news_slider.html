@@ -16,12 +16,12 @@
                                 <div class="event-card__top">
                                     <div class="event-card__date">{{ news.created_at|date:"j E Y" }}</div>
                                     <div class="event-card__title">
-                                        <a href="">{{ news.title }}</a>
+                                        <a href="{% url 'news_detail' slug=news.slug %}">{{ news.title }}</a>
                                     </div>
                                     <div class="event-card__desc">{{ news.description }}</div>
                                 </div>
                                 <div class="event-card__bottom">
-                                    <a href="" class="event-card__link">
+                                    <a href="{% url 'news_detail' slug=news.slug %}" class="event-card__link">
                                         Читать полностью
                                     </a>
                                 </div>
