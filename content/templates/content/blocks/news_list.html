@@ -1,0 +1,66 @@
+<div class="events-page">
+    <div class="container">
+        <div class="breadcrumbs">
+            <ul>
+                <li><a href="{% url 'home' %}">Главная</a></li>
+                <li><span>Новости</span></li>
+            </ul>
+        </div>
+        <h1 class="h1">
+            НОВОСТИ И СОБЫТИЯ
+        </h1>
+        <div class="events-page__grid events-page__grid2 grid3 grid-tablet2">
+            {% for article in articles %}
+                <div class="event-card event-card2 grid">
+                    <div class="event-card__col">
+                        <div class="event-card__img">
+                            <img src="{{ article.webp_image.url }}" alt="">
+                        </div>
+                    </div>
+                    <div class="event-card__col2">
+                        <div class="event-card__top">
+                            <div class="event-card__date">
+                                {{ article.created_at|date:"j E Y" }}
+                            </div>
+                            <div class="event-card__title">
+                                <a href="{% url 'news-detail' article.slug %}">
+                                    {{ article.title }}
+                                </a>
+                            </div>
+                            <div class="event-card__desc">
+                                {{ article.description|truncatechars:150|safe }}
+                            </div>
+                        </div>
+                        <div class="event-card__bottom">
+                            <a href="{% url 'news-detail' article.slug %}" class="event-card__link">
+                                Читать полностью
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% if is_is_paginated %}
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}" class="pagination__btn _prev"></a>
+                {% endif %}
+                
+                <div class="pagination__items">
+                    {# Номера страниц вокруг текущей #}
+                    {% for num in paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <a href="" class="pagination__item _active">{{ num }}</a>
+                        {% elif num > page_obj.number|add:"-4" and num < page_obj.number|add:"4" %}
+                            <a href="?page={{ num }}" class="pagination__item">{{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="pagination__btn _next"></a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>

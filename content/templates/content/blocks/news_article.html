@@ -7,12 +7,12 @@
                 {% for article in news_article %}
                     <div class="swiper-slide">
                         <div class="blog-card">
-                            <a href="{% url 'news_detail' slug=article.slug %}" class="blog-card__img _scale-img">
+                            <a href="{% url 'news-detail' article.slug %}" class="blog-card__img _scale-img">
                                 <img src="{{ article.webp_image.url }}" alt="">
                             </a>
                             <div class="blog-card__content">
                                 <div class="h3">
-                                    <a href="{% url 'news_detail' slug=article.slug %}">
+                                    <a href="{% url 'news-detail' slug=article.slug %}">
                                         {{ article.title }}
                                     </a>
                                 </div>
@@ -40,7 +40,7 @@
             </div>
         </div>
 
-        <a href="" class="slider__link m-btn m-btn-black-outline">
+        <a href="{% url 'news-list' %}" class="slider__link m-btn m-btn-black-outline">
             <span>Узнать больше </span>
         </a>
     </div>

@@ -23,7 +23,7 @@
                                                 {{ other_new.created_at|date:"j E Y" }}
                                             </div>
                                             <div class="event-card__title">
-                                                <a href="{% url 'news_detail' slug=other_new.slug %}">
+                                                <a href="{% url 'news-detail' other_new.slug %}">
                                                     {{ other_new.title }}
                                                 </a>
                                             </div>

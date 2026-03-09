@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404, redirect
-from django.views.generic import TemplateView, DetailView
+from django.views.generic import TemplateView, DetailView, ListView
 
 from catalog.models import Configuration, ConfigurationCharacteristic, ConfigurationImage, CarImage, Car, \
     CarAdvantages, Color, Characteristic
@@ -82,8 +82,8 @@ class HomePageView(LoginRequiredMixin, TemplateView):
         main_features = Characteristic.objects.filter(is_active=True, group__key='main').order_by('order')
         outside_colors = Color.objects.filter(is_active=True, color_type='exterior').order_by('order')
         inside_colors = Color.objects.filter(is_active=True, color_type='interior').order_by('order')
-        news_video = NewsVideo.objects.filter(is_active=True).order_by('order', 'created_at')
-        news_article = NewsArticle.objects.filter(is_active=True).order_by('order', 'created_at')
+        news_video = NewsVideo.objects.filter(is_active=True).order_by('order', '-created_at')
+        news_article = NewsArticle.objects.filter(is_active=True).order_by('order', '-created_at')
         block_questions = Question.objects.filter(is_active=True).order_by('order', 'pk')
 
         configurations = Configuration.objects.filter(is_active=True).order_by('order', 'pk')
@@ -136,12 +136,12 @@ class OurWorld(TemplateView):
         context = super().get_context_data(**kwargs)
 
         banner = Banner.objects.get(key='our-world')
-        news_main = NewsArticle.objects.filter(is_active=True, is_main=True).order_by('order', 'created_at')
-        news = NewsArticle.objects.filter(is_active=True, is_main=False).order_by('order', 'created_at')
+        news_main = NewsArticle.objects.filter(is_active=True, is_main=True).order_by('order', '-created_at')
+        news = NewsArticle.objects.filter(is_active=True, is_main=False).order_by('order', '-created_at')
         adventures = OurAdventure.objects.filter(is_active=True).order_by('order', 'id')
         history = History.objects.filter(is_active=True).order_by('order', 'id')
         society = Society.objects.get(key='our-world')
-        news_video = NewsVideo.objects.filter(is_active=True).order_by('order', 'created_at')
+        news_video = NewsVideo.objects.filter(is_active=True).order_by('order', '-created_at')
 
         context['banner'] = banner
         context['news_main'] = news_main
@@ -166,8 +166,8 @@ class About(TemplateView):
         history_baw = HistoryBaw.objects.filter(is_active=True).order_by('order', 'id')
 
         adventures = OurAdventure.objects.filter(is_active=True).order_by('order', 'id')
-        news_video = NewsVideo.objects.filter(is_active=True).order_by('order', 'created_at')
-        news_article = NewsArticle.objects.filter(is_active=True).order_by('order', 'created_at')
+        news_video = NewsVideo.objects.filter(is_active=True).order_by('order', '-created_at')
+        news_article = NewsArticle.objects.filter(is_active=True).order_by('order', '-created_at')
 
         context['submenu_items'] = submenu
         context['banner'] = banner
@@ -181,21 +181,39 @@ class About(TemplateView):
         return context
 
 
-class NewsDetail(DetailView):
+class NewsArticleMixin:
+    """Миксин вывода новостей. Выводим только активные новости"""
+
+    def get_queryset(self):
+        return NewsArticle.objects.filter(is_active=True).order_by('order', '-created_at')
+
+
+class NewsArticleListView(NewsArticleMixin, ListView):
+    """Список всех новостей."""
     model = NewsArticle
-    template_name = 'content/news_detail.html'
-    context_object_name = 'news_article'
-    slug_field = 'slug'
+    template_name = 'content/news.html'
+    context_object_name = 'articles'
+    paginate_by = 9
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Все новости'
+        return context
 
-        submenu = MenuItem.objects.filter(menu__key='baw_212', is_active=True)
+
+class NewsArticleDetailView(NewsArticleMixin, DetailView):
+    """Детальная страница новости по slug."""
+    model = NewsArticle
+    template_name = 'content/news_detail.html'
+    context_object_name = 'news_article'
+    slug_url_kwarg = 'slug'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         other_news = (NewsArticle.objects.filter(is_active=True)
                       .exclude(id=self.object.id)
-                      .order_by('order', 'id'))
+                      .order_by('order', '-created_at'))
 
-        context['submenu'] = submenu
         context['other_news'] = other_news
 
         return context
