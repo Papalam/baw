@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404, redirect
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
 
 from catalog.models import Configuration, ConfigurationCharacteristic, ConfigurationImage, CarImage, Car, \
     CarAdvantages, Color, Characteristic
@@ -177,5 +177,25 @@ class About(TemplateView):
         context['news_video'] = news_video
         context['news_article'] = news_article
         context['history_baw'] = history_baw
+
+        return context
+
+
+class NewsDetail(DetailView):
+    model = NewsArticle
+    template_name = 'content/news_detail.html'
+    context_object_name = 'news_article'
+    slug_field = 'slug'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        submenu = MenuItem.objects.filter(menu__key='baw_212', is_active=True)
+        other_news = (NewsArticle.objects.filter(is_active=True)
+                      .exclude(id=self.object.id)
+                      .order_by('order', 'id'))
+
+        context['submenu'] = submenu
+        context['other_news'] = other_news
 
         return context
