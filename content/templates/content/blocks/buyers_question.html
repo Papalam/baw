@@ -1,0 +1,64 @@
+{% load static %}
+
+<div class="test-main__info">
+    <div class="h1">КАК МЫ МОЖЕМ ПОМОЧЬ?</div>
+    <div class="test-main__info-desc">
+        <div class="text16 _lsp01">
+            Мы собрали вопросы, которые нам присылали клиенты и поместили в этот раздел
+        </div>
+    </div>
+</div>
+
+<form method="get" action="">
+    <div class="search">
+        <div class="fg">
+            <input type="text" name="q" value="{{ query }}" placeholder="Поиск">
+            <img src="{% static 'img/search.svg' %}" alt="">
+        </div>
+        <button type="submit" class="search__btn m-btn m-btn--cut m-btn-brown">
+            <span>Найти</span>
+        </button>
+    </div>
+</form>
+
+<div class="knowledge _tabs-parent">
+    <div class="knowledge__col">
+        <div class="knowledge__tabs">
+            {% for topic in topics %}
+                <div class="knowledge__tab _tab {% if forloop.first %}_active{% endif %}"
+                     data-tab="_tab{{ topic.pk }}">
+                    <span>{{ topic.name }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="knowledge__col2">
+        {% for topic in topics %}
+            <div class="tab-content _tab{{ topic.pk }} {% if forloop.first %}_active{% endif %}">
+                <div class="knowledge__title text20 _lsp01 semi-bold-text">
+                    {{ topic.name }}
+                </div>
+                <div class="knowledge__items">
+                    {% for question in topic.questions.all %}
+                        <div class="qa-card">
+                            <div class="qa-card__show">
+                                <div class="qa-card__title h3 text16-tablet regular-text-tablet">
+                                    {{ question.question }}
+                                </div>
+                                <div class="qa-card__btn"></div>
+                            </div>
+                            <div class="qa-card__hidden">
+                                <div class="qa-card__text">
+                                    {{ question.answer }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% empty %}
+            <p>Вопросов пока нет.</p>
+        {% endfor %}
+    </div>
+</div>

@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Prefetch
+from django.contrib.postgres.search import SearchQuery, SearchRank
+from django.db.models import Prefetch, OuterRef, Exists
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import TemplateView, DetailView, ListView
 
@@ -9,7 +10,7 @@ from catalog.models import Configuration, ConfigurationCharacteristic, Configura
 from content.forms import CarApplicationForm
 from content.models import MenuItem, HeroSection, CardConfiguration, Question, BawComparison, \
     BawComparisonConfiguration, BawTesting, VideoCard, TechnologyBlock, ServicesBlock, NewsVideo, NewsArticle, Banner, \
-    OurAdventure, History, Society, HistoryBaw
+    OurAdventure, History, Society, HistoryBaw, QuestionTopic
 
 
 class HomePageView(LoginRequiredMixin, TemplateView):
@@ -215,5 +216,56 @@ class NewsArticleDetailView(NewsArticleMixin, DetailView):
                       .order_by('order', '-created_at'))
 
         context['other_news'] = other_news
+
+        return context
+
+
+class BuyersView(TemplateView):
+    template_name = 'content/buyers.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        banner = Banner.objects.get(key='buyers')
+        query = self.request.GET.get('q', '').strip()
+
+        active_questions_qs = Question.objects.filter(is_active=True)
+
+        if query:
+            search_query = SearchQuery(query, config='russian')
+            active_questions_qs = (
+                active_questions_qs
+                .filter(search_vector=search_query)
+                .annotate(rank=SearchRank('search_vector', search_query))
+                .order_by('-rank')
+            )
+        else:
+            active_questions_qs = active_questions_qs.order_by('order', 'id')
+
+        # topics всегда та же структура — меняется только prefetch
+        active_questions_exist = Question.objects.filter(
+            topic=OuterRef('pk'),
+            is_active=True
+        )
+
+        topics = (
+            QuestionTopic.objects
+            .filter(is_active=True)
+            .filter(Exists(active_questions_exist))
+            .prefetch_related(
+                Prefetch(
+                    'questions',
+                    queryset=active_questions_qs,
+                )
+            )
+            .order_by('order', 'id')
+        )
+
+        topics = list(topics)  # выполняем queryset
+        topics_with_questions = [t for t in topics if t.questions.all()]
+
+        context['banner'] = banner
+        context['topics'] = topics_with_questions
+        context['query'] = query
 
         return context
