@@ -344,7 +344,6 @@ class Question(BaseModel):
         on_delete=models.CASCADE,
         related_name='questions',
         verbose_name='Тема',
-        null=True,
     )
     question = models.TextField(
         max_length=255,
