@@ -1,9 +1,10 @@
+from django.contrib.postgres.search import SearchVector
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
 from catalog.models import ConfigurationImage, CarImage, CarAdvantages
 from content.models import CardConfigurationImage, BawComparison, BawTestingImage, VideoCardContent, \
-    TechnologyBlockContent, NewsArticle, History, Society, Banner, OurAdventure, NewsVideo, HistoryBaw
+    TechnologyBlockContent, NewsArticle, History, Society, Banner, OurAdventure, NewsVideo, HistoryBaw, Question
 from catalog.utils import generate_webp
 
 
@@ -77,3 +78,14 @@ def handle_configuration_image(sender, instance, created, **kwargs):
 
     if created or not instance.webp_image:
         generate_webp(instance)
+
+
+@receiver(post_save, sender=Question)
+def update_search_vector(sender, instance, **kwargs):
+    # Отключаем рекурсию: update() не вызывает post_save повторно
+    Question.objects.filter(pk=instance.pk).update(
+        search_vector=(
+                SearchVector('question', weight='A', config='russian') +
+                SearchVector('answer', weight='B', config='russian')
+        )
+    )

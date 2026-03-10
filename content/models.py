@@ -1,3 +1,5 @@
+from django.contrib.postgres.indexes import GinIndex
+from django.contrib.postgres.search import SearchVectorField
 from django.core.validators import FileExtensionValidator, MinValueValidator, MaxValueValidator
 from django.db import models
 
@@ -320,8 +322,30 @@ class CardConfigurationImage(BaseModel):
     )
 
 
+class QuestionTopic(BaseModel):
+    """Тема для блока вопросов и ответов"""
+    name = models.CharField(
+        max_length=150,
+        verbose_name='Название темы',
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'тема вопросов'
+        verbose_name_plural = 'Темы вопросов'
+
+
 class Question(BaseModel):
     """Блок вопросов и ответов"""
+    topic = models.ForeignKey(
+        QuestionTopic,
+        on_delete=models.CASCADE,
+        related_name='questions',
+        verbose_name='Тема',
+        null=True,
+    )
     question = models.TextField(
         max_length=255,
         verbose_name='Вопрос',
@@ -331,6 +355,7 @@ class Question(BaseModel):
         verbose_name='Ответ',
         help_text='Максимальная длина не ограничена'
     )
+    search_vector = SearchVectorField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.question}'
@@ -338,6 +363,9 @@ class Question(BaseModel):
     class Meta:
         verbose_name = 'вопрос-ответ'
         verbose_name_plural = 'Вопросы и ответы'
+        indexes = [
+            GinIndex(fields=['search_vector']),
+        ]
 
 
 class BawComparison(BaseModel):

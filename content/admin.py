@@ -6,7 +6,7 @@ from .models import Menu, MenuItem, HeroSection, HTMLContent, CardConfiguration,
     CardConfigurationImage, Question, BawComparison, BawComparisonConfiguration, BawTesting, BawTestingImage, \
     BawTestingFeature, BawTestingItems, VideoCardContent, VideoCard, TechnologyBlockContent, TechnologyBlock, \
     ServicesBlock, NewsArticle, NewsVideo, OurAdventure, History, Society, Banner, HistoryBaw, SocialNetwork, \
-    CompanyInfo
+    CompanyInfo, QuestionTopic
 from .widgets import RichTextEditorWidget
 
 
@@ -181,16 +181,33 @@ class CardConfigurationAdmin(admin.ModelAdmin):
     )
 
 
+@admin.register(QuestionTopic)
+class QuestionTopicAdmin(admin.ModelAdmin):
+    list_display = ['name', 'id', 'order', 'is_active']
+    list_display_links = ['name', 'id']
+    readonly_fields = ['id']
+    search_fields = ['name']
+    ordering = ['order', 'id']
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('name',)
+        }),
+        ('Активность и сортировка', {
+            'fields': ('order', 'is_active')
+        })
+    )
+
+
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
-    list_display = ['question', 'id', 'order', 'is_active']
+    list_display = ['topic', 'question', 'id', 'order', 'is_active']
     list_display_links = ['question', 'id', 'order', 'is_active']
     readonly_fields = ['id']
     search_fields = ['question']
     ordering = ['order', 'id']
     fieldsets = (
         ('Основная информация', {
-            'fields': ('question', 'answer')
+            'fields': ('topic', 'question', 'answer')
         }),
         ('Активность и сортировка', {
             'fields': ('order', 'is_active')
