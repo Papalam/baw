@@ -269,3 +269,17 @@ class BuyersView(TemplateView):
         context['query'] = query
 
         return context
+
+
+class StoriesListView(ListView):
+    model = History
+    template_name = 'content/stories.html'
+    context_object_name = 'stories'
+    paginate_by = 12
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['page_title'] = 'Истории клиентов'
+
+        return context

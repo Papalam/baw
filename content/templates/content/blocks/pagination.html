@@ -1,0 +1,30 @@
+{% if is_paginated %}
+    <div class="pagination">
+
+        {# Кнопка НАЗАД #}
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="pagination__btn _prev"></a>
+        {% else %}
+            <span class="pagination__btn _prev _disabled"></span>
+        {% endif %}
+
+        <div class="pagination__items">
+            {% for num in paginator.page_range %}
+                {% if page_obj.number == num %}
+                    {# Текущая страница — не ссылка, не кликабельна #}
+                    <span class="pagination__item _active">{{ num }}</span>
+                {% elif num > page_obj.number|add:"-4" and num < page_obj.number|add:"4" %}
+                    <a href="?page={{ num }}" class="pagination__item">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        {# Кнопка ВПЕРЁД #}
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="pagination__btn _next"></a>
+        {% else %}
+            <span class="pagination__btn _next _disabled"></span>
+        {% endif %}
+
+    </div>
+{% endif %}

@@ -1,0 +1,31 @@
+{% load technical_features %}
+
+<div class="events-page">
+    <div class="container">
+        {% breadcrumbs 'Главная' 'home' 'Истории клиентов' '' %}
+        <h1 class="h1">
+            {{ page_title }}
+        </h1>
+        <div class="events-page__grid grid4 grid-tablet2">
+            {% for story in stories %}
+                <div class="story-card">
+                    <div class="story-card__img">
+                        <img src="{{ story.webp_image.url }}" alt="">
+                    </div>
+                    <div class="story-card__content">
+                        <div class="story-card__title m-subtitle">
+                            {{ story.name }}
+                        </div>
+                        <div class="story-card__city text16 _lsp01">
+                            {{ story.city }}
+                        </div>
+                        <div class="story-card__desc text16 _lsp01 gray-text">
+                            {{ story.description }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% include 'content/blocks/pagination.html' %}
+    </div>
+</div>

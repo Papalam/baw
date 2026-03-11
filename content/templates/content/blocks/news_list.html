@@ -3,12 +3,6 @@
 <div class="events-page">
     <div class="container">
         {% breadcrumbs "Главная" "home" "Новости" "" %}
-{#        <div class="breadcrumbs">#}
-{#            <ul>#}
-{#                <li><a href="{% url 'home' %}">Главная</a></li>#}
-{#                <li><span>Новости</span></li>#}
-{#            </ul>#}
-{#        </div>#}
         <h1 class="h1">
             НОВОСТИ И СОБЫТИЯ
         </h1>
@@ -43,27 +37,6 @@
                 </div>
             {% endfor %}
         </div>
-        {% if is_is_paginated %}
-            <div class="pagination">
-                {% if page_obj.has_previous %}
-                    <a href="?page={{ page_obj.previous_page_number }}" class="pagination__btn _prev"></a>
-                {% endif %}
-                
-                <div class="pagination__items">
-                    {# Номера страниц вокруг текущей #}
-                    {% for num in paginator.page_range %}
-                        {% if page_obj.number == num %}
-                            <a href="" class="pagination__item _active">{{ num }}</a>
-                        {% elif num > page_obj.number|add:"-4" and num < page_obj.number|add:"4" %}
-                            <a href="?page={{ num }}" class="pagination__item">{{ num }}</a>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-                
-                {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}" class="pagination__btn _next"></a>
-                {% endif %}
-            </div>
-        {% endif %}
+        {% include 'content/blocks/pagination.html' %}
     </div>
 </div>

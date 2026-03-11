@@ -1,6 +1,7 @@
 from django.urls import path
 
-from content.views import HomePageView, OurWorld, About, NewsArticleListView, NewsArticleDetailView, BuyersView
+from content.views import HomePageView, OurWorld, About, NewsArticleListView, NewsArticleDetailView, BuyersView, \
+    StoriesListView
 
 urlpatterns = [
     path('', HomePageView.as_view(), name='home'),
@@ -9,4 +10,5 @@ urlpatterns = [
     path('news/', NewsArticleListView.as_view(), name='news-list'),
     path('news/<slug:slug>/', NewsArticleDetailView.as_view(), name='news-detail'),
     path('buyers/', BuyersView.as_view(), name='buyers'),
+    path('stories/', StoriesListView.as_view(), name='stories'),
 ]
