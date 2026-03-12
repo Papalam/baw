@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import TemplateView, DetailView, ListView
 
 from catalog.models import Configuration, ConfigurationCharacteristic, ConfigurationImage, CarImage, Car, \
-    CarAdvantages, Color, Characteristic
+    CarAdvantages, Color, Characteristic, Group
 from content.forms import CarApplicationForm
 from content.models import MenuItem, HeroSection, CardConfiguration, Question, BawComparison, \
     BawComparisonConfiguration, BawTesting, VideoCard, TechnologyBlock, ServicesBlock, NewsVideo, NewsArticle, Banner, \
@@ -77,6 +77,13 @@ class HomePageView(LoginRequiredMixin, TemplateView):
                 gallery[ctype][img.color] = []
             gallery[ctype][img.color].append(img)
 
+        groups = Group.objects.prefetch_related(
+            Prefetch(
+                'characteristics',
+                queryset=Characteristic.objects.filter(is_active=True).order_by('order'),
+            )
+        ).filter(is_active=True).exclude(key__in=['main', 'comparison']).order_by('order')
+
         advantages = CarAdvantages.objects.prefetch_related('items').filter(is_active=True)
         technology = TechnologyBlock.objects.prefetch_related('content').first()
         services = ServicesBlock.objects.filter(is_active=True).order_by('order')
@@ -106,6 +113,7 @@ class HomePageView(LoginRequiredMixin, TemplateView):
         context['services'] = services
         context['configurations'] = configurations
         context['main_features'] = main_features
+        context['groups'] = groups
         context['values_dict'] = values_dict
         context['outside_colors'] = outside_colors
         context['inside_colors'] = inside_colors
