@@ -13,7 +13,7 @@ from content.models import MenuItem, HeroSection, CardConfiguration, Question, B
     OurAdventure, History, Society, HistoryBaw, QuestionTopic
 
 
-class HomePageView(LoginRequiredMixin, TemplateView):
+class HomePageView(TemplateView):
     template_name = 'content/home_page.html'
 
     def get_context_data(self, **kwargs):
