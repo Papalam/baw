@@ -37,17 +37,64 @@
         {% include 'footer.html' %}
     </div>
 
-    <div class="modal" id="Modal">
+    <div class="modal" id="reqModal">
         <div class="modal__bg modal-bg _close-modal"></div>
         <div class="modal__dialog">
             <div class="modal__top">
-                <div class="text32 medium-text">
-                    Title
+                <div class="text26">
+                    Позвонить мне
                 </div>
-                <button class="close-btn _close-modal">
-                    <img src="{% static 'img/close.svg' %}" alt="Кнопка свернуть меню" />
-                </button>
+                <div class="text16">
+                    Оставьте контактные данные, чтобы наш специалист мог Вам помочь
+                </div>
             </div>
+
+            <form class="modal-form">
+                <div class="modal-form__fields">
+                    <div class="fg">
+                        <input type="text" placeholder="Как к Вам обращаться? ">
+                    </div>
+                    <div class="fg">
+                        <input type="tel" placeholder="+ 7 ( _ _ _ ) _ _ - _ _ - ___">
+                    </div>
+                    <div class="fg">
+                        <textarea placeholder="Комментарий "></textarea>
+                    </div>
+                </div>
+                <button class="modal-form__btn m-btn m-btn--cut m-btn-brown">
+                    <span>ОТПРАВИТЬ ЗАЯВКУ</span>
+                </button>
+                <div class="modal-form__hint">
+                    <div class="text10">
+                        При нажатии на кнопку «Записаться» вы соглашаетесь <br>  с <a href="" class="underline-text">условиями обработки персональных данных</a>
+                    </div>
+                </div>
+            </form>
+
+            <button class="close-btn _close-modal">
+                <img src="{% static 'img/close2.svg' %}" alt="">
+            </button>
+        </div>
+    </div>
+
+    <div class="modal" id="thankModal">
+        <div class="modal__bg modal-bg _close-modal"></div>
+        <div class="modal__dialog">
+            <div class="modal__top">
+                <div class="text26">
+                    Спасибо за обращение
+                </div>
+                <div class="text16">
+                    Заявка принята и мы <br>
+                 скоро свяжемся с Вами
+                </div>
+            </div>
+
+            <img src="{% static 'img/check2.svg' %}" alt="" class="modal__icon">
+
+            <button class="close-btn _close-modal">
+                <img src="{% static 'img/close2.svg' %}" alt="">
+            </button>
         </div>
     </div>
 
