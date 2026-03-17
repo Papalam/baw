@@ -363,6 +363,10 @@ class NewsArticleAdmin(admin.ModelAdmin):
         })
     )
 
+    formfield_overrides = {
+        models.TextField: {'widget': RichTextEditorWidget}
+    }
+
     def preview(self, obj):
         if obj.pk and obj.image:
             return format_html(

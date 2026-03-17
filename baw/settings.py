@@ -161,6 +161,7 @@ MEDIA_ROOT = BASE_DIR / 'media'  # абсолютный путь к папке m
 
 CSRF_TRUSTED_ORIGINS = [
     'https://baw.papalam.ru',
+    'https://new.bawrussia.ru',
 ]
 
 # Для правильной работы за прокси
