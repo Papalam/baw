@@ -6,7 +6,7 @@ from .models import Menu, MenuItem, HeroSection, HTMLContent, CardConfiguration,
     CardConfigurationImage, Question, BawComparison, BawComparisonConfiguration, BawTesting, BawTestingImage, \
     BawTestingFeature, BawTestingItems, VideoCardContent, VideoCard, TechnologyBlockContent, TechnologyBlock, \
     ServicesBlock, NewsArticle, NewsVideo, OurAdventure, History, Society, Banner, HistoryBaw, SocialNetwork, \
-    CompanyInfo, QuestionTopic
+    CompanyInfo, QuestionTopic, CallbackRequest
 from .widgets import RichTextEditorWidget
 
 
@@ -564,6 +564,33 @@ class CompanyInfoAdmin(admin.ModelAdmin):
         }),
         ('Активность и сортировка', {
             'fields': ('order', 'is_active')
+        }),
+    )
+
+
+@admin.register(CallbackRequest)
+class CallbackRequestAdmin(admin.ModelAdmin):
+    # Поля, которые отображаются в списке
+    list_display = ['name', 'phone', 'is_sent_to_crm', 'created_at']
+
+    # Фильтрация в боковой панели
+    list_filter = ['is_sent_to_crm', 'created_at']
+
+    # Поиск по основным данным клиента
+    search_fields = ['name', 'phone', 'comment']
+
+    # Поля только для чтения (дату создания нельзя менять вручную)
+    readonly_fields = ('id', 'created_at')
+
+    fieldsets = (
+        ('Данные клиента', {
+            'fields': ('id', 'name', 'phone')
+        }),
+        ('Содержимое запроса', {
+            'fields': ('comment',)
+        }),
+        ('Статус и системная информация', {
+            'fields': ('is_sent_to_crm', 'created_at')
         }),
     )
 

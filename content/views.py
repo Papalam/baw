@@ -2,15 +2,16 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.postgres.search import SearchQuery, SearchRank
 from django.db.models import Prefetch, OuterRef, Exists
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
-from django.views.generic import TemplateView, DetailView, ListView
+from django.views.generic import TemplateView, DetailView, ListView, CreateView
 
 from catalog.models import Configuration, ConfigurationCharacteristic, ConfigurationImage, CarImage, Car, \
     CarAdvantages, Color, Characteristic, Group
-from content.forms import CarApplicationForm
+from content.forms import CarApplicationForm, ContactForm
 from content.models import MenuItem, HeroSection, CardConfiguration, Question, BawComparison, \
     BawComparisonConfiguration, BawTesting, VideoCard, TechnologyBlock, ServicesBlock, NewsVideo, NewsArticle, Banner, \
-    OurAdventure, History, Society, HistoryBaw, QuestionTopic
+    OurAdventure, History, Society, HistoryBaw, QuestionTopic, CallbackRequest
 
 
 class HomePageView(TemplateView):
@@ -291,3 +292,15 @@ class StoriesListView(ListView):
         context['page_title'] = 'Истории клиентов'
 
         return context
+
+
+class ContactFormView(CreateView):
+    model = CallbackRequest
+    form_class = ContactForm
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return JsonResponse({'success': True, 'id': str(self.object.id)})
+
+    def form_invalid(self, form):
+        return JsonResponse({'success': False, 'error': form.errors}, status=400)

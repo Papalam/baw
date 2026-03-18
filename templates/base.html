@@ -49,19 +49,20 @@
                 </div>
             </div>
 
-            <form class="modal-form">
+            <form class="modal-form" id="callbackForm" data-url="{% url 'callback' %}">
+                {% csrf_token %}
                 <div class="modal-form__fields">
                     <div class="fg">
-                        <input type="text" placeholder="Как к Вам обращаться? ">
+                        <input type="text" name="name" placeholder="Как к Вам обращаться? ">
                     </div>
                     <div class="fg">
-                        <input type="tel" placeholder="+ 7 ( _ _ _ ) _ _ - _ _ - ___">
+                        <input type="tel" name="phone" placeholder="+ 7 ( _ _ _ ) _ _ - _ _ - ___">
                     </div>
                     <div class="fg">
-                        <textarea placeholder="Комментарий "></textarea>
+                        <textarea name="comment" placeholder="Комментарий "></textarea>
                     </div>
                 </div>
-                <button class="modal-form__btn m-btn m-btn--cut m-btn-brown">
+                <button class="modal-form__btn m-btn m-btn--cut m-btn-brown" id="submitBtn" type="button">
                     <span>ОТПРАВИТЬ ЗАЯВКУ</span>
                 </button>
                 <div class="modal-form__hint">

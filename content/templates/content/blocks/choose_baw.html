@@ -35,8 +35,9 @@
                                             {% endfor %}
                                         </div>
                                         <div class="car-card__nav">
-                                            <a href="/" 
-                                               class="car-card__btn m-btn m-btn--cut m-btn-brown">
+                                            <a href="#" 
+                                               class="car-card__btn m-btn m-btn--cut m-btn-brown js-open-modal" 
+                                               data-modal="reqModal">
                                                 <span>подробнее</span>
                                             </a>
                                         </div>
@@ -73,10 +74,10 @@
                 {{ block_baw_comparison.text_form|capfirst }}
             </div>
             <div class="guarantee__nav">
-                <a href="" class="guarantee__btn m-btn m-btn--cut m-btn-brown">
+                <a href="#" class="guarantee__btn m-btn m-btn--cut m-btn-brown js-open-modal" data-modal="reqModal">
                     <span>{{ block_baw_comparison.text_red_button|upper }}</span>
                 </a>
-                <a href="" class="guarantee__btn m-btn m-btn--cut m-btn-black">
+                <a href="#" class="guarantee__btn m-btn m-btn--cut m-btn-black js-open-modal" data-modal="reqModal">
                     <span>{{ block_baw_comparison.text_black_button|upper }}</span>
                 </a>
             </div>

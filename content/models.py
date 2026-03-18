@@ -1072,3 +1072,35 @@ class SocialNetwork(BaseModel):
 
     def __str__(self):
         return self.get_platform_display()
+
+
+class CallbackRequest(models.Model):
+    """Заявка на обратный звонок"""
+    name = models.CharField(
+        max_length=255,
+        verbose_name='Имя'
+    )
+    phone = models.CharField(
+        max_length=20,
+        verbose_name='Номер телефона'
+    )
+    comment = models.TextField(
+        blank=True,
+        verbose_name='Комментарий'
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата добавления'
+    )
+    is_sent_to_crm = models.BooleanField(
+        default=False,
+        verbose_name='Обработан в AmoCRM'
+    )
+
+    def __str__(self):
+        return f'{self.name} - {self.phone}'
+
+    class Meta:
+        verbose_name = 'заявка'
+        verbose_name_plural = 'Заявки на обратный звонок'
+        ordering = ['-created_at']
