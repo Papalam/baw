@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     "django.contrib.postgres",
     "content.apps.ContentConfig",
-    "catalog.apps.CatalogConfig"
+    "catalog.apps.CatalogConfig",
+    "amocrm.apps.AmocrmConfig"
 ]
 
 MIDDLEWARE = [
@@ -173,3 +174,99 @@ LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
 
 STATICFILES_VERSION = env('STATICFILES_VERSION')
+
+# AmoCRM
+AMOCRM_SUBDOMAIN = env('AMOCRM_SUBDOMAIN')
+AMOCRM_CLIENT_ID = env('AMOCRM_CLIENT_ID')
+AMOCRM_CLIENT_SECRET = env('AMOCRM_CLIENT_SECRET')
+AMOCRM_REDIRECT_URI = env('AMOCRM_REDIRECT_URI')
+AMOCRM_PIPELINE_ID = env('AMOCRM_PIPELINE_ID')
+
+# Celery
+CELERY_BROKER_URL = env('REDIS_CELERY_URL')
+CELERY_RESULT_BACKEND = env('REDIS_CELERY_URL')
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Europe/Moscow'
+
+# Повторные попытки при ошибке AmoCRM
+CELERY_TASK_MAX_RETRIES = 3
+CELERY_TASK_DEFAULT_RETRY_DELAY = 60  # секунд
+
+# Создать директорию для логов, если не существует
+LOGS_DIR = BASE_DIR / 'logs'
+os.makedirs(LOGS_DIR, exist_ok=True)
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {asctime} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+            'level': 'DEBUG' if DEBUG else 'WARNING',
+        },
+        'file_django': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': LOGS_DIR / 'django.log',
+            'maxBytes': 10 * 1024 * 1024,
+            'backupCount': 5,
+            'formatter': 'verbose',
+            'level': 'WARNING',
+        },
+        'file_errors': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': LOGS_DIR / 'errors.log',
+            'maxBytes': 10 * 1024 * 1024,
+            'backupCount': 5,
+            'formatter': 'verbose',
+            'level': 'ERROR',
+        },
+        'file_app': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': LOGS_DIR / 'app.log',
+            'maxBytes': 10 * 1024 * 1024,
+            'backupCount': 5,
+            'formatter': 'verbose',
+            'level': 'DEBUG',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file_django'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+        'django.request': {
+            'handlers': ['console', 'file_errors'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'django.security': {
+            'handlers': ['console', 'file_errors'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+        'content': {
+            'handlers': ['console', 'file_app'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'catalog': {
+            'handlers': ['console', 'file_app'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}

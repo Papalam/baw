@@ -4,8 +4,10 @@ from django.dispatch import receiver
 
 from catalog.models import ConfigurationImage, CarImage, CarAdvantages
 from content.models import CardConfigurationImage, BawComparison, BawTestingImage, VideoCardContent, \
-    TechnologyBlockContent, NewsArticle, History, Society, Banner, OurAdventure, NewsVideo, HistoryBaw, Question
+    TechnologyBlockContent, NewsArticle, History, Society, Banner, OurAdventure, NewsVideo, HistoryBaw, Question, \
+    CallbackRequest
 from catalog.utils import generate_webp
+from content.tasks import send_callback_to_amocrm
 
 
 @receiver(pre_save, sender=CardConfigurationImage)
@@ -89,3 +91,10 @@ def update_search_vector(sender, instance, **kwargs):
                 SearchVector('answer', weight='B', config='russian')
         )
     )
+
+
+@receiver(post_save, sender=CallbackRequest)
+def on_callback_created(sender, instance: CallbackRequest, created: bool, **kwargs):
+    """Запускает Celery-задачу только при создании новой записи."""
+    if created and not instance.is_sent_to_crm:
+        send_callback_to_amocrm.delay(instance.pk)
