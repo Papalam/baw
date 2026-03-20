@@ -169,7 +169,7 @@ class AmoCRMService:
             f"{self.BASE_URL}/leads",
             headers=self.headers,
             params={
-                "filter[contact_id]": contact_id,
+                "filter[created_by]": contact_id,
                 "with": "contacts",
                 "limit": 50,
             },
