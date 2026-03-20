@@ -34,6 +34,11 @@
                                                 <div class="advantage-item__title">
                                                     {{ feature.value }}
                                                 </div>
+                                                {% if feature.unit %}
+                                                    <div class="advantage-item__measure">
+                                                        {{ feature.unit }}
+                                                    </div>
+                                                {% endif %}
                                             </div>
                                             <div class="body-l white-text3">
                                                 {{ feature.title }}
