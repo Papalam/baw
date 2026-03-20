@@ -208,7 +208,8 @@ class AmoCRMService:
         payload = [
             {
                 "name": f"Обратный звонок — {name}",
-                "pipeline_id": settings.AMOCRM_PIPELINE_ID,
+                "pipeline_id": int(settings.AMOCRM_PIPELINE_ID),
+                "status_id": int(settings.AMOCRM_STATUS_ID),
                 "_embedded": {
                     "contacts": [{"id": contact_id}],
                 },
