@@ -101,6 +101,7 @@ class AmoCRMService:
         1. Ищет контакт по номеру телефона.
         2. Если есть открытая сделка — дописывает примечание.
         3. Если открытой сделки нет — создаёт новую.
+        4. В обоих случаях создаёт задачу к сделке.
         """
         contact = self._find_contact_by_phone(phone)
 
@@ -123,7 +124,17 @@ class AmoCRMService:
             logger.info("Создана новая сделка #%s", lead_id)
             action = "lead_created"
 
-        return {"contact_id": contact_id, "lead_id": lead_id, "action": action}
+        task_id = self._add_task_to_lead(
+            lead_id,
+            text=f"Перезвонить: {name} / {phone}",
+        )
+
+        return {
+            "contact_id": contact_id,
+            "lead_id": lead_id,
+            "task_id": task_id,
+            "action": action,
+        }
 
     # ─────────────────────────────────────────
     # Контакты
@@ -137,7 +148,7 @@ class AmoCRMService:
         response = requests.get(
             f"{self.BASE_URL}/contacts",
             headers=self.headers,
-            params={"query": normalized, "with": "leads"},
+            params={"query": normalized},
             timeout=10,
         )
 
@@ -182,7 +193,7 @@ class AmoCRMService:
             f"{self.BASE_URL}/leads",
             headers=self.headers,
             params={
-                "filter[created_by]": contact_id,
+                "query": contact_id,
                 "with": "contacts",
                 "limit": 50,
             },
@@ -196,7 +207,10 @@ class AmoCRMService:
         leads = response.json().get("_embedded", {}).get("leads", [])
 
         CLOSED_STATUSES = {142, 143}
-        open_leads = [lead for lead in leads if lead.get("status_id") not in CLOSED_STATUSES]
+        open_leads = [
+            lead for lead in leads
+            if lead.get("status_id") not in CLOSED_STATUSES
+        ]
 
         # Берём самую свежую открытую сделку
         if open_leads:
@@ -258,3 +272,50 @@ class AmoCRMService:
             timeout=10,
         )
         response.raise_for_status()
+
+    # ─────────────────────────────────────────
+    # Задачи
+    # ─────────────────────────────────────────
+
+    def _add_task_to_lead(
+        self,
+        lead_id: int,
+        text: str = "Обработать заявку обратного звонка",
+        responsible_user_id: int | None = None,
+        complete_till_hours: int = 24,
+    ) -> int:
+        """
+        Создаёт задачу типа «Позвонить» к сделке.
+
+        :param lead_id: ID сделки
+        :param text: текст задачи
+        :param responsible_user_id: ответственный (None → наследует от сделки)
+        :param complete_till_hours: срок выполнения в часах от текущего момента
+        :return: ID созданной задачи
+        """
+        complete_till = int(
+            (timezone.now() + timedelta(hours=complete_till_hours)).timestamp()
+        )
+
+        task: dict = {
+            "task_type_id": 1,          # 1 — «Позвонить» (стандартный тип AmoCRM)
+            "text": text,
+            "complete_till": complete_till,
+            "entity_type": "leads",
+            "entity_id": lead_id,
+        }
+
+        if responsible_user_id:
+            task["responsible_user_id"] = responsible_user_id
+
+        response = requests.post(
+            f"{self.BASE_URL}/tasks",
+            json=[task],
+            headers=self.headers,
+            timeout=10,
+        )
+        self._raise_for_status(response)
+
+        task_id = response.json()["_embedded"]["tasks"][0]["id"]
+        logger.info("Создана задача #%s к сделке #%s", task_id, lead_id)
+        return task_id
