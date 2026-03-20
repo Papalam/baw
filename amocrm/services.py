@@ -21,6 +21,19 @@ class AmoCRMService:
         self.headers = {}
         self._load_token()
 
+    @staticmethod
+    def _raise_for_status(response: requests.Response) -> None:
+        """raise_for_status с логированием тела ответа."""
+        if not response.ok:
+            logger.error(
+                "AmoCRM API error %s %s\nURL: %s\nBody: %s",
+                response.status_code,
+                response.reason,
+                response.url,
+                response.text,
+            )
+            response.raise_for_status()
+
     # ─────────────────────────────────────────
     # Токены
     # ─────────────────────────────────────────
@@ -207,7 +220,7 @@ class AmoCRMService:
             headers=self.headers,
             timeout=10,
         )
-        response.raise_for_status()
+        self._raise_for_status(response)
         lead_id = response.json()["_embedded"]["leads"][0]["id"]
 
         # Добавляем комментарий сразу к новой сделке
