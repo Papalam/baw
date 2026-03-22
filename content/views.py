@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import TemplateView, DetailView, ListView, CreateView
 
 from catalog.models import Configuration, ConfigurationCharacteristic, ConfigurationImage, CarImage, Car, \
-    CarAdvantages, Color, Characteristic, Group
+    CarAdvantages, Color, Characteristic, Group, Dealership
 from content.forms import CarApplicationForm, ContactForm
 from content.models import MenuItem, HeroSection, CardConfiguration, Question, BawComparison, \
     BawComparisonConfiguration, BawTesting, VideoCard, TechnologyBlock, ServicesBlock, NewsVideo, NewsArticle, Banner, \
@@ -290,6 +290,21 @@ class StoriesListView(ListView):
         context = super().get_context_data(**kwargs)
 
         context['page_title'] = 'Истории клиентов'
+
+        return context
+
+
+class TestDriveView(TemplateView):
+    template_name = 'content/test_drive.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        dealers = Dealership.objects.filter(is_active=True).order_by('city', 'order', 'id')
+        block_questions = Question.objects.filter(is_active=True).order_by('order', 'pk')
+
+        context['dealers'] = dealers
+        context['questions'] = block_questions
 
         return context
 

@@ -1,0 +1,126 @@
+{% load static %}
+{% load technical_features %}
+
+{# Получаем уникальные города из queryset #}
+{% regroup dealers by city as dealers_by_city %}
+
+<div class="test-drive">
+    <div class="container">
+        {% breadcrumbs 'Главная' 'home' 'Покупателям' '' %}
+
+        <h1 class="h1">
+            ЗАПИШИТЕСЬ НА ТЕСТ-ДРАЙВ
+        </h1>
+
+        <div class="req-dealer">
+            <div class="h5">
+                ВЫБЕРИТЕ ДИЛЕРСКИЙ ЦЕНТР
+            </div>
+            <div class="req-dealer__grid">
+                <div class="city-select">
+                    <div class="city-select__show">
+                        <div class="city-select__current text16">Выберите город</div>
+                    </div>
+                    <div class="city-select__hidden">
+                        {% for city_group in dealers_by_city %}
+                            <div class="city-select__item">
+                                <input type="radio" name="city" data-value="{{ city_group.grouper }}">
+                                <label>
+                                    {{ city_group.grouper }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <button class="req-dealer__btn caps-text m-btn m-btn--cut m-btn-black">
+                    <img src="{% static 'img/target.svg' %}" alt="">
+                    <span>Поблизости</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="dealers">
+            <div class="dealers__col">
+                <div class="dealers__items">
+                    {% for dealer in dealers %}
+                        <div class="dealer-item">
+                            <div class="dealer-item__show">
+                                <div class="dealer-item__title">
+                                    {{ dealer.name }}
+                                </div>
+                                <div class="dealer-item__street">
+                                    {{ dealer.city }} {{ dealer.address }}
+                                </div>
+                            </div>
+
+                            <div class="dealer-item__hidden">
+                                <button class="dealer-item__back">
+                                    <img src="{% static 'img/back.svg' %}" alt="">
+                                    <span class="text18 text16-tablet">Все диллеры</span>
+                                </button>
+                                <div class="dealer-item__title">
+                                    {{ dealer.name }}
+                                </div>
+                                <div class="dealer-item__props">
+                                    <div class="dealer-item__prop">
+                                        <div class="dealer-item__prop-title">
+                                            Адрес:
+                                        </div>
+                                        <div class="dealer-item__street">
+                                            {{ dealer.city }} {{ dealer.address }}
+                                        </div>
+                                    </div>
+                                    <div class="dealer-item__prop">
+                                        <div class="dealer-item__prop-title">
+                                            Телефон:
+                                        </div>
+                                        <div class="dealer-item__street">
+                                            {{ dealer.phone }}
+                                        </div>
+                                    </div>
+                                    {% if dealer.email %}
+                                        <div class="dealer-item__prop">
+                                            <div class="dealer-item__prop-title">
+                                                Email:
+                                            </div>
+                                            <div class="dealer-item__street">
+                                                {{ dealer.email }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if dealer.working_hours %}
+                                        <div class="dealer-item__prop">
+                                            <div class="dealer-item__prop-title">
+                                                Часы работы:
+                                            </div>
+                                            <div class="dealer-item__street">
+                                                {{ dealer.working_hours }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="dealers__col2">
+                <div class="dealers__map" id="map"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://api-maps.yandex.ru/2.1/?apikey=90bef184-8ac9-4527-9f79-6cf59dc1920a&lang=ru_RU"
+        type="text/javascript"></script>
+
+<script>
+    ymaps.ready(init);
+
+    function init() {
+        var myMap = new ymaps.Map("map", {
+            center: [55.76, 37.64],  // Москва [широта, долгота]
+            zoom: 10
+        });
+    }
+</script>

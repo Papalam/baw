@@ -333,6 +333,12 @@ class Dealership(BaseModel):
         blank=True,
         verbose_name='Сайт'
     )
+    working_hours = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name='Часы работы',
+        default='Ежедневно с 09:00 до 21:00'
+    )
     created_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name='Создан'

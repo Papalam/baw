@@ -246,7 +246,7 @@ class DealershipAdmin(admin.ModelAdmin):
     search_fields = ('name', 'city', 'phone', 'email')
     fieldsets = (
         ('Основная информация', {
-            'fields': ('id', 'name', 'slug', 'city', 'address')
+            'fields': ('id', 'name', 'slug', 'city', 'address', 'working_hours')
         }),
         ('Контакты', {
             'fields': ('phone', 'email', 'website')
