@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{% static 'css/fancybox.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.min.css' %}?v={{ staticfiles_version }}">
 {#    <link rel="icon" href="img/favicon.svg" type="image/svg+xml">#}
+    {% block other_css %}{% endblock %}
     <title>{% block title %}BAW{% endblock %}</title>
 </head>
 
@@ -104,5 +105,6 @@
     <script src="{% static 'js/swiper-bundle.min.js' %}"></script>
     <script src="{% static 'js/fancybox.umd.js' %}"></script>
     <script src="{% static 'js/main.min.js' %}?v={{ staticfiles_version }}"></script>
+    {% block other_js %}{% endblock %}
 </body>
 </html>

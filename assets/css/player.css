@@ -1,0 +1,31 @@
+/* Fancybox v4 классы */
+.fancybox__slide {
+    padding: 0 !important;
+}
+
+.fancybox__slide .fancybox__content {
+    width: min(100vw, calc(90vh * 9 / 16)) !important;
+    height: 85vh !important;
+    max-width: none !important;
+    padding: 0 !important;
+    background: #000 !important;
+    border-radius: 0 !important;
+}
+
+.fancybox__slide .fancybox__content video {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
+/* Plyr внутри */
+.fancybox__slide .fancybox__content .plyr,
+.fancybox__slide .fancybox__content .plyr__video-wrapper {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.fancybox__slide .fancybox__content .plyr {
+    --plyr-color-main: #ff3b5c;
+    --plyr-video-controls-background: linear-gradient(transparent, rgba(0,0,0,0.6));
+}

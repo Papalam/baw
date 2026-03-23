@@ -1,4 +1,10 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block other_css %}
+	<link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css">
+    <link rel="stylesheet" href="{% static 'css/player.css' %}">
+{% endblock %}
 
 {% block title %}
     Главная страница
@@ -19,4 +25,9 @@
     {% include 'content/blocks/baw_car_application.html' %}
     {% include 'content/blocks/news_block.html' %}
     {% include 'content/blocks/question.html' %}
+{% endblock %}
+
+{% block other_js %}
+	<script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+    <script src="{% static 'js/player.js' %}"></script>
 {% endblock %}

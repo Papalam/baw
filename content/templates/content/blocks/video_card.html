@@ -9,9 +9,12 @@
             <div class="slider__wrap">
                 <div class="swiper-container">
                     <div class="swiper-wrapper">
+                        <!-- Ссылка на слайде — убираем data-type и data-src, используем data-fancybox напрямую с видео -->
                         {% for content in video_card.content.all %}
                             <div class="swiper-slide">
-                                <a href="{{ content.video.url }}" data-fancybox class="video-card">
+                                <a href="{{ content.video.url }}"
+                                   data-fancybox="videos"
+                                   class="video-card">
                                     <div class="video-card__img">
                                         <img src="{{ content.webp_image.url }}" alt="{{ content.alt }}">
                                     </div>
