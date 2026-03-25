@@ -1,0 +1,22 @@
+{% load static %}
+
+<div class="modal" id="thankModal">
+    <div class="modal__bg modal-bg _close-modal"></div>
+    <div class="modal__dialog">
+        <div class="modal__top">
+            <div class="text26">
+                Спасибо за обращение
+            </div>
+            <div class="text16">
+                Заявка принята и мы <br>
+                скоро свяжемся с Вами
+            </div>
+        </div>
+
+        <img src="{% static 'img/check2.svg' %}" alt="" class="modal__icon">
+
+        <button class="close-btn _close-modal">
+            <img src="{% static 'img/close2.svg' %}" alt="">
+        </button>
+    </div>
+</div>

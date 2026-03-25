@@ -12,14 +12,13 @@
     <link rel="stylesheet" href="{% static 'css/swiper-bundle.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/fancybox.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.min.css' %}?v={{ staticfiles_version }}">
-{#    <link rel="icon" href="img/favicon.svg" type="image/svg+xml">#}
     {% block other_css %}{% endblock %}
     <title>{% block title %}BAW{% endblock %}</title>
 </head>
 
 <body class="m-page">
     <div class="wrapper">
-        {% include 'header.html' %}
+        {% include 'partials/header.html' %}
 
         {% if messages %}
             <div class="messages">
@@ -35,71 +34,11 @@
         <main class="content">
             {% block content %}Контент{% endblock %}
         </main>
-        {% include 'footer.html' %}
+        {% include 'partials/footer.html' %}
     </div>
 
-    <div class="modal" id="reqModal">
-        <div class="modal__bg modal-bg _close-modal"></div>
-        <div class="modal__dialog">
-            <div class="modal__top">
-                <div class="text26">
-                    Позвонить мне
-                </div>
-                <div class="text16">
-                    Оставьте контактные данные, чтобы наш специалист мог Вам помочь
-                </div>
-            </div>
-
-            <form class="modal-form" id="callbackForm" data-url="{% url 'callback' %}">
-                {% csrf_token %}
-                <div class="modal-form__fields">
-                    <div class="fg">
-                        <input type="text" name="name" placeholder="Как к Вам обращаться? ">
-                    </div>
-                    <div class="fg">
-                        <input type="tel" name="phone" placeholder="+ 7 ( _ _ _ ) _ _ - _ _ - ___">
-                    </div>
-                    <div class="fg">
-                        <textarea name="comment" placeholder="Комментарий "></textarea>
-                    </div>
-                </div>
-                <button class="modal-form__btn m-btn m-btn--cut m-btn-brown" id="submitBtn" type="button">
-                    <span>ОТПРАВИТЬ ЗАЯВКУ</span>
-                </button>
-                <div class="modal-form__hint">
-                    <div class="text10">
-                        При нажатии на кнопку «Записаться» вы соглашаетесь <br>  с <a href="" class="underline-text">условиями обработки персональных данных</a>
-                    </div>
-                </div>
-            </form>
-
-            <button class="close-btn _close-modal">
-                <img src="{% static 'img/close2.svg' %}" alt="">
-            </button>
-        </div>
-    </div>
-
-    <div class="modal" id="thankModal">
-        <div class="modal__bg modal-bg _close-modal"></div>
-        <div class="modal__dialog">
-            <div class="modal__top">
-                <div class="text26">
-                    Спасибо за обращение
-                </div>
-                <div class="text16">
-                    Заявка принята и мы <br>
-                 скоро свяжемся с Вами
-                </div>
-            </div>
-
-            <img src="{% static 'img/check2.svg' %}" alt="" class="modal__icon">
-
-            <button class="close-btn _close-modal">
-                <img src="{% static 'img/close2.svg' %}" alt="">
-            </button>
-        </div>
-    </div>
-
+    {% include 'partials/modal_callback.html' %}
+    {% include 'partials/modal_thanks.html' %}
 
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/swiper-bundle.min.js' %}"></script>

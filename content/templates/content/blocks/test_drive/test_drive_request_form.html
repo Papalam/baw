@@ -1,27 +1,36 @@
+{% load technical_features %}
+
 <div class="req req2">
     <div class="container">
         <div class="req__inner">
             <div class="h1 text-center">
                 Оставьте заявку
             </div>
-            <form action="" class="req-form">
+            <form class="req-form" id="testDriveForm" data-url="{% url 'callback' %}">
+                {% csrf_token %}
                 <div class="req-contacts">
                     <div class="h5">
                         КОНТАКТНАЯ ИНФОРМАЦИЯ
                     </div>
                     <div class="req-contacts__fields">
                         <div class="fg">
-                            <input type="text" placeholder="Имя">
+                            <input type="text" placeholder="Имя" name="first_name" required>
                         </div>
                         <div class="fg">
-                            <input type="text" placeholder="Фамилия ">
+                            <input type="text" placeholder="Фамилия" name="last_name">
                         </div>
                         <div class="fg">
-                            <input type="tel" placeholder="+ 7 ( _ _ _ ) _ _ - _ _ - ___">
+                            <input type="tel" placeholder="+ 7 ( _ _ _ ) _ _ - _ _ - ___"
+                                   pattern="[\+]?[7-8][\s\-]?\(?\d{3}\)?[\s\-]?\d{3}[\s\-]?\d{2}[\s\-]?\d{2}"
+                                   title="Введите корректный номер телефона"
+                                   name="phone"
+                                   required>
                         </div>
                         <div class="req-contacts__wishes">
                             <div class="fg">
-                                <input type="date" placeholder="Желаемая дата" min="2026-03-22" max="2026-12-31">
+                                <input type="date" placeholder="Желаемая дата"
+                                       min="{% next_date 1 %}"
+                                       max="{% next_date 13 %}">
                             </div>
                             <div class="fg">
                                 <input type="time" placeholder="Желаемое время" min="09:00" max="20:30" step="1800">
@@ -40,7 +49,7 @@
                         </div>
                     </div>
                     <div class="req-contacts__nav">
-                        <button class="req-contacts__btn m-btn m-btn--cut m-btn-brown">
+                        <button class="req-contacts__btn m-btn m-btn--cut m-btn-brown" type="button" id="testDriveBtnSubmit">
                             <span>Записаться на тест-драйв</span>
                         </button>
                     </div>
