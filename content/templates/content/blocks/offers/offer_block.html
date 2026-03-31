@@ -1,0 +1,47 @@
+{% load technical_features %}
+
+<div class="test-main">
+    <div class="container">
+        {% breadcrumbs "Главная" "home" "Специальные предложения" "" %}
+        {% include 'content/blocks/shared/banner.html' %}
+    </div>
+</div>
+
+<div class="offers m-section2">
+    <div class="container">
+        <div class="offers__grid grid3">
+            {% for offer in offers %}
+                <div class="offer-card">
+                    <div class="offer-card__img">
+                        {% if offer.webp_image %}
+                            <img src="{{ offer.webp_image.url }}" alt="{{ offer.alt }}">
+                        {% endif %}
+                    </div>
+                    <div class="offer-card__content">
+                        <div class="h2">
+                            {{ offer.name }}
+                        </div>
+                        <div class="offer-card__subtitle">
+                            <div class="text18 text16-tablet semi-bold-text red-text">
+                                {% if offer.valid_from %}
+                                    Акция действует с {{ offer.valid_from }}
+                                {% endif %}
+                                {% if offer.valid_until %}
+                                    по {{ offer.valid_until }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="text">
+                            {{ offer.description|safe }}
+                        </div>
+                        <div class="offer-card__nav">
+                            <button class="offer-card__btn m-btn m-btn--cut m-btn-brown">
+                                <span>ПОЛУЧИТЬ ПРЕДЛОЖЕНИЕ</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,89 @@
+{% load static %}
+{% load technical_features %}
+
+<div class="completion">
+    <div class="container">
+        {% breadcrumbs "Главная" "home" "Сравнение комплектаций" "" %}
+
+        <h1 class="h1 text-center">
+            Комплектации <span class="no-wrap">и возможности</span>
+        </h1>
+
+        <div class="completion-filter">
+            <div class="completion-filter__top _flex">
+                <div class="completion-filter__m-switch _flex">
+                    <div class="text18 text14-mob">Показать отличия</div>
+                    <div class="m-switch">
+                        <input type="checkbox">
+                        <label></label>
+                    </div>
+                </div>
+                <button class="completion-filter__toggle">
+                    <img src="{% static 'img/filter.svg' %}" alt="">
+                </button>
+            </div>
+            <div class="completion-filter__bottom">
+                <div class="completion-filter__checks">
+                    {% for configuration in configurations %}
+                        <div class="m-check">
+                            <input type="checkbox" data-config-id="{{ configuration.id }}">
+                            <label>
+                                <span>{{ configuration.name }}</span>
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="completion__cars grid4">
+            {% for configuration in configurations %}
+                <div class="completion-car" data-config-id="{{ configuration.id }}">
+                    <div class="completion-car__img">
+                        <img src="{% static 'img/completion-car.webp' %}" alt="">
+                    </div>
+                    <div class="completion-car__content">
+                        <div class="h2">
+                            {{ configuration.name }}
+                        </div>
+                        <div class="completion-car__price text24 text16-mob">
+                            {{ configuration.price }}  ₽
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="completion__props">
+            {% for group in groups %}
+                <div class="completion-props">
+                    <div class="completion-props__top">
+                        <div class="text20 text18-tablet semi-bold-text">
+                            {{ group.name }}
+                        </div>
+                        <img src="{% static 'img/arrow-bottom3.svg' %}" alt="">
+                    </div>
+                    <div class="completion-props__bottom">
+                        <div class="completion-props__rows">
+                            {% for characteristic in group.characteristics.all %}
+                                <div class="completion-props__row">
+                                    <div class="completion-props__title">
+                                        {{ characteristic.name }}
+                                    </div>
+                                    <div class="completion-props__grid">
+                                        {% for configuration in configurations %}
+                                            <div class="completion-props__col" data-config-id="{{ configuration.id }}">
+                                                {% feature_value values_dict main_feature.id configuration.id as val %}
+                                                {% if val == '+' %}<span class="completion-props__rect"></span>{% endif %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

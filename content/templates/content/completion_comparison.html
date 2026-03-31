@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+{% endblock %}
+
+{% block content %}
+    {% include 'content/blocks/complection_comparison/complection_comparison_table.html' %}
+    {% include 'content/blocks/complection_comparison/useful.html' %}
+    {% include 'content/blocks/shared/baw_car_application.html' %}
+{% endblock %}
+
+{% block other_js %}
+    <script>
+        $(function () {
+            function applyFilter() {
+                let checked = [];
+                $(".completion-filter__checks input[type='checkbox']:checked").each(function () {
+                    checked.push($(this).data('config-id'));
+                });
+
+                if (checked.length === 0) {
+                    $("[data-config-id]").show();
+                } else {
+                    $(".completion-car[data-config-id], .completion-props__col[data-config-id]").hide();
+                    $.each(checked, function (_, id) {
+                        $("[data-config-id='" + id + "']").not(".m-check").show();
+                    });
+                }
+            }
+
+            $(document).on("change", ".completion-filter__checks input[type='checkbox']", applyFilter);
+        });
+    </script>
+{% endblock %}

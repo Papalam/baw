@@ -2,6 +2,7 @@ from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.core.validators import FileExtensionValidator, MinValueValidator, MaxValueValidator
 from django.db import models
+from django.utils import timezone
 
 from catalog.models import Configuration, Color
 from content.base import BaseModel
@@ -1103,4 +1104,105 @@ class CallbackRequest(models.Model):
     class Meta:
         verbose_name = 'заявка'
         verbose_name_plural = 'Заявки на обратный звонок'
+        ordering = ['-created_at']
+
+
+class TestDriveRequest(models.Model):
+    """Заявка на тест-драйв"""
+    first_name = models.CharField(
+        max_length=255,
+        verbose_name='Имя'
+    )
+    last_name = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name='Фамилия'
+    )
+    phone = models.CharField(
+        max_length=20,
+        verbose_name='Номер телефона'
+    )
+    desired_date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name='Желаемая дата'
+    )
+    desired_time = models.TimeField(
+        null=True,
+        blank=True,
+        verbose_name='Желаемое время'
+    )
+    comment = models.TextField(
+        blank=True,
+        verbose_name='Комментарий'
+    )
+    consent = models.BooleanField(
+        default=False,
+        verbose_name='Согласие на обработку персональных данных'
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата добавления'
+    )
+    is_sent_to_crm = models.BooleanField(
+        default=False,
+        verbose_name='Обработан в AmoCRM'
+    )
+
+    def __str__(self):
+        return f'{self.last_name} {self.first_name} - {self.phone}'
+
+    class Meta:
+        verbose_name = 'заявка'
+        verbose_name_plural = 'Заявки на тест-драйв'
+        ordering = ['-created_at']
+
+
+class SpecialOffer(BaseModel):
+    """Специальные предложения"""
+    title = models.CharField(
+        max_length=255,
+        verbose_name='Заголовок'
+    )
+    description = models.TextField(
+        verbose_name='Описание'
+    )
+    image = models.ImageField(
+        upload_to='special_offers/images/',
+        validators=[FileExtensionValidator(allowed_extensions=['png', 'jpg', 'jpeg'])],
+        verbose_name='Изображение'
+    )
+    webp_image = models.ImageField(
+        upload_to='special_offers/webp/',
+        blank=True,
+        null=True
+    )
+    alt = models.CharField(
+        max_length=255,
+        blank=True
+    )
+    slug = models.SlugField(
+        unique=True
+    )
+    valid_from = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name='Дата начала'
+    )
+    valid_until = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name='Дата окончания'
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Создано'
+    )
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'спецпредложение'
+        verbose_name_plural = 'Спецпредложения'
         ordering = ['-created_at']

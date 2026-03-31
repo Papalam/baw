@@ -11,7 +11,7 @@ from catalog.models import Configuration, ConfigurationCharacteristic, Configura
 from content.forms import CarApplicationForm, ContactForm
 from content.models import MenuItem, HeroSection, CardConfiguration, Question, BawComparison, \
     BawComparisonConfiguration, BawTesting, VideoCard, TechnologyBlock, ServicesBlock, NewsVideo, NewsArticle, Banner, \
-    OurAdventure, History, Society, HistoryBaw, QuestionTopic, CallbackRequest
+    OurAdventure, History, Society, HistoryBaw, QuestionTopic, CallbackRequest, SpecialOffer
 
 
 class HomePageView(TemplateView):
@@ -305,6 +305,50 @@ class TestDriveView(TemplateView):
 
         context['dealers'] = dealers
         context['questions'] = block_questions
+
+        return context
+
+
+class CompletionComparisonView(TemplateView):
+    template_name = 'content/completion_comparison.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        configurations = Configuration.objects.filter(is_active=True).order_by('order', 'pk')
+        groups = Group.objects.prefetch_related(
+            Prefetch(
+                'characteristics',
+                queryset=Characteristic.objects.filter(is_active=True).order_by('order'),
+            )
+        ).filter(is_active=True).exclude(key__in=['main', 'comparison']).order_by('order')
+        values_dict = {(v[0], v[1]): v[2]
+                       for v in ConfigurationCharacteristic.objects.filter(is_active=True)
+                       .values_list('characteristic_id', 'configuration_id', 'value')
+                       }
+        outside_colors = Color.objects.filter(is_active=True, color_type='exterior').order_by('order')
+        inside_colors = Color.objects.filter(is_active=True, color_type='interior').order_by('order')
+
+        context['configurations'] = configurations
+        context['groups'] = groups
+        context['values_dict'] = values_dict
+        context['outside_colors'] = outside_colors
+        context['inside_colors'] = inside_colors
+
+        return context
+
+
+class SpecialOfferView(TemplateView):
+    template_name = 'content/special_offer.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        banner = Banner.objects.get(key='special-offer')
+        offers = SpecialOffer.objects.filter(is_active=True).order_by('order')
+
+        context['banner'] = banner
+        context['offers'] = offers
 
         return context
 

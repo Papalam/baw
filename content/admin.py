@@ -6,7 +6,7 @@ from .models import Menu, MenuItem, HeroSection, HTMLContent, CardConfiguration,
     CardConfigurationImage, Question, BawComparison, BawComparisonConfiguration, BawTesting, BawTestingImage, \
     BawTestingFeature, BawTestingItems, VideoCardContent, VideoCard, TechnologyBlockContent, TechnologyBlock, \
     ServicesBlock, NewsArticle, NewsVideo, OurAdventure, History, Society, Banner, HistoryBaw, SocialNetwork, \
-    CompanyInfo, QuestionTopic, CallbackRequest
+    CompanyInfo, QuestionTopic, CallbackRequest, TestDriveRequest, SpecialOffer
 from .widgets import RichTextEditorWidget
 
 
@@ -593,6 +593,52 @@ class CallbackRequestAdmin(admin.ModelAdmin):
             'fields': ('is_sent_to_crm', 'created_at')
         }),
     )
+
+
+@admin.register(TestDriveRequest)
+class TestDriveRequestAdmin(admin.ModelAdmin):
+    list_display = ['last_name', 'first_name', 'phone', 'desired_date', 'desired_time', 'is_sent_to_crm', 'created_at']
+    list_filter = ['is_sent_to_crm', 'created_at', 'desired_date']
+    search_fields = ['first_name', 'last_name', 'phone', 'comment']
+    readonly_fields = ('id', 'created_at')
+    fieldsets = (
+        ('Данные клиента', {
+            'fields': ('id', 'first_name', 'last_name', 'phone')
+        }),
+        ('Детали заявки', {
+            'fields': ('desired_date', 'desired_time', 'comment', 'consent')
+        }),
+        ('Статус и системная информация', {
+            'fields': ('is_sent_to_crm', 'created_at')
+        }),
+    )
+
+
+@admin.register(SpecialOffer)
+class SpecialOfferAdmin(admin.ModelAdmin):
+    list_display = ['title', 'id', 'valid_from', 'valid_until', 'order', 'is_active']
+    list_display_links = ['title', 'id']
+    readonly_fields = ('id', 'preview', 'created_at')
+    prepopulated_fields = {'slug': ('title',)}
+    ordering = ['order', '-created_at']
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('title', 'id', 'description', 'image', 'preview', 'webp_image', 'alt', 'slug', 'created_at')
+        }),
+        ('Срок действия', {
+            'fields': ('valid_from', 'valid_until')
+        }),
+        ('Активность и сортировка', {
+            'fields': ('order', 'is_active')
+        })
+    )
+
+    def preview(self, obj):
+        if obj.pk and obj.image:
+            return format_html('<img src="{}" style="max-height:60px; max-width:80px;" />', obj.image.url)
+        return 'Изображение'
+
+    preview.short_description = 'Превью'
 
 
 admin.site.site_header = "Администрирование сайта Baw"
