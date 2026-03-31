@@ -1,7 +1,7 @@
 from django.urls import path
 
 from content.views import HomePageView, OurWorld, About, NewsArticleListView, NewsArticleDetailView, BuyersView, \
-    StoriesListView, ContactFormView, TestDriveView, CompletionComparisonView, SpecialOfferView
+    StoriesListView, ContactFormView, TestDriveView, CompletionComparisonView, SpecialOfferView, CorporateClientsView
 
 urlpatterns = [
     path('', HomePageView.as_view(), name='home'),
@@ -15,4 +15,5 @@ urlpatterns = [
     path('test-drive/', TestDriveView.as_view(), name='test-drive'),
     path('trim-levels/', CompletionComparisonView.as_view(), name='trim-levels'),
     path('offers/', SpecialOfferView.as_view(), name='offers'),
+    path('corporate/', CorporateClientsView.as_view(), name='corporate'),
 ]

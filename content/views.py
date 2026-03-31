@@ -353,6 +353,19 @@ class SpecialOfferView(TemplateView):
         return context
 
 
+class CorporateClientsView(TemplateView):
+    template_name = 'content/corporate.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        banner = get_object_or_404(Banner, key='corporate')
+
+        context['banner'] = banner
+
+        return context
+
+
 class ContactFormView(CreateView):
     model = CallbackRequest
     form_class = ContactForm

@@ -1,0 +1,24 @@
+{% load static %}
+
+<div class="page-menu">
+    <div class="container">
+        <div class="page-menu__inner">
+            <a href="#" class="page-menu__btn js-open-modal" data-modal="reqModal" >
+                <img src="{% static 'img/menu-icon.svg' %}" alt="">
+                <span>Поддержка клиентов</span>
+            </a>
+            <a href="#" class="page-menu__btn js-open-modal" data-modal="reqModal">
+                <img src="{% static 'img/menu-icon2.svg' %}" alt="">
+                <span>Сервис</span>
+            </a>
+            <a href="#" class="page-menu__btn js-open-modal" data-modal="reqModal">
+                <img src="{% static 'img/menu-icon3.svg' %}" alt="">
+                <span>Найти диллера</span>
+            </a>
+            <a href="{% url 'test-drive' %}" class="page-menu__btn">
+                <img src="{% static 'img/menu-icon4.svg' %}" alt="">
+                <span>Тест-драйв</span>
+            </a>
+        </div>
+    </div>
+</div>
