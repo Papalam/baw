@@ -704,6 +704,10 @@ class ServicesBlock(BaseModel):
     slug = models.SlugField(
         unique=True,
     )
+    is_popup = models.BooleanField(
+        default=True,
+        verbose_name='Показывать модальное окно'
+    )
 
     def __str__(self):
         return f'{self.title}'

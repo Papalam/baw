@@ -331,7 +331,7 @@ class ServicesBlockAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
     fieldsets = (
         ('Основная информация', {
-            'fields': ('title', 'id', 'description', 'icon', 'preview', 'slug')
+            'fields': ('title', 'id', 'description', 'icon', 'preview', 'slug', 'is_popup')
         }),
         ('Активность и сортировка', {
             'fields': ('order', 'is_active')
