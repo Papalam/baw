@@ -11,7 +11,24 @@ from catalog.models import Configuration, ConfigurationCharacteristic, Configura
 from content.forms import CarApplicationForm, ContactForm
 from content.models import MenuItem, HeroSection, CardConfiguration, Question, BawComparison, \
     BawComparisonConfiguration, BawTesting, VideoCard, TechnologyBlock, ServicesBlock, NewsVideo, NewsArticle, Banner, \
-    OurAdventure, History, Society, HistoryBaw, QuestionTopic, CallbackRequest, SpecialOffer
+    OurAdventure, History, Society, HistoryBaw, QuestionTopic, CallbackRequest, SpecialOffer, SEOPage
+
+
+class SEOMixin:
+    """
+    Добавляет SEO-метаданные в контекст.
+    В дочернем классе указать seo_page_key = SEOPage.PageKey.HOME
+    """
+    seo_page_key: str = None
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.seo_page_key:
+            context['seo'] = SEOPage.objects.filter(
+                key=self.seo_page_key,
+                is_active=True
+            ).first()
+        return context
 
 
 class HomePageView(TemplateView):

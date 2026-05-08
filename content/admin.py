@@ -6,7 +6,7 @@ from .models import Menu, MenuItem, HeroSection, HTMLContent, CardConfiguration,
     CardConfigurationImage, Question, BawComparison, BawComparisonConfiguration, BawTesting, BawTestingImage, \
     BawTestingFeature, BawTestingItems, VideoCardContent, VideoCard, TechnologyBlockContent, TechnologyBlock, \
     ServicesBlock, NewsArticle, NewsVideo, OurAdventure, History, Society, Banner, HistoryBaw, SocialNetwork, \
-    CompanyInfo, QuestionTopic, CallbackRequest, TestDriveRequest, SpecialOffer
+    CompanyInfo, QuestionTopic, CallbackRequest, TestDriveRequest, SpecialOffer, SEOPage
 from .widgets import RichTextEditorWidget
 
 
@@ -639,6 +639,24 @@ class SpecialOfferAdmin(admin.ModelAdmin):
         return 'Изображение'
 
     preview.short_description = 'Превью'
+
+
+@admin.register(SEOPage)
+class SEOPageAdmin(admin.ModelAdmin):
+    list_display = ['get_key_display', 'title', 'is_active']
+    readonly_fields = ('id',)
+    fieldsets = (
+        ('Страница', {
+            'fields': ('key', 'is_active')
+        }),
+        ('Основные мета-теги', {
+            'fields': ('title', 'description', 'keywords')
+        }),
+        ('Open Graph', {
+            'classes': ('collapse',),
+            'fields': ('og_title', 'og_description', 'og_image')
+        }),
+    )
 
 
 admin.site.site_header = "Администрирование сайта Baw"

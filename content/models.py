@@ -1210,3 +1210,66 @@ class SpecialOffer(BaseModel):
         verbose_name = 'спецпредложение'
         verbose_name_plural = 'Спецпредложения'
         ordering = ['-created_at']
+
+
+class SEOPage(BaseModel):
+    """SEO-метаданные для страниц"""
+
+    class PageKey(models.TextChoices):
+        HOME = 'home', 'Главная'
+        OUR_WORLD = 'our-world', 'Наш мир'
+        ABOUT = 'about', 'О компании'
+        NEWS = 'news', 'Новости'
+        BUYERS = 'buyers', 'Покупателям'
+        TEST_DRIVE = 'test-drive', 'Тест-драйв'
+        COMPARISON = 'comparison', 'Сравнение комплектаций'
+        SPECIAL_OFFER = 'special-offer', 'Спецпредложения'
+        CORPORATE = 'corporate', 'Корпоративным клиентам'
+        STORIES = 'stories', 'Истории клиентов'
+
+    key = models.CharField(
+        max_length=50,
+        choices=PageKey.choices,
+        unique=True,
+        verbose_name='Страница'
+    )
+    title = models.CharField(
+        max_length=200,
+        verbose_name='SEO Title',
+        help_text='Рекомендуемая длина: до 60 символов'
+    )
+    description = models.CharField(
+        max_length=500,
+        verbose_name='Meta Description',
+        help_text='Рекомендуемая длина: 120–160 символов'
+    )
+    keywords = models.CharField(
+        max_length=500,
+        blank=True,
+        verbose_name='Meta Keywords',
+        help_text='Через запятую'
+    )
+    og_title = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name='OG Title'
+    )
+    og_description = models.CharField(
+        max_length=500,
+        blank=True,
+        verbose_name='OG Description'
+    )
+    og_image = models.ImageField(
+        upload_to='seo/og/',
+        blank=True,
+        null=True,
+        verbose_name='OG Image',
+        help_text='Рекомендуемый размер: 1200×630px'
+    )
+
+    def __str__(self):
+        return self.get_key_display()
+
+    class Meta:
+        verbose_name = 'SEO страницы'
+        verbose_name_plural = 'SEO страниц'
