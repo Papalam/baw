@@ -1,3 +1,7 @@
+{# FIX: hero_sections может быть пустым queryset — {% for %} просто ничего не выведет,
+   но структурный div .main остаётся. Если нужно скрыть весь блок — добавить {% if %}.
+   Оборачиваем внешний контейнер, чтобы не рендерить пустой .main. #}
+{% if hero_sections %}
 <div class="main">
     <div class="container">
         {% for hero_section in hero_sections %}
@@ -15,15 +19,20 @@
                             <div class="main-top__price-num h1">{{ hero_section.price_value }}</div>
                         </div>
                         <div class="main-top__nav">
-                            <a href="{{ hero_section.button_url }}" class="main-top__btn m-btn m-btn--cut m-btn-brown">
+                            {# FIX: button_url может быть пустой строкой — href="#" как fallback #}
+                            <a href="{{ hero_section.button_url|default:'#' }}"
+                               class="main-top__btn m-btn m-btn--cut m-btn-brown">
                                 <span>{{ hero_section.button_text }}</span>
                             </a>
                         </div>
                     </div>
                     <div class="main-top__video m-backdrop">
-                        <video autoplay muted playsinline loop class="_autoplay-video"
-                               src="{{ hero_section.video_file.url }}">
-                        </video>
+                        {# FIX: video_file может быть пустым → ValueError на .url #}
+                        {% if hero_section.video_file %}
+                            <video autoplay muted playsinline loop class="_autoplay-video"
+                                   src="{{ hero_section.video_file.url }}">
+                            </video>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="main-bottom">
@@ -36,7 +45,8 @@
                         </div>
                     </div>
                     <div class="main-bottom__nav">
-                        <a href="{{ hero_section.bottom_button_url }}"
+                        {# FIX: bottom_button_url может быть пустой строкой — href="#" как fallback #}
+                        <a href="{{ hero_section.bottom_button_url|default:'#' }}"
                            class="main-bottom__btn m-btn m-btn--cut m-btn-white">
                             <span>{{ hero_section.bottom_button_text }}</span>
                         </a>
@@ -46,3 +56,4 @@
         {% endfor %}
     </div>
 </div>
+{% endif %}

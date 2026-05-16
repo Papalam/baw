@@ -1,4 +1,5 @@
 {% load static %}
+{% if features %}
 <div class="advantages m-section">
     <div class="container">
         <div class="info-block">
@@ -15,9 +16,12 @@
             {% for feature in features.features.all %}
                 <div class="advantage-item">
                     <div class="advantage-item__top">
-                        <div class="advantage-item__icon">
-                            <img src="{{ feature.icon.url }}" alt="">
-                        </div>
+                        {# FIX: feature.icon может быть пустым → ValueError на .url #}
+                        {% if feature.icon %}
+                            <div class="advantage-item__icon">
+                                <img src="{{ feature.icon.url }}" alt="">
+                            </div>
+                        {% endif %}
                         <div class="advantage-item__title">
                             {{ feature.value|upper }}
                         </div>
@@ -31,9 +35,14 @@
                 </div>
             {% endfor %}
         </div>
-        <div class="advantages__video">
-            <video autoplay muted playsinline class="_autoplay-video" src="{{ features.video.url }}"></video>
-        </div>
+
+        {# FIX: features.video может быть пустым → ValueError на .url #}
+        {% if features.video %}
+            <div class="advantages__video">
+                <video autoplay muted playsinline class="_autoplay-video" src="{{ features.video.url }}"></video>
+            </div>
+        {% endif %}
+
         <div class="challenges">
             <div class="h1 text-center">
                 {{ features.subtitle|upper }}
@@ -45,9 +54,12 @@
                             {% for image in features.images.all %}
                                 <div class="swiper-slide">
                                     <div class="challenge-card">
-                                        <div class="challenge-card__img">
-                                            <img src="{{ image.webp_image.url }}" alt="{{ image.alt }}">
-                                        </div>
+                                        {# FIX: image.webp_image может быть пустым → ValueError на .url #}
+                                        {% if image.webp_image %}
+                                            <div class="challenge-card__img">
+                                                <img src="{{ image.webp_image.url }}" alt="{{ image.alt }}">
+                                            </div>
+                                        {% endif %}
                                         <div class="challenge-card__content">
                                             <div class="challenge-card__title h3">
                                                 {{ image.title|upper }}
@@ -99,9 +111,12 @@
                 <div class="slider__nav">
                     <div class="swiper-pagination"></div>
                 </div>
-                <img src="{{ features.image.url }}" alt="" class="mechanic__img">
+                {# FIX: features.image может быть пустым → ValueError на .url #}
+                {% if features.image %}
+                    <img src="{{ features.image.url }}" alt="" class="mechanic__img">
+                {% endif %}
             </div>
         </div>
     </div>
-
 </div>
+{% endif %}

@@ -2,6 +2,9 @@
 {% load humanize %}
 {% load technical_features %}
 
+{# FIX: если configurations пуст — таблица рендерится с пустыми заголовками.
+   Скрываем весь блок при отсутствии данных. #}
+{% if configurations %}
 <div class="equip m-section _tabs-parent">
     <div class="container">
         <div class="h1 text-center">
@@ -31,11 +34,12 @@
                 <tbody>
                 <tr>
                     <td>
-                        <div class="text18">Розничная цена на автомобили , руб. с НДС</div>
+                        <div class="text18">Розничная цена на автомобили , руб. с НДС</div>
                     </td>
                     {% for configuration in configurations %}
                         <td>
-                            <div class="text24">{{ configuration.price|intcomma }}</div>
+                            {# FIX: configuration.price может быть None → intcomma упадёт с TypeError #}
+                            <div class="text24">{{ configuration.price|default:0|intcomma }}</div>
                         </td>
                     {% endfor %}
                 </tr>
@@ -46,6 +50,7 @@
                         </td>
                         {% for configuration in configurations %}
                             <td>
+                                {# Тег {% feature_value %} должен сам обрабатывать отсутствие ключа в values_dict #}
                                 <div class="text18">{% feature_value values_dict main_feature.id configuration.id %}</div>
                             </td>
                         {% endfor %}
@@ -54,7 +59,7 @@
                 </tbody>
             </table>
         </div>
-        
+
         {% for group in groups %}
             <div class="equip-items equip-items--hide-mob">
                 <div class="qa-card qa-card-table">
@@ -95,3 +100,4 @@
         {% endfor %}
     </div>
 </div>
+{% endif %}

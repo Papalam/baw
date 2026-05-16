@@ -1,5 +1,8 @@
 {% load static %}
 
+{# FIX: card_configuration может быть пустым queryset → .0 вернёт '' без ошибки,
+   но весь блок бессмысленен. Оборачиваем в проверку. #}
+{% if card_configuration %}
 <div class="adventurer m-section">
     <div class="container">
         <div class="adventurer__desc">
@@ -28,9 +31,12 @@
                                     {% for feature in card.features.all %}
                                         <div class="advantage-item">
                                             <div class="advantage-item__top">
-                                                <div class="advantage-item__icon">
-                                                    <img src="{{ feature.icon.url }}" alt="">
-                                                </div>
+                                                {# FIX: feature.icon может быть пустым → ValueError на .url #}
+                                                {% if feature.icon %}
+                                                    <div class="advantage-item__icon">
+                                                        <img src="{{ feature.icon.url }}" alt="">
+                                                    </div>
+                                                {% endif %}
                                                 <div class="advantage-item__title">
                                                     {{ feature.value }}
                                                 </div>
@@ -53,9 +59,12 @@
                                                 {% for image in card.images.all %}
                                                     <div class="swiper-slide">
                                                         <div class="challenge-card">
-                                                            <div class="challenge-card__img">
-                                                                <img src="{{ image.webp_image.url }}" alt="">
-                                                            </div>
+                                                            {# FIX: image.webp_image может быть пустым → ValueError на .url #}
+                                                            {% if image.webp_image %}
+                                                                <div class="challenge-card__img">
+                                                                    <img src="{{ image.webp_image.url }}" alt="">
+                                                                </div>
+                                                            {% endif %}
                                                             <div class="challenge-card__content">
                                                                 <div class="challenge-card__title h3">
                                                                     {{ image.title }}
@@ -82,3 +91,4 @@
         </div>
     </div>
 </div>
+{% endif %}
