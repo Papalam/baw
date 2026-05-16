@@ -7,7 +7,7 @@
         <div class="services__grid grid4">
             {% for service in services %}
                 <div class="service-card">
-                    {# FIX: service.icon уже обёрнут в {% if %} — правильно #}
+                    {# FIX: service.icon уже обёрнут в if — правильно #}
                     {% if service.icon %}
                         <img src="{{ service.icon.url }}" alt="" class="service-card__icon">
                     {% endif %}

@@ -50,7 +50,7 @@
                         </td>
                         {% for configuration in configurations %}
                             <td>
-                                {# Тег {% feature_value %} должен сам обрабатывать отсутствие ключа в values_dict #}
+                                {# Тег feature_value должен сам обрабатывать отсутствие ключа в values_dict #}
                                 <div class="text18">{% feature_value values_dict main_feature.id configuration.id %}</div>
                             </td>
                         {% endfor %}
