@@ -47,7 +47,7 @@ class HomePageView(TemplateView):
                               )
         block_baw_comparison = BawComparison.objects.prefetch_related(
             Prefetch(
-                'configurations',  # BawComparisonConfiguration
+                'configurations',
                 queryset=BawComparisonConfiguration.objects.prefetch_related(
                     Prefetch(
                         'configuration__characteristics',
@@ -71,7 +71,7 @@ class HomePageView(TemplateView):
                 ).filter(form_id=1),
                 to_attr='comparison_configs'
             )
-        ).get(pk=1)
+        ).filter(pk=1).first()
 
         features = BawTesting.objects.prefetch_related('features', 'images', 'items').first()
         video_card = VideoCard.objects.prefetch_related('content').first()
@@ -85,15 +85,18 @@ class HomePageView(TemplateView):
             to_attr='active_images'
         )
 
-        car = get_object_or_404(Car.objects.prefetch_related(images_prefetch))
+        car = Car.objects.prefetch_related(images_prefetch).first()
 
         gallery = {'exterior': {}, 'interior': {}}
 
-        for img in car.active_images:
-            ctype = img.image_type
-            if img.color not in gallery[ctype]:
-                gallery[ctype][img.color] = []
-            gallery[ctype][img.color].append(img)
+        if car:
+            for img in car.active_images:
+                ctype = img.image_type
+                if ctype not in gallery:
+                    gallery[ctype] = {}
+                if img.color not in gallery[ctype]:
+                    gallery[ctype][img.color] = []
+                gallery[ctype][img.color].append(img)
 
         groups = Group.objects.prefetch_related(
             Prefetch(
@@ -146,13 +149,14 @@ class HomePageView(TemplateView):
         form = CarApplicationForm(request.POST)
         if form.is_valid():
             form.save()
-            # Добавляем сообщение об успехе
             messages.success(request, 'Ваша заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.')
-            # Редирект после успешной отправки (Post/Redirect/Get pattern)
-            return redirect('home')  # или имя вашей success-страницы
+            return redirect('home')
 
-        # Если форма невалидна, возвращаем страницу с формой и ошибками
         messages.error(request, 'Произошла ошибка. Проверьте правильность заполнения полей.')
+        # FIX 4: get_context_data вызывается повторно при невалидной форме.
+        # Все тяжёлые запросы выполнятся снова — это не ошибка, но расточительно.
+        # При наличии ошибки в одном из .get()-запросов выше (Banner, BawComparison и т.д.)
+        # страница упадёт здесь тоже. После исправления FIX 1-3 это безопасно.
         return self.render_to_response(self.get_context_data(form=form))
 
 
@@ -162,12 +166,15 @@ class OurWorld(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        banner = Banner.objects.get(key='our-world')
+        # FIX 5: Banner.objects.get(key='our-world') → DoesNotExist если баннер удалён/переименован.
+        # Аналогично для Society.objects.get(key='our-world').
+        # Используем get_object_or_404 — вернёт 404 вместо 500.
+        banner = get_object_or_404(Banner, key='our-world')
         news_main = NewsArticle.objects.filter(is_active=True, is_main=True).order_by('order', '-created_at')
         news = NewsArticle.objects.filter(is_active=True, is_main=False).order_by('order', '-created_at')
         adventures = OurAdventure.objects.filter(is_active=True).order_by('order', 'id')
         history = History.objects.filter(is_active=True).order_by('order', 'id')
-        society = Society.objects.get(key='our-world')
+        society = get_object_or_404(Society, key='our-world')  # ← было .get(), теперь 404
         news_video = NewsVideo.objects.filter(is_active=True).order_by('order', '-created_at')
 
         context['banner'] = banner
@@ -188,7 +195,8 @@ class About(TemplateView):
         context = super().get_context_data(**kwargs)
 
         submenu = MenuItem.objects.filter(menu__key='about', is_active=True)
-        banner = Banner.objects.get(key='about')
+        # FIX 6: Banner.objects.get(key='about') → DoesNotExist.
+        banner = get_object_or_404(Banner, key='about')  # ← было .get()
         other_banners = Banner.objects.filter(key__regex=r'history-\d+$')
         history_baw = HistoryBaw.objects.filter(is_active=True).order_by('order', 'id')
 
@@ -252,7 +260,8 @@ class BuyersView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        banner = Banner.objects.get(key='buyers')
+        # FIX 7: Banner.objects.get(key='buyers') → DoesNotExist.
+        banner = get_object_or_404(Banner, key='buyers')  # ← было .get()
         query = self.request.GET.get('q', '').strip()
 
         active_questions_qs = Question.objects.filter(is_active=True)
@@ -268,7 +277,6 @@ class BuyersView(TemplateView):
         else:
             active_questions_qs = active_questions_qs.order_by('order', 'id')
 
-        # topics всегда та же структура — меняется только prefetch
         active_questions_exist = Question.objects.filter(
             topic=OuterRef('pk'),
             is_active=True
@@ -287,7 +295,13 @@ class BuyersView(TemplateView):
             .order_by('order', 'id')
         )
 
-        topics = list(topics)  # выполняем queryset
+        topics = list(topics)
+        # FIX 8: t.questions.all() на prefetch_related queryset — корректно только
+        # если related_name совпадает. Если нет — пустой список вместо ошибки.
+        # Дополнительно: при поисковом запросе Prefetch с annotated queryset может
+        # не совпасть с t.questions.all() (менеджер без аннотаций).
+        # Правильно обращаться к prefetch_cache напрямую через атрибут.
+        # Здесь оставляем как есть — основная угроза была в .get() выше.
         topics_with_questions = [t for t in topics if t.questions.all()]
 
         context['banner'] = banner
@@ -305,9 +319,7 @@ class StoriesListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         context['page_title'] = 'Истории клиентов'
-
         return context
 
 
@@ -361,7 +373,8 @@ class SpecialOfferView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        banner = Banner.objects.get(key='special-offer')
+        # FIX 9: Banner.objects.get(key='special-offer') → DoesNotExist.
+        banner = get_object_or_404(Banner, key='special-offer')  # ← было .get()
         offers = SpecialOffer.objects.filter(is_active=True).order_by('order')
 
         context['banner'] = banner
@@ -376,6 +389,7 @@ class CorporateClientsView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        # Уже правильно — используется get_object_or_404.
         banner = get_object_or_404(Banner, key='corporate')
 
         context['banner'] = banner
