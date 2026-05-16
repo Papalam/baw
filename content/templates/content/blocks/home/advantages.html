@@ -16,7 +16,6 @@
             {% for feature in features.features.all %}
                 <div class="advantage-item">
                     <div class="advantage-item__top">
-                        {# FIX: feature.icon может быть пустым → ValueError на .url #}
                         {% if feature.icon %}
                             <div class="advantage-item__icon">
                                 <img src="{{ feature.icon.url }}" alt="">
@@ -35,8 +34,7 @@
                 </div>
             {% endfor %}
         </div>
-
-        {# FIX: features.video может быть пустым → ValueError на .url #}
+    
         {% if features.video %}
             <div class="advantages__video">
                 <video autoplay muted playsinline class="_autoplay-video" src="{{ features.video.url }}"></video>
@@ -54,7 +52,6 @@
                             {% for image in features.images.all %}
                                 <div class="swiper-slide">
                                     <div class="challenge-card">
-                                        {# FIX: image.webp_image может быть пустым → ValueError на .url #}
                                         {% if image.webp_image %}
                                             <div class="challenge-card__img">
                                                 <img src="{{ image.webp_image.url }}" alt="{{ image.alt }}">
@@ -111,7 +108,6 @@
                 <div class="slider__nav">
                     <div class="swiper-pagination"></div>
                 </div>
-                {# FIX: features.image может быть пустым → ValueError на .url #}
                 {% if features.image %}
                     <img src="{{ features.image.url }}" alt="" class="mechanic__img">
                 {% endif %}

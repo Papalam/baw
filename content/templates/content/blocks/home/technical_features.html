@@ -2,8 +2,6 @@
 {% load humanize %}
 {% load technical_features %}
 
-{# FIX: если configurations пуст — таблица рендерится с пустыми заголовками.
-   Скрываем весь блок при отсутствии данных. #}
 {% if configurations %}
 <div class="equip m-section _tabs-parent">
     <div class="container">
@@ -38,7 +36,6 @@
                     </td>
                     {% for configuration in configurations %}
                         <td>
-                            {# FIX: configuration.price может быть None → intcomma упадёт с TypeError #}
                             <div class="text24">{{ configuration.price|default:0|intcomma }}</div>
                         </td>
                     {% endfor %}

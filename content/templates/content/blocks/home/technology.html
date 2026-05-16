@@ -21,7 +21,6 @@
                         {% for content in technology.content.all %}
                             <div class="swiper-slide">
                                 <div class="technology-card">
-                                    {# FIX: content.webp_image может быть пустым → ValueError на .url #}
                                     {% if content.webp_image %}
                                         <div class="technology-card__img">
                                             <img src="{{ content.webp_image.url }}" alt="">

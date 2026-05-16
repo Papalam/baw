@@ -1,7 +1,5 @@
 {% load static %}
 
-{# FIX: card_configuration может быть пустым queryset → .0 вернёт '' без ошибки,
-   но весь блок бессмысленен. Оборачиваем в проверку. #}
 {% if card_configuration %}
 <div class="adventurer m-section">
     <div class="container">
@@ -31,7 +29,6 @@
                                     {% for feature in card.features.all %}
                                         <div class="advantage-item">
                                             <div class="advantage-item__top">
-                                                {# FIX: feature.icon может быть пустым → ValueError на .url #}
                                                 {% if feature.icon %}
                                                     <div class="advantage-item__icon">
                                                         <img src="{{ feature.icon.url }}" alt="">
@@ -59,7 +56,6 @@
                                                 {% for image in card.images.all %}
                                                     <div class="swiper-slide">
                                                         <div class="challenge-card">
-                                                            {# FIX: image.webp_image может быть пустым → ValueError на .url #}
                                                             {% if image.webp_image %}
                                                                 <div class="challenge-card__img">
                                                                     <img src="{{ image.webp_image.url }}" alt="">

@@ -1,5 +1,3 @@
-{# FIX: hero_sections может быть пустым queryset — for просто ничего не выведет,
-   но структурный div .main остаётся. Оборачиваем в if, чтобы не рендерить пустой .main. #}
 {% if hero_sections %}
 <div class="main">
     <div class="container">
@@ -18,7 +16,6 @@
                             <div class="main-top__price-num h1">{{ hero_section.price_value }}</div>
                         </div>
                         <div class="main-top__nav">
-                            {# FIX: button_url может быть пустой строкой — href="#" как fallback #}
                             <a href="{{ hero_section.button_url|default:'#' }}"
                                class="main-top__btn m-btn m-btn--cut m-btn-brown">
                                 <span>{{ hero_section.button_text }}</span>
@@ -26,7 +23,6 @@
                         </div>
                     </div>
                     <div class="main-top__video m-backdrop">
-                        {# FIX: video_file может быть пустым → ValueError на .url #}
                         {% if hero_section.video_file %}
                             <video autoplay muted playsinline loop class="_autoplay-video"
                                    src="{{ hero_section.video_file.url }}">
@@ -44,7 +40,6 @@
                         </div>
                     </div>
                     <div class="main-bottom__nav">
-                        {# FIX: bottom_button_url может быть пустой строкой — href="#" как fallback #}
                         <a href="{{ hero_section.bottom_button_url|default:'#' }}"
                            class="main-bottom__btn m-btn m-btn--cut m-btn-white">
                             <span>{{ hero_section.bottom_button_text }}</span>

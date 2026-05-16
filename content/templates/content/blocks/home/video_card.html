@@ -1,6 +1,5 @@
 {% load static %}
 
-{# FIX: video_card может быть None (view возвращает .first() → может вернуть None) #}
 {% if video_card %}
 <div class="videos-collection m-section">
     <div class="container">
@@ -12,7 +11,6 @@
                 <div class="swiper-container">
                     <div class="swiper-wrapper">
                         {% for content in video_card.content.all %}
-                            {# FIX: content.video или content.webp_image могут быть пустыми → ValueError на .url #}
                             {% if content.video and content.webp_image %}
                                 <div class="swiper-slide">
                                     <a href="{{ content.video.url }}"
