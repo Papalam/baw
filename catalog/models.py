@@ -322,7 +322,7 @@ class Dealership(BaseModel):
         verbose_name='Город'
     )
     phone = models.CharField(
-        max_length=30,
+        max_length=150,
         verbose_name='Телефон'
     )
     email = models.EmailField(
@@ -338,6 +338,20 @@ class Dealership(BaseModel):
         blank=True,
         verbose_name='Часы работы',
         default='Ежедневно с 09:00 до 21:00'
+    )
+    latitude = models.DecimalField(
+        max_digits=9,
+        decimal_places=6,
+        null=True,
+        blank=True,
+        verbose_name='Широта'
+    )
+    longitude = models.DecimalField(
+        max_digits=9,
+        decimal_places=6,
+        null=True,
+        blank=True,
+        verbose_name='Долгота'
     )
     created_at = models.DateTimeField(
         auto_now_add=True,

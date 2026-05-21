@@ -1,9 +1,12 @@
+import math
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.postgres.search import SearchQuery, SearchRank
 from django.db.models import Prefetch, OuterRef, Exists
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
+from django.views import View
 from django.views.generic import TemplateView, DetailView, ListView, CreateView
 
 from catalog.models import Configuration, ConfigurationCharacteristic, ConfigurationImage, CarImage, Car, \
@@ -407,3 +410,48 @@ class ContactFormView(CreateView):
 
     def form_invalid(self, form):
         return JsonResponse({'success': False, 'error': form.errors}, status=400)
+
+
+class NearestDealerView(View):
+    def get(self, request, *args, **kwargs):
+        try:
+            user_lat = float(request.GET.get('lat'))
+            user_lon = float(request.GET.get('lon'))
+        except (TypeError, ValueError):
+            return JsonResponse({'error': 'Invalid coordinates'}, status=400)
+
+        dealers = Dealership.objects.filter(
+            is_active=True,
+            latitude__isnull=False,
+            longitude__isnull=False
+        )
+
+        nearest = min(
+            dealers,
+            key=lambda d: self._haversine(user_lat, user_lon, float(d.latitude), float(d.longitude)),
+            default=None
+        )
+
+        if nearest:
+            return JsonResponse({
+                'id': nearest.id,
+                'name': nearest.name,
+                'city': nearest.city,
+                'address': nearest.address,
+                'distance_km': round(
+                    self._haversine(user_lat, user_lon, float(nearest.latitude), float(nearest.longitude)), 1
+                )
+            })
+
+        return JsonResponse({'error': 'No dealers found'}, status=404)
+
+    @staticmethod
+    def _haversine(lat1, lon1, lat2, lon2):
+        R = 6371
+        dlat = math.radians(lat2 - lat1)
+        dlon = math.radians(lon2 - lon1)
+        a = (math.sin(dlat / 2) ** 2 +
+             math.cos(math.radians(lat1)) *
+             math.cos(math.radians(lat2)) *
+             math.sin(dlon / 2) ** 2)
+        return R * 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))

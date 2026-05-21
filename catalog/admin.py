@@ -3,6 +3,7 @@ from django.contrib.admin.widgets import AutocompleteSelect
 from django.forms import TextInput
 from django.utils.html import format_html
 
+from catalog.forms import DealershipAdminForm
 from catalog.models import Car, Group, Characteristic, Configuration, ConfigurationCharacteristic, ConfigurationImage, \
     Color, CarImage, CarAdvantages, CarAdvantagesItem, Dealership
 
@@ -238,6 +239,7 @@ class CarAdvantagesAdmin(admin.ModelAdmin):
 
 @admin.register(Dealership)
 class DealershipAdmin(admin.ModelAdmin):
+    form = DealershipAdminForm
     list_display = ('name', 'id', 'city', 'phone', 'is_active', 'order')
     readonly_fields = ('id', 'created_at')
     ordering = ('order', 'id')
@@ -250,6 +252,9 @@ class DealershipAdmin(admin.ModelAdmin):
         }),
         ('Контакты', {
             'fields': ('phone', 'email', 'website')
+        }),
+        ('Расположение на карте', {
+            'fields': ('coordinates',)
         }),
         ('Активность и сортировка', {
             'fields': ('order', 'is_active')
