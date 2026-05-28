@@ -413,6 +413,10 @@ class CorporateClientsView(TemplateView):
         return context
 
 
+class PrivacyPolicyView(TemplateView):
+    template_name = 'content/privacy_policy.html'
+
+
 class ContactFormView(CreateView):
     model = CallbackRequest
     form_class = ContactForm
