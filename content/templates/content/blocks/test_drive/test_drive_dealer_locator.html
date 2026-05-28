@@ -1,8 +1,9 @@
 {% load static %}
 {% load technical_features %}
 
-{# Получаем уникальные города из queryset #}
 {% regroup dealers by city as dealers_by_city %}
+
+{{ dealers_map_data|json_script:"dealers-data" }}
 
 <div class="test-drive">
     <div class="container">
@@ -43,7 +44,7 @@
             <div class="dealers__col">
                 <div class="dealers__items">
                     {% for dealer in dealers %}
-                        <div class="dealer-item">
+                        <div class="dealer-item" data-dealer-pk="{{ dealer.pk }}">
                             <div class="dealer-item__show">
                                 <div class="dealer-item__title">
                                     {{ dealer.name }}
@@ -110,17 +111,3 @@
         </div>
     </div>
 </div>
-
-<script src="https://api-maps.yandex.ru/2.1/?apikey=90bef184-8ac9-4527-9f79-6cf59dc1920a&lang=ru_RU"
-        type="text/javascript"></script>
-
-<script>
-    ymaps.ready(init);
-
-    function init() {
-        var myMap = new ymaps.Map("map", {
-            center: [55.76, 37.64],  // Москва [широта, долгота]
-            zoom: 10
-        });
-    }
-</script>

@@ -11,8 +11,11 @@ def generate_webp(instance):
     try:
         # Открываем оригинал
         with Image.open(instance.image.path) as img:
-            # Конвертируем в RGB (требуется для WebP)
-            if img.mode != 'RGB':
+            # Палитра → RGBA чтобы корректно разрешить прозрачность
+            if img.mode == 'P':
+                img = img.convert('RGBA')
+            # WebP поддерживает RGBA, остальные режимы приводим к RGB
+            if img.mode not in ('RGB', 'RGBA'):
                 img = img.convert('RGB')
 
             # Буферизируем WebP

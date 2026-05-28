@@ -1,5 +1,6 @@
 import math
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.postgres.search import SearchQuery, SearchRank
@@ -337,6 +338,18 @@ class TestDriveView(TemplateView):
 
         context['dealers'] = dealers
         context['questions'] = block_questions
+        context['dealers_map_data'] = [
+            {
+                'pk': d.pk,
+                'lat': float(d.latitude),
+                'lng': float(d.longitude),
+                'name': d.name,
+                'address': f"{d.city}, {d.address}",
+                'phone': d.phone,
+            }
+            for d in dealers if d.latitude and d.longitude
+        ]
+        context['yandex_maps_api_key'] = settings.YANDEX_MAPS_API_KEY
 
         return context
 

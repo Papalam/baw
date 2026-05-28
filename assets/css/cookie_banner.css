@@ -26,7 +26,6 @@
     pointer-events: none;
 }
 
-/* ---- Main content ---- */
 .cookie-banner__inner {
     padding: 1.5em 1.5em 1.25em;
 }
@@ -57,12 +56,8 @@
     color: #fff;
 }
 
-/* ---- Buttons ---- */
 .cookie-banner__btns {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.5em;
-    margin-bottom: 0.625em;
+    display: flex;
 }
 
 .cookie-banner__btn {
@@ -82,174 +77,13 @@
 }
 
 .cookie-banner__btn--accept {
+    width: 100%;
     background: #921539;
     color: #eeece0;
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - 1em), calc(100% - 0.375em) 100%, 0 100%, 0 0);
 }
 
 .cookie-banner__btn--accept:hover {
-    background: hsl(342.72, 74.85%, 22.75%);
-}
-
-.cookie-banner__btn--necessary {
-    background: transparent;
-    color: #fefdf6;
-    border: 1px solid rgba(254, 253, 246, 0.35);
-}
-
-.cookie-banner__btn--necessary:hover {
-    border-color: #fefdf6;
-    background: rgba(254, 253, 246, 0.07);
-}
-
-.cookie-banner__btn--settings {
-    grid-column: 1 / -1;
-    background: transparent;
-    color: rgba(254, 253, 246, 0.55);
-    font-size: 0.6875em;
-    font-weight: 400;
-    text-transform: none;
-    letter-spacing: 0;
-    height: 2em;
-    border: none;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-}
-
-.cookie-banner__btn--settings:hover {
-    color: #fefdf6;
-}
-
-/* ---- Settings panel ---- */
-.cookie-banner__settings {
-    display: none;
-    border-top: 1px solid rgba(254, 253, 246, 0.12);
-    padding: 1em 1.5em 1.25em;
-}
-
-.cookie-banner__settings._open {
-    display: block;
-}
-
-.cookie-banner__settings-title {
-    font-size: 0.6875em;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: rgba(254, 253, 246, 0.5);
-    margin-bottom: 0.875em;
-}
-
-/* ---- Checkbox items ---- */
-.cookie-check {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 0.75em;
-    padding: 0.625em 0;
-    border-bottom: 1px solid rgba(254, 253, 246, 0.08);
-}
-
-.cookie-check:last-child {
-    border-bottom: none;
-}
-
-.cookie-check__info {
-    flex: 1;
-    min-width: 0;
-}
-
-.cookie-check__name {
-    font-size: 0.75em;
-    font-weight: 600;
-    line-height: 130%;
-    color: #fefdf6;
-}
-
-.cookie-check__desc {
-    font-size: 0.625em;
-    line-height: 140%;
-    color: rgba(254, 253, 246, 0.5);
-    margin-top: 0.2em;
-}
-
-/* Toggle switch */
-.cookie-toggle {
-    position: relative;
-    flex-shrink: 0;
-    margin-top: 0.125em;
-}
-
-.cookie-toggle input {
-    position: absolute;
-    opacity: 0;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    z-index: 2;
-    cursor: pointer;
-    margin: 0;
-}
-
-.cookie-toggle input:disabled {
-    cursor: not-allowed;
-}
-
-.cookie-toggle__track {
-    width: 2.75em;
-    height: 1.4em;
-    background: rgba(254, 253, 246, 0.18);
-    display: flex;
-    align-items: center;
-    padding: 0.2em 0.25em;
-    transition: background 0.2s;
-    border-radius: 0;
-}
-
-.cookie-toggle input:checked ~ .cookie-toggle__track {
-    background: #921539;
-}
-
-.cookie-toggle input:disabled ~ .cookie-toggle__track {
-    background: rgba(146, 21, 57, 0.45);
-    cursor: not-allowed;
-}
-
-.cookie-toggle__thumb {
-    width: 1em;
-    height: 1em;
-    background: #fefdf6;
-    transition: transform 0.2s;
-    flex-shrink: 0;
-}
-
-.cookie-toggle input:checked ~ .cookie-toggle__track .cookie-toggle__thumb {
-    transform: translateX(1.25em);
-}
-
-/* ---- Save settings button ---- */
-.cookie-banner__btn--save {
-    margin-top: 1em;
-    width: 100%;
-    height: 2.5em;
-    background: #921539;
-    color: #eeece0;
-    font-family: NouvelR, sans-serif;
-    font-size: 0.75em;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: -0.01em;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.225s ease-out;
-    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 1em), calc(100% - 0.375em) 100%, 0 100%, 0 0);
-}
-
-.cookie-banner__btn--save:hover {
     background: hsl(342.72, 74.85%, 22.75%);
 }
 
