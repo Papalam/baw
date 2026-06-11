@@ -54,47 +54,40 @@
                     </tr>
                 {% endfor %}
                 </tbody>
+                {% for group in groups %}
+                    <tbody class="equip-group">
+                        <tr class="equip-group__header">
+                            <td colspan="100%">
+                                <div class="equip-group__header__inner">
+                                    <div class="h3 text16-tablet regular-text-tablet">
+                                        {{ group.name }}
+                                    </div>
+                                    <div class="equip-group__btn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="23" height="14" viewBox="0 0 23 14"
+                                             fill="none">
+                                            <path d="M1.06055 1.06055L11.0605 11.0605L21.0605 1.06055" stroke="#242422"
+                                                  stroke-width="3"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% for characteristic in group.characteristics.all %}
+                            <tr class="equip-group__row">
+                                <td>
+                                    <div class="text18">{{ characteristic.name }}</div>
+                                </td>
+                                {% for configuration in configurations %}
+                                    <td>
+                                        <div class="text18">{% feature_value values_dict characteristic.id configuration.id %}</div>
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                {% endfor %}
             </table>
         </div>
-
-        {% for group in groups %}
-            <div class="equip-items equip-items--hide-mob">
-                <div class="qa-card qa-card-table">
-                    <div class="qa-card__show">
-                        <div class="qa-card__title h3 text16-tablet regular-text-tablet">
-                            {{ group.name }}
-                        </div>
-                        <div class="qa-card__btn">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="14" viewBox="0 0 23 14"
-                                 fill="none">
-                                <path d="M1.06055 1.06055L11.0605 11.0605L21.0605 1.06055" stroke="#242422"
-                                      stroke-width="3"/>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="qa-card__hidden">
-                        <div class="equip-table">
-                            <table>
-                                <tbody>
-                                {% for characteristic in group.characteristics.all %}
-                                    <tr>
-                                        <td>
-                                            <div class="text18">{{ characteristic.name }}</div>
-                                        </td>
-                                        {% for configuration in configurations %}
-                                            <td>
-                                                <div class="text18">{% feature_value values_dict characteristic.id configuration.id %}</div>
-                                            </td>
-                                        {% endfor %}
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
     </div>
 </div>
 {% endif %}

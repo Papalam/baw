@@ -1,0 +1,42 @@
+.equip-table .equip-group__row {
+    display: none;
+}
+
+.equip-table .equip-group._active .equip-group__row {
+    display: table-row;
+}
+
+.equip-table .equip-group__header td {
+    width: auto;
+    padding: 0;
+    cursor: pointer;
+}
+
+.equip-table .equip-group__header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25em 2em 1.25em 1.5em;
+}
+
+.equip-table .equip-group__btn {
+    margin-left: .25em;
+    width: 1.5em;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.equip-table .equip-group__btn svg {
+    width: 100%;
+    transition: .3s;
+}
+
+.equip-table .equip-group__btn svg path {
+    stroke: #fff;
+}
+
+.equip-table .equip-group._active .equip-group__btn svg {
+    transform: rotate(180deg);
+}
