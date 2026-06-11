@@ -368,7 +368,13 @@ class CompletionComparisonView(SEOMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        configurations = Configuration.objects.filter(is_active=True).order_by('order', 'pk')
+        configurations = Configuration.objects.prefetch_related(
+            Prefetch(
+                'images',
+                queryset=ConfigurationImage.objects.filter(is_active=True, is_main=True).order_by('order'),
+                to_attr='main_images'
+            )
+        ).filter(is_active=True).order_by('order', 'pk')
         groups = Group.objects.prefetch_related(
             Prefetch(
                 'characteristics',
