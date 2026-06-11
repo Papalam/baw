@@ -14,7 +14,7 @@
 {% block other_js %}
     <script>
         $(function () {
-            function applyFilter() {
+            function applyFilters() {
                 let checked = [];
                 $(".completion-filter__checks input[type='checkbox']:checked").each(function () {
                     checked.push($(this).data('config-id'));
@@ -28,9 +28,21 @@
                         $("[data-config-id='" + id + "']").not(".m-check").show();
                     });
                 }
+
+                let showDifferences = $("#show-differences").is(":checked");
+
+                $(".completion-props__row").each(function () {
+                    let values = $(this).find(".completion-props__col:visible .text18").map(function () {
+                        return $(this).text().trim();
+                    }).get();
+
+                    let hasDifference = new Set(values).size > 1;
+
+                    $(this).toggle(!showDifferences || hasDifference);
+                });
             }
 
-            $(document).on("change", ".completion-filter__checks input[type='checkbox']", applyFilter);
+            $(document).on("change", ".completion-filter__checks input[type='checkbox'], #show-differences", applyFilters);
         });
     </script>
 {% endblock %}
