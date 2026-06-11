@@ -112,7 +112,7 @@ class ConfigurationAdmin(admin.ModelAdmin):
     inlines = [ConfigurationCharacteristicInline, ConfigurationImageInline]
     fieldsets = (
         ('Основная информация', {
-            'fields': ('car', 'name', 'price', 'get_main_image_preview', 'id', 'slug')
+            'fields': ('car', 'name', 'additional_name', 'price', 'get_main_image_preview', 'id', 'slug')
         }),
         ('Активность и сортировка', {
             'fields': ('order', 'is_active')

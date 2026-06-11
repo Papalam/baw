@@ -97,6 +97,11 @@ class Configuration(BaseModel):
         unique=True,
         verbose_name='Название комплектации',
     )
+    additional_name = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name='Дополнительное название',
+    )
     price = models.DecimalField(
         max_digits=14,
         decimal_places=0,
