@@ -22,7 +22,7 @@
                                     комлектация
                                 </div>
                                 <div class="equip-item__desc">
-                                    {{ configuration.name }}
+                                    {{ configuration.name }}{% if configuration.additional_name %} <span class="equip-item__additional">{{ configuration.additional_name }}</span>{% endif %}
                                 </div>
                             </div>
                         </th>

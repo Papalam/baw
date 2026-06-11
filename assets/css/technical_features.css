@@ -40,3 +40,11 @@
 .equip-table .equip-group._active .equip-group__btn svg {
     transform: rotate(180deg);
 }
+
+.car-card__title sup {
+    font-size: .35em;
+}
+
+.equip-item__additional {
+    font-size: .35em;
+}

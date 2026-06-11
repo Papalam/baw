@@ -23,7 +23,7 @@
                                         {% endif %}
                                         <div class="car-card__info">
                                             <div class="car-card__title h2">
-                                                {{ config.name }}
+                                                {{ config.name }}{% if config.additional_name %} <sup>{{ config.additional_name }}</sup>{% endif %}
                                             </div>
                                             <div class="car-card__price">
                                                 от {{ config.price|intcomma }} ₽
