@@ -48,3 +48,15 @@
 .equip-item__additional {
     font-size: .35em;
 }
+
+.equip-table {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.equip-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #4c5744;
+}
