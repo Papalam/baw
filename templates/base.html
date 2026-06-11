@@ -6,8 +6,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="keywords" content="">
+    <meta name="description" content="{% if seo %}{{ seo.description }}{% endif %}">
+    <meta name="keywords" content="{% if seo %}{{ seo.keywords }}{% endif %}">
     <meta name="color-scheme" content="light only">
     <link rel="icon" href="{% static 'img/favicon.ico' %}" sizes="any">
     <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="{% static 'css/style.min.css' %}?v={{ staticfiles_version }}">
     <link rel="stylesheet" href="{% static 'css/cookie_banner.css' %}">
     {% block other_css %}{% endblock %}
-    <title>{% block title %}BAW{% endblock %}</title>
+    <title>{% block title %}{% if seo %}{{ seo.title }}{% else %}BAW{% endif %}{% endblock %}</title>
 </head>
 
 <body class="m-page">

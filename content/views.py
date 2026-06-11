@@ -35,7 +35,8 @@ class SEOMixin:
         return context
 
 
-class HomePageView(TemplateView):
+class HomePageView(SEOMixin, TemplateView):
+    seo_page_key = SEOPage.PageKey.HOME
     template_name = 'content/home_page.html'
 
     def get_context_data(self, **kwargs):
@@ -164,7 +165,8 @@ class HomePageView(TemplateView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-class OurWorld(TemplateView):
+class OurWorld(SEOMixin, TemplateView):
+    seo_page_key = SEOPage.PageKey.OUR_WORLD
     template_name = 'content/our_world.html'
 
     def get_context_data(self, **kwargs):
@@ -192,7 +194,8 @@ class OurWorld(TemplateView):
         return context
 
 
-class About(TemplateView):
+class About(SEOMixin, TemplateView):
+    seo_page_key = SEOPage.PageKey.ABOUT
     template_name = 'content/about.html'
 
     def get_context_data(self, **kwargs):
@@ -227,7 +230,8 @@ class NewsArticleMixin:
         return NewsArticle.objects.filter(is_active=True).order_by('order', '-created_at')
 
 
-class NewsArticleListView(NewsArticleMixin, ListView):
+class NewsArticleListView(SEOMixin, NewsArticleMixin, ListView):
+    seo_page_key = SEOPage.PageKey.NEWS
     """Список всех новостей."""
     model = NewsArticle
     template_name = 'content/news.html'
@@ -258,7 +262,8 @@ class NewsArticleDetailView(NewsArticleMixin, DetailView):
         return context
 
 
-class BuyersView(TemplateView):
+class BuyersView(SEOMixin, TemplateView):
+    seo_page_key = SEOPage.PageKey.BUYERS
     template_name = 'content/buyers.html'
 
     def get_context_data(self, **kwargs):
@@ -315,7 +320,8 @@ class BuyersView(TemplateView):
         return context
 
 
-class StoriesListView(ListView):
+class StoriesListView(SEOMixin, ListView):
+    seo_page_key = SEOPage.PageKey.STORIES
     model = History
     template_name = 'content/stories.html'
     context_object_name = 'stories'
@@ -327,7 +333,8 @@ class StoriesListView(ListView):
         return context
 
 
-class TestDriveView(TemplateView):
+class TestDriveView(SEOMixin, TemplateView):
+    seo_page_key = SEOPage.PageKey.TEST_DRIVE
     template_name = 'content/test_drive.html'
 
     def get_context_data(self, **kwargs):
@@ -354,7 +361,8 @@ class TestDriveView(TemplateView):
         return context
 
 
-class CompletionComparisonView(TemplateView):
+class CompletionComparisonView(SEOMixin, TemplateView):
+    seo_page_key = SEOPage.PageKey.COMPARISON
     template_name = 'content/completion_comparison.html'
 
     def get_context_data(self, **kwargs):
@@ -383,7 +391,8 @@ class CompletionComparisonView(TemplateView):
         return context
 
 
-class SpecialOfferView(TemplateView):
+class SpecialOfferView(SEOMixin, TemplateView):
+    seo_page_key = SEOPage.PageKey.SPECIAL_OFFER
     template_name = 'content/special_offer.html'
 
     def get_context_data(self, **kwargs):
@@ -399,7 +408,8 @@ class SpecialOfferView(TemplateView):
         return context
 
 
-class CorporateClientsView(TemplateView):
+class CorporateClientsView(SEOMixin, TemplateView):
+    seo_page_key = SEOPage.PageKey.CORPORATE
     template_name = 'content/corporate.html'
 
     def get_context_data(self, **kwargs):
