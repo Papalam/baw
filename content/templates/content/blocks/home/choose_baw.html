@@ -76,7 +76,8 @@
                 {{ block_baw_comparison.text_form|capfirst }}
             </div>
             <div class="guarantee__nav">
-                <a href="#" class="guarantee__btn m-btn m-btn--cut m-btn-brown js-open-modal" data-modal="reqModal">
+                <a href="{% url block_baw_comparison.url_red_button %}" 
+                   class="guarantee__btn m-btn m-btn--cut m-btn-brown">
                     <span>{{ block_baw_comparison.text_red_button|upper }}</span>
                 </a>
                 <a href="#" class="guarantee__btn m-btn m-btn--cut m-btn-black js-open-modal" data-modal="reqModal">

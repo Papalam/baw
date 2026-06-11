@@ -3,6 +3,7 @@
 <footer class="footer">
     <div class="container">
         <div class="footer__inner grid4">
+            {% if footer_menu_models %}
             <div class="footer-nav">
                 <div class="footer-nav__show">
                     <div class="footer-nav__title">
@@ -17,7 +18,8 @@
                     </ul>
                 </div>
             </div>
-
+            {% endif %}
+            {% if footer_menu_customers %}
             <div class="footer-nav">
                 <div class="footer-nav__show">
                     <div class="footer-nav__title">
@@ -32,7 +34,8 @@
                     </ul>
                 </div>
             </div>
-
+            {% endif %}
+            {% if footer_menu_owners %}
             <div class="footer-nav">
                 <div class="footer-nav__show">
                     <div class="footer-nav__title">
@@ -47,7 +50,8 @@
                     </ul>
                 </div>
             </div>
-
+            {% endif %}
+            {% if footer_menu_baw_russia %}
             <div class="footer-nav">
                 <div class="footer-nav__show">
                     <div class="footer-nav__title">
@@ -62,7 +66,7 @@
                     </ul>
                 </div>
             </div>
-
+            {% endif %}
             <div class="footer-bottom grid4">
                 <div class="footer-address">
                     <div class="text16">
