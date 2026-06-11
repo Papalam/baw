@@ -1,0 +1,23 @@
+.completion-filter {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    row-gap: 1em;
+}
+
+.completion-filter__bottom {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.completion-filter__checks {
+    flex-wrap: wrap;
+    gap: 1em 2em;
+}
+
+.completion-filter .m-check {
+    flex: 0 0 auto;
+}
+
+.completion-filter .m-check label {
+    white-space: nowrap;
+}

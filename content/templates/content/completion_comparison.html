@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block other_css %}
+    <link rel="stylesheet" href="{% static 'css/completion_filter.css' %}">
+{% endblock %}
 
 {% block content %}
     {% include 'content/blocks/complection_comparison/complection_comparison_table.html' %}
