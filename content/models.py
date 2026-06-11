@@ -717,6 +717,25 @@ class ServicesBlock(BaseModel):
         verbose_name_plural = 'Сервисы'
 
 
+class UsefulMaterial(BaseModel):
+    """Карточка блока 'Полезные материалы' на странице комплектаций"""
+    title = models.CharField(
+        max_length=255,
+        verbose_name='Заголовок'
+    )
+    file = models.FileField(
+        upload_to='useful_materials/',
+        verbose_name='Файл'
+    )
+
+    def __str__(self):
+        return f'{self.title}'
+
+    class Meta:
+        verbose_name = 'полезный материал'
+        verbose_name_plural = 'Полезные материалы'
+
+
 class NewsBase(BaseModel):
     """Базовая модель новости"""
     title = models.CharField(

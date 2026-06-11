@@ -15,7 +15,7 @@ from catalog.models import Configuration, ConfigurationCharacteristic, Configura
 from content.forms import CarApplicationForm, ContactForm
 from content.models import MenuItem, HeroSection, CardConfiguration, Question, BawComparison, \
     BawComparisonConfiguration, BawTesting, VideoCard, TechnologyBlock, ServicesBlock, NewsVideo, NewsArticle, Banner, \
-    OurAdventure, History, Society, HistoryBaw, QuestionTopic, CallbackRequest, SpecialOffer, SEOPage
+    OurAdventure, History, Society, HistoryBaw, QuestionTopic, CallbackRequest, SpecialOffer, SEOPage, UsefulMaterial
 
 
 class SEOMixin:
@@ -387,6 +387,7 @@ class CompletionComparisonView(SEOMixin, TemplateView):
         context['values_dict'] = values_dict
         context['outside_colors'] = outside_colors
         context['inside_colors'] = inside_colors
+        context['useful_materials'] = UsefulMaterial.objects.filter(is_active=True).order_by('order')
 
         return context
 

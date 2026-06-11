@@ -6,7 +6,7 @@ from .models import Menu, MenuItem, HeroSection, HTMLContent, CardConfiguration,
     CardConfigurationImage, Question, BawComparison, BawComparisonConfiguration, BawTesting, BawTestingImage, \
     BawTestingFeature, BawTestingItems, VideoCardContent, VideoCard, TechnologyBlockContent, TechnologyBlock, \
     ServicesBlock, NewsArticle, NewsVideo, OurAdventure, History, Society, Banner, HistoryBaw, SocialNetwork, \
-    CompanyInfo, QuestionTopic, CallbackRequest, TestDriveRequest, SpecialOffer, SEOPage
+    CompanyInfo, QuestionTopic, CallbackRequest, TestDriveRequest, SpecialOffer, SEOPage, UsefulMaterial
 from .widgets import RichTextEditorWidget
 
 
@@ -657,6 +657,13 @@ class SEOPageAdmin(admin.ModelAdmin):
             'fields': ('og_title', 'og_description', 'og_image')
         }),
     )
+
+
+@admin.register(UsefulMaterial)
+class UsefulMaterialAdmin(admin.ModelAdmin):
+    list_display = ['title', 'file', 'order', 'is_active']
+    list_editable = ['order', 'is_active']
+    readonly_fields = ('id',)
 
 
 admin.site.site_header = "Администрирование сайта Baw"
