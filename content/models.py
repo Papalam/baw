@@ -1024,7 +1024,9 @@ class HistoryBaw(BaseModel):
     image = models.ImageField(
         upload_to='history/images/',
         validators=[FileExtensionValidator(allowed_extensions=['png', 'jpg', 'jpeg'])],
-        verbose_name='Изображение'
+        verbose_name='Изображение',
+        blank=True,
+        null=True
     )
     webp_image = models.ImageField(
         upload_to='history/webp/',

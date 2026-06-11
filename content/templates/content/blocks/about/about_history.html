@@ -26,11 +26,13 @@
                             {% endif %}
                             <div class="history-card">
                                 <div class="history-card__img">
+                                    {% if story.webp_image %}
                                     <img src="{{ story.webp_image.url }}" alt="">
+                                    {% endif %}
                                 </div>
                                 <div class="history-card__content">
                                     <div class="history-card__year">
-                                        {{ story.yaer }}
+                                        {{ story.year }}
                                     </div>
                                     <div class="history-card__desc">
                                         {{ story.description }}

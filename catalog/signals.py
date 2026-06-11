@@ -57,6 +57,12 @@ def handle_configuration_card(sender, instance, update_fields, **kwargs):
 
     delattr(instance, '_image_changed')
 
+    if not instance.image:
+        if instance.webp_image:
+            instance.webp_image.delete(save=False)
+            instance.save(update_fields=['webp_image'])
+        return
+
     # Генерируем файл
     generate_webp(instance)
 
