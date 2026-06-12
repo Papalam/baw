@@ -60,3 +60,10 @@
     z-index: 2;
     background: #4c5744;
 }
+
+th > .equip-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+}
