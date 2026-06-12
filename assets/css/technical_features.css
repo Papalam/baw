@@ -59,11 +59,9 @@
     top: 0;
     z-index: 2;
     background: #4c5744;
+    vertical-align: top;
 }
 
-th > .equip-item {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    justify-content: flex-start !important;
+.equip-table thead th:first-child {
+    vertical-align: middle;
 }
