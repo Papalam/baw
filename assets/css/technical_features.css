@@ -49,19 +49,26 @@
     font-size: .35em;
 }
 
-.equip-table {
-    max-height: 80vh;
-    overflow-y: auto;
+#specs.equip {
+    overflow: visible;
 }
 
 .equip-table thead th {
     position: sticky;
-    top: 0;
-    z-index: 2;
+    top: 46px;
+    z-index: 3;
     background: #4c5744;
     vertical-align: top;
+    transform: translateZ(0);
+    will-change: transform;
 }
 
 .equip-table thead th:first-child {
     vertical-align: middle;
+}
+
+@media screen and (max-width: 992px) {
+    .equip-table thead th {
+        top: 0;
+    }
 }
