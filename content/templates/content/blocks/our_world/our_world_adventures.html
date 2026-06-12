@@ -32,9 +32,11 @@
                                             <div class="journey-card__desc gray-text">
                                                 {{ adventure.description }}
                                             </div>
-                                            <a href="" class="journey-card__link">
+                                            {% if adventure.ext_url %}
+                                            <a href="{{ adventure.ext_url }}" class="journey-card__link">
                                                 <span>УЗНАТЬ КАК ЭТО БЫЛО</span>
                                             </a>
+                                            {% endif %}
                                         </div>
                                         <div class="journey-card__video">
 

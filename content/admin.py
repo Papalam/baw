@@ -410,7 +410,7 @@ class OurAdventureAdmin(admin.ModelAdmin):
     ordering = ['order', 'id']
     fieldsets = (
         ('Основная информация', {
-            'fields': ('title', 'id', 'name', 'description', 'image', 'preview', 'video', 'slug')
+            'fields': ('title', 'id', 'name', 'description', 'image', 'preview', 'video', 'slug', 'ext_url')
         }),
         ('Активность и сортировка', {
             'fields': ('order', 'is_active')

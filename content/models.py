@@ -894,6 +894,11 @@ class OurAdventure(BaseModel):
         validators=[FileExtensionValidator(allowed_extensions=['mp4'])],
         verbose_name='Видео'
     )
+    ext_url = models.URLField(
+        blank=True,
+        null=True,
+        verbose_name='Внешняя ссылка'
+    )
 
     def __str__(self):
         return f'{self.title}'
