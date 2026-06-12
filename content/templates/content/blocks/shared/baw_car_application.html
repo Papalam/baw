@@ -86,9 +86,9 @@
                         <div class="fg">
                             <select name="dealer">
                                 <option selected hidden disabled>Выберите из списка</option>
-                                <option value="г. Москва">г. Москва</option>
-                                <option value="г. Казань">г. Казань</option>
-                                <option value="г. Самара">г. Самара</option>
+                                {% for dealer in dealers %}
+                                	<option value="{{ dealer.id }}">{{ dealer.name }}</option>
+                                {% endfor %}
                             </select>
                             {% if form.dealer.errors %}
                                 <div class="error-block">{{ form.dealer.errors|join:", " }}</div>

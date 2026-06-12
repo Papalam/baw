@@ -121,6 +121,7 @@ class HomePageView(SEOMixin, TemplateView):
         block_questions = Question.objects.filter(is_active=True).order_by('order', 'pk')
 
         configurations = Configuration.objects.filter(is_active=True).order_by('order', 'pk')
+        dealers = Dealership.objects.filter(is_active=True).order_by('order', 'pk')
 
         values_dict = {(v[0], v[1]): v[2]
                        for v in ConfigurationCharacteristic.objects.filter(is_active=True)
@@ -146,6 +147,7 @@ class HomePageView(SEOMixin, TemplateView):
         context['news_video'] = news_video
         context['news_article'] = news_article
         context['questions'] = block_questions
+        context['dealers'] = dealers
 
         return context
 
