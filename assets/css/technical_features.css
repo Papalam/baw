@@ -53,6 +53,16 @@
     overflow: visible;
 }
 
+.equip-table td:first-child,
+.equip-table th:first-child {
+    width: 28em;
+}
+
+.equip-table td,
+.equip-table th {
+    overflow-wrap: anywhere;
+}
+
 .equip-table thead th {
     position: sticky;
     top: 46px;
