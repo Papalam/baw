@@ -1,0 +1,25 @@
+@media screen and (max-width: 576px) {
+    .character__colors {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .character-color__title {
+        display: none;
+    }
+
+    .character-color__top {
+        height: 2.5em;
+        margin-bottom: 0;
+    }
+
+    .character-color__bg {
+        width: 2.5em;
+        height: 2.5em;
+        border-radius: 50%;
+    }
+
+    #specs > .container > .h1 {
+        display: none;
+    }
+}
