@@ -20,7 +20,10 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from content.views_admin import ckeditor_upload
+
 urlpatterns = [
+    path("admin/ckeditor/upload/", ckeditor_upload, name="ckeditor_upload"),
     path("admin/", admin.site.urls),
     path("", include("content.urls")),
 ]
