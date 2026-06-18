@@ -65,7 +65,7 @@
 
 .equip-table thead th {
     position: sticky;
-    top: 46px;
+    top: var(--page-nav-h, 46px);
     z-index: 3;
     background: #4c5744;
     vertical-align: top;

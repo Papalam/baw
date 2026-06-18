@@ -17,7 +17,7 @@
                                     </a>
                                 </div>
                                 <div class="blog-card__desc body-m">
-                                    {{ article.description|truncatechars:150|safe }}
+                                    {{ article.description|truncatechars_html:150|safe }}
                                 </div>
                                 <div class="blog-card__date body-m">
                                     {{ article.created_at|date:"d.m.Y" }}

@@ -11,8 +11,11 @@
                                 <img src="{{ news_post.webp_image.url }}" alt="">
                             </a>
                             <div class="blog-card__content">
-                                <div class="h3 ">
-                                    <a href="">{{ news_post.title }} {{ news_post.description }}</a>
+                                <div class="h3">
+                                    {{ news_post.title }} 
+                                </div>
+                                <div class="blog-card__desc body-m">
+                                    {{ news_post.description }}
                                 </div>
                             </div>
                         </div>
