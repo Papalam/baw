@@ -2,7 +2,7 @@ from django.contrib.postgres.search import SearchVector
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
-from catalog.models import ConfigurationImage, CarImage, CarAdvantages
+from catalog.models import ConfigurationImage, CarImage, CarAdvantages, DealershipImage
 from content.models import CardConfigurationImage, BawComparison, BawTestingImage, VideoCardContent, \
     TechnologyBlockContent, NewsArticle, History, Society, Banner, OurAdventure, NewsVideo, HistoryBaw, Question, \
     CallbackRequest
@@ -24,6 +24,7 @@ from content.tasks import send_callback_to_amocrm
 @receiver(pre_save, sender=Banner)
 @receiver(pre_save, sender=OurAdventure)
 @receiver(pre_save, sender=HistoryBaw)
+@receiver(pre_save, sender=DealershipImage)
 def detect_image_changes(sender, instance, **kwargs):
     """Определяем что изображение поменялось"""
     if instance.pk:
@@ -47,6 +48,7 @@ def detect_image_changes(sender, instance, **kwargs):
 @receiver(post_save, sender=Banner)
 @receiver(post_save, sender=OurAdventure)
 @receiver(post_save, sender=HistoryBaw)
+@receiver(post_save, sender=DealershipImage)
 def handle_configuration_card(sender, instance, update_fields, **kwargs):
     """Сохранение фото в формате webp"""
     if update_fields and 'webp_image' in update_fields:

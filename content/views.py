@@ -15,7 +15,8 @@ from catalog.models import Configuration, ConfigurationCharacteristic, Configura
 from content.forms import CarApplicationForm, ContactForm
 from content.models import MenuItem, HeroSection, CardConfiguration, Question, BawComparison, \
     BawComparisonConfiguration, BawTesting, VideoCard, TechnologyBlock, ServicesBlock, NewsVideo, NewsArticle, Banner, \
-    OurAdventure, History, Society, HistoryBaw, QuestionTopic, CallbackRequest, SpecialOffer, SEOPage, UsefulMaterial
+    OurAdventure, History, Society, HistoryBaw, QuestionTopic, CallbackRequest, SpecialOffer, SEOPage, UsefulMaterial, \
+    CompanyInfo
 
 
 class SEOMixin:
@@ -258,8 +259,10 @@ class NewsArticleDetailView(NewsArticleMixin, DetailView):
         other_news = (NewsArticle.objects.filter(is_active=True)
                       .exclude(id=self.object.id)
                       .order_by('order', '-created_at'))
+        news_channel = CompanyInfo.objects.filter(key='news_channel').first()
 
         context['other_news'] = other_news
+        context['news_channel'] = news_channel
 
         return context
 

@@ -1,0 +1,35 @@
+{% extends "admin/change_form.html" %}
+
+{% block after_related_objects %}
+<div class="module" style="margin-top: 20px;">
+    <h2 style="padding: 8px 10px; background: #417690; color: #fff; margin: 0;">
+        Загрузить несколько фото сразу
+    </h2>
+    <div style="padding: 15px;">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p style="margin-bottom: 10px; color: #666;">
+                Выберите несколько файлов (JPG, PNG, WebP). Для каждого будет создана отдельная запись и сконвертирован WebP.
+            </p>
+            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                <input type="file" name="multi_images" multiple accept="image/*"
+                       style="border: 1px solid #ccc; padding: 5px; border-radius: 4px;">
+                <button type="submit"
+                        style="padding: 8px 15px; background: #417690; color: #fff; border: none; cursor: pointer; border-radius: 4px;">
+                    Загрузить
+                </button>
+            </div>
+            {% if multi_upload_success %}
+            <p style="color: #417690; margin-top: 10px; font-weight: bold;">
+                Загружено фото: {{ multi_upload_success }}
+            </p>
+            {% endif %}
+            {% if multi_upload_error %}
+            <p style="color: #ba2121; margin-top: 10px;">
+                {{ multi_upload_error }}
+            </p>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% endblock %}

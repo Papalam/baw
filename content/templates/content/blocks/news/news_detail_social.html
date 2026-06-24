@@ -1,3 +1,4 @@
+{% if news_channel %}
 <div class="our-tg">
     <div class="container">
         <div class="our-tg__inner">
@@ -9,9 +10,10 @@
                     Подпишись, чтобы всегда быть в курсе событий
                 </div>
             </div>
-            <a href="" class="our-tg__link m-btn m-btn-white2 m-btn--cut">
+            <a href="{{ news_channel.value }}" class="our-tg__link m-btn m-btn-white2 m-btn--cut">
                 <span>ПОДПИСАТЬСЯ</span>
             </a>
         </div>
     </div>
 </div>
+{% endif %}

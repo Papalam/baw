@@ -374,3 +374,33 @@ class Dealership(BaseModel):
         if not self.slug:
             self.slug = slugify(f"{self.name}-{self.city}")
         super().save(*args, **kwargs)
+
+
+class DealershipImage(BaseModel):
+    dealership = models.ForeignKey(
+        Dealership,
+        on_delete=models.CASCADE,
+        related_name='images',
+        verbose_name='Изображения'
+    )
+    image = models.ImageField(
+        upload_to='dealership/original/%Y/%m/%d',
+        verbose_name='Изображение'
+    )
+    webp_image = models.ImageField(
+        upload_to='dealership/webp/%Y/%m/%d',
+        blank=True,
+        null=True,
+    )
+    alt = models.CharField(
+        max_length=255,
+        blank=True,
+    )
+
+    def __str__(self):
+        return f'Фото {self.pk}'
+
+    class Meta:
+        verbose_name = 'изображение'
+        verbose_name_plural = 'Изображения'
+        ordering = ['order']

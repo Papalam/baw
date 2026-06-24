@@ -1,11 +1,13 @@
 from django.contrib import admin
 from django.contrib.admin.widgets import AutocompleteSelect
 from django.forms import TextInput
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from django.utils.html import format_html
 
 from catalog.forms import DealershipAdminForm
 from catalog.models import Car, Group, Characteristic, Configuration, ConfigurationCharacteristic, ConfigurationImage, \
-    Color, CarImage, CarAdvantages, CarAdvantagesItem, Dealership
+    Color, CarImage, CarAdvantages, CarAdvantagesItem, Dealership, DealershipImage
 
 
 class ConfigurationCharacteristicInline(admin.TabularInline):
@@ -52,6 +54,24 @@ class CarAdvantagesItemInline(admin.TabularInline):
     model = CarAdvantagesItem
     extra = 1
     fields = ['title', 'description', 'order', 'is_active']
+
+
+class DealershipImageInline(admin.TabularInline):
+    model = DealershipImage
+    extra = 1
+
+    readonly_fields = ('preview',)
+    fields = ('image', 'alt', 'order', 'is_active', 'preview')
+
+    def preview(self, obj):
+        if obj.pk and obj.image:
+            return format_html(
+                '<img src="{}" style="max-height:60px; max-width:80px;" />',
+                obj.image.url
+            )
+        return "Фото"
+
+    preview.short_description = "Превью"
 
 
 @admin.register(Car)
@@ -243,9 +263,11 @@ class DealershipAdmin(admin.ModelAdmin):
     list_display = ('name', 'id', 'city', 'phone', 'is_active', 'order')
     readonly_fields = ('id', 'created_at')
     ordering = ('order', 'id')
+    inlines = [DealershipImageInline]
     prepopulated_fields = {'slug': ('name',)}
     list_filter = ('city', 'is_active')
     search_fields = ('name', 'city', 'phone', 'email')
+    change_form_template = 'admin/catalog/dealership/change_form.html'
     fieldsets = (
         ('Основная информация', {
             'fields': ('id', 'name', 'slug', 'city', 'address', 'working_hours')
@@ -264,3 +286,22 @@ class DealershipAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        extra_context = extra_context or {}
+        extra_context['multi_upload_success'] = request.session.pop('multi_upload_success', None)
+        extra_context['multi_upload_error'] = request.session.pop('multi_upload_error', None)
+
+        if request.method == 'POST' and request.FILES.getlist('multi_images'):
+            files = request.FILES.getlist('multi_images')
+            redirect_url = reverse('admin:catalog_dealership_change', args=[object_id])
+            try:
+                dealership = Dealership.objects.get(pk=object_id)
+                for f in files:
+                    DealershipImage.objects.create(dealership=dealership, image=f)
+                request.session['multi_upload_success'] = len(files)
+            except Exception as e:
+                request.session['multi_upload_error'] = str(e)
+            return HttpResponseRedirect(redirect_url)
+
+        return super().change_view(request, object_id, form_url, extra_context)
