@@ -6,7 +6,8 @@ from .models import Menu, MenuItem, HeroSection, HTMLContent, CardConfiguration,
     CardConfigurationImage, Question, BawComparison, BawComparisonConfiguration, BawTesting, BawTestingImage, \
     BawTestingFeature, BawTestingItems, VideoCardContent, VideoCard, TechnologyBlockContent, TechnologyBlock, \
     ServicesBlock, NewsArticle, NewsVideo, OurAdventure, History, Society, Banner, HistoryBaw, SocialNetwork, \
-    CompanyInfo, QuestionTopic, CallbackRequest, TestDriveRequest, SpecialOffer, SEOPage, UsefulMaterial
+    CompanyInfo, QuestionTopic, CallbackRequest, TestDriveRequest, SpecialOffer, SEOPage, UsefulMaterial, \
+    CarApplication
 from .widgets import RichTextEditorWidget
 
 
@@ -564,6 +565,25 @@ class CompanyInfoAdmin(admin.ModelAdmin):
         }),
         ('Активность и сортировка', {
             'fields': ('order', 'is_active')
+        }),
+    )
+
+
+@admin.register(CarApplication)
+class CarApplicationAdmin(admin.ModelAdmin):
+    list_display = ['last_name', 'first_name', 'phone', 'configuration', 'dealer', 'is_sent_to_crm', 'created_at']
+    list_filter = ['is_sent_to_crm', 'created_at', 'configuration']
+    search_fields = ['first_name', 'last_name', 'phone', 'dealer', 'comment']
+    readonly_fields = ('id', 'created_at')
+    fieldsets = (
+        ('Данные клиента', {
+            'fields': ('id', 'first_name', 'last_name', 'phone')
+        }),
+        ('Детали заявки', {
+            'fields': ('configuration', 'outside_color', 'inside_color', 'dealer', 'comment', 'agreement')
+        }),
+        ('Статус и системная информация', {
+            'fields': ('is_sent_to_crm', 'created_at')
         }),
     )
 

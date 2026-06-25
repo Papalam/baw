@@ -2,7 +2,7 @@ from django.urls import path
 
 from content.views import HomePageView, OurWorld, About, NewsArticleListView, NewsArticleDetailView, BuyersView, \
     StoriesListView, ContactFormView, TestDriveView, TestDriveFormView, CompletionComparisonView, SpecialOfferView, \
-    CorporateClientsView, NearestDealerView, PrivacyPolicyView
+    CorporateClientsView, NearestDealerView, PrivacyPolicyView, CarApplicationFormView
 
 urlpatterns = [
     path('', HomePageView.as_view(), name='home'),
@@ -12,6 +12,7 @@ urlpatterns = [
     path('news/<slug:slug>/', NewsArticleDetailView.as_view(), name='news-detail'),
     path('buyers/', BuyersView.as_view(), name='buyers'),
     path('stories/', StoriesListView.as_view(), name='stories'),
+    path('car-application/', CarApplicationFormView.as_view(), name='car-application'),
     path('callback/', ContactFormView.as_view(), name='callback'),
     path('test-drive/', TestDriveView.as_view(), name='test-drive'),
     path('test-drive-request/', TestDriveFormView.as_view(), name='test-drive-request'),

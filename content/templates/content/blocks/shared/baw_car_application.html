@@ -6,7 +6,7 @@
             <div class="h1 text-center">
                 Оставьте заявку на BAW 212
             </div>
-            <form class="req-form" method="post" action="{% url 'home' %}">
+            <form class="req-form" id="carApplicationForm" data-url="{% url 'car-application' %}">
                 {% csrf_token %}
                 <div class="req-equip">
                     <div class="h5">ВЫБЕРИТЕ КОМПЛЕКТАЦИЮ</div>
@@ -33,9 +33,6 @@
                             </div>
                         {% endfor %}
                     </div>
-                    {% if form.configuration.errors %}
-                        <div class="error-block">{{ form.configuration.errors|join:", " }}</div>
-                    {% endif %}
                 </div>
                 <div class="req-form__colors">
                     <!-- Цвет кузова -->
@@ -84,15 +81,12 @@
                     <div class="h5">ВЫБЕРИТЕ ДИЛЕРСКИЙ ЦЕНТР</div>
                     <div class="req-dealer__grid">
                         <div class="fg">
-                            <select name="dealer">
+                            <select name="dealer" required>
                                 <option selected hidden disabled>Выберите из списка</option>
                                 {% for dealer in dealers %}
                                 	<option value="{{ dealer.id }}">{{ dealer.name }}</option>
                                 {% endfor %}
                             </select>
-                            {% if form.dealer.errors %}
-                                <div class="error-block">{{ form.dealer.errors|join:", " }}</div>
-                            {% endif %}
                         </div>
                         <button type="button" class="req-dealer__btn caps-text m-btn m-btn--cut m-btn-black">
                             <img src="{% static 'img/target.svg' %}">
@@ -106,22 +100,23 @@
                     </div>
                     <div class="req-contacts__fields">
                         <div class="fg">
-                            <input type="text" placeholder="Имя" name="first_name">
+                            <input type="text" placeholder="Имя" name="first_name" required>
                         </div>
                         <div class="fg">
                             <input type="text" placeholder="Фамилия" name="last_name">
                         </div>
                         <div class="fg">
-                            <input type="tel" placeholder="+ 7 ( _ _ _ ) _ _ - _ _ - ___" name="phone">
-                            {% if form.phone.errors %}
-                                <div class="error-block">{{ form.phone.errors|join:", " }}</div>
-                            {% endif %}
+                            <input type="tel" placeholder="+ 7 ( _ _ _ ) _ _ - _ _ - ___"
+                                   pattern="[\+]?[7-8][\s\-]?\(?\d{3}\)?[\s\-]?\d{3}[\s\-]?\d{2}[\s\-]?\d{2}"
+                                   title="Введите корректный номер телефона"
+                                   name="phone"
+                                   required>
                         </div>
                         <div class="req-contacts__textarea fg">
                             <textarea placeholder="Ваш комментарий" name="comment"></textarea>
                         </div>
                         <div class="m-check">
-                            <input type="checkbox" name="agreement" id="id_agreement">
+                            <input type="checkbox" name="agreement" id="id_agreement" required>
                             <label for="id_agreement">
                                 <span>
                                 Я даю согласие на обработку персональных данных; предоставление персональных  данных третьим лицам и коммуникацию; ознакомлен с политикой конфиденциальности.
@@ -130,7 +125,7 @@
                         </div>
                     </div>
                     <div class="req-contacts__nav">
-                        <button class="req-contacts__btn m-btn m-btn--cut m-btn-brown">
+                        <button class="req-contacts__btn m-btn m-btn--cut m-btn-brown" type="button" id="carApplicationBtnSubmit">
                             <span>ОТПРАВИТЬ ЗАЯВКУ</span>
                         </button>
                     </div>
@@ -139,15 +134,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    // Ждем 5 секунд и плавно скрываем сообщения
-    setTimeout(function () {
-        const messages = document.querySelectorAll('.alert');
-        messages.forEach(function (msg) {
-            msg.style.transition = "opacity 0.5s ease";
-            msg.style.opacity = "0";
-            setTimeout(() => msg.remove(), 500);
-        });
-    }, 5000);
-</script>

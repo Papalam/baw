@@ -1,12 +1,11 @@
 import math
 
 from django.conf import settings
-from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.postgres.search import SearchQuery, SearchRank
 from django.db.models import Prefetch, OuterRef, Exists
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from django.views import View
 from django.views.generic import TemplateView, DetailView, ListView, CreateView
 
@@ -16,7 +15,7 @@ from content.forms import CarApplicationForm, ContactForm, TestDriveForm
 from content.models import MenuItem, HeroSection, CardConfiguration, Question, BawComparison, \
     BawComparisonConfiguration, BawTesting, VideoCard, TechnologyBlock, ServicesBlock, NewsVideo, NewsArticle, Banner, \
     OurAdventure, History, Society, HistoryBaw, QuestionTopic, CallbackRequest, TestDriveRequest, SpecialOffer, \
-    SEOPage, UsefulMaterial, CompanyInfo
+    SEOPage, UsefulMaterial, CompanyInfo, CarApplication
 
 
 class SEOMixin:
@@ -151,21 +150,6 @@ class HomePageView(SEOMixin, TemplateView):
         context['dealers'] = dealers
 
         return context
-
-    def post(self, request, *args, **kwargs):
-        """Обработка отправки формы"""
-        form = CarApplicationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Ваша заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.')
-            return redirect('home')
-
-        messages.error(request, 'Произошла ошибка. Проверьте правильность заполнения полей.')
-        # FIX 4: get_context_data вызывается повторно при невалидной форме.
-        # Все тяжёлые запросы выполнятся снова — это не ошибка, но расточительно.
-        # При наличии ошибки в одном из .get()-запросов выше (Banner, BawComparison и т.д.)
-        # страница упадёт здесь тоже. После исправления FIX 1-3 это безопасно.
-        return self.render_to_response(self.get_context_data(form=form))
 
 
 class OurWorld(SEOMixin, TemplateView):
@@ -437,6 +421,18 @@ class CorporateClientsView(SEOMixin, TemplateView):
 
 class PrivacyPolicyView(TemplateView):
     template_name = 'content/privacy_policy.html'
+
+
+class CarApplicationFormView(CreateView):
+    model = CarApplication
+    form_class = CarApplicationForm
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return JsonResponse({'success': True, 'id': str(self.object.id)})
+
+    def form_invalid(self, form):
+        return JsonResponse({'success': False, 'errors': form.errors}, status=400)
 
 
 class ContactFormView(CreateView):

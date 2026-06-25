@@ -854,6 +854,10 @@ class CarApplication(models.Model):
         default=False,
         verbose_name='Согласие на обработку персональных данных'
     )
+    is_sent_to_crm = models.BooleanField(
+        default=False,
+        verbose_name='Отправлено в CRM'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
