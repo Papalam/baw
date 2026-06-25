@@ -12,11 +12,11 @@ from django.views.generic import TemplateView, DetailView, ListView, CreateView
 
 from catalog.models import Configuration, ConfigurationCharacteristic, ConfigurationImage, CarImage, Car, \
     CarAdvantages, Color, Characteristic, Group, Dealership
-from content.forms import CarApplicationForm, ContactForm
+from content.forms import CarApplicationForm, ContactForm, TestDriveForm
 from content.models import MenuItem, HeroSection, CardConfiguration, Question, BawComparison, \
     BawComparisonConfiguration, BawTesting, VideoCard, TechnologyBlock, ServicesBlock, NewsVideo, NewsArticle, Banner, \
-    OurAdventure, History, Society, HistoryBaw, QuestionTopic, CallbackRequest, SpecialOffer, SEOPage, UsefulMaterial, \
-    CompanyInfo
+    OurAdventure, History, Society, HistoryBaw, QuestionTopic, CallbackRequest, TestDriveRequest, SpecialOffer, \
+    SEOPage, UsefulMaterial, CompanyInfo
 
 
 class SEOMixin:
@@ -449,6 +449,18 @@ class ContactFormView(CreateView):
 
     def form_invalid(self, form):
         return JsonResponse({'success': False, 'error': form.errors}, status=400)
+
+
+class TestDriveFormView(CreateView):
+    model = TestDriveRequest
+    form_class = TestDriveForm
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return JsonResponse({'success': True, 'id': str(self.object.id)})
+
+    def form_invalid(self, form):
+        return JsonResponse({'success': False, 'errors': form.errors}, status=400)
 
 
 class NearestDealerView(View):

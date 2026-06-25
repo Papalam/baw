@@ -6,7 +6,7 @@
             <div class="h1 text-center">
                 Оставьте заявку
             </div>
-            <form class="req-form" id="testDriveForm" data-url="{% url 'callback' %}">
+            <form class="req-form" id="testDriveForm" data-url="{% url 'test-drive-request' %}">
                 {% csrf_token %}
                 <div class="req-contacts">
                     <div class="h5">
@@ -29,18 +29,19 @@
                         <div class="req-contacts__wishes">
                             <div class="fg">
                                 <input type="date" placeholder="Желаемая дата"
+                                       name="desired_date"
                                        min="{% next_date 1 %}"
                                        max="{% next_date 13 %}">
                             </div>
                             <div class="fg">
-                                <input type="time" placeholder="Желаемое время" min="09:00" max="20:30" step="1800">
+                                <input type="time" placeholder="Желаемое время" name="desired_time" min="09:00" max="20:30" step="1800">
                             </div>
                         </div>
                         <div class="req-contacts__textarea fg">
-                            <textarea placeholder="Ваш комментарий"></textarea>
+                            <textarea placeholder="Ваш комментарий" name="comment"></textarea>
                         </div>
                         <div class="m-check">
-                            <input type="checkbox">
+                            <input type="checkbox" name="consent" required>
                             <label>
                             <span>
                                 Я даю согласие на обработку персональных данных; предоставление персональных  данных третьим лицам и коммуникацию; ознакомлен с политикой конфиденциальности.

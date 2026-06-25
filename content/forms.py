@@ -1,5 +1,5 @@
 from django import forms
-from .models import CarApplication, Configuration, Color, CallbackRequest
+from .models import CarApplication, Configuration, Color, CallbackRequest, TestDriveRequest
 
 
 class CarApplicationForm(forms.ModelForm):
@@ -26,4 +26,19 @@ class ContactForm(forms.ModelForm):
             'name',
             'phone',
             'comment'
+        ]
+
+
+class TestDriveForm(forms.ModelForm):
+    """Форма заявки на тест-драйв"""
+    class Meta:
+        model = TestDriveRequest
+        fields = [
+            'first_name',
+            'last_name',
+            'phone',
+            'desired_date',
+            'desired_time',
+            'comment',
+            'consent',
         ]

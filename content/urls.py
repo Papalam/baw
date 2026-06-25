@@ -1,8 +1,8 @@
 from django.urls import path
 
 from content.views import HomePageView, OurWorld, About, NewsArticleListView, NewsArticleDetailView, BuyersView, \
-    StoriesListView, ContactFormView, TestDriveView, CompletionComparisonView, SpecialOfferView, CorporateClientsView, \
-    NearestDealerView, PrivacyPolicyView
+    StoriesListView, ContactFormView, TestDriveView, TestDriveFormView, CompletionComparisonView, SpecialOfferView, \
+    CorporateClientsView, NearestDealerView, PrivacyPolicyView
 
 urlpatterns = [
     path('', HomePageView.as_view(), name='home'),
@@ -14,6 +14,7 @@ urlpatterns = [
     path('stories/', StoriesListView.as_view(), name='stories'),
     path('callback/', ContactFormView.as_view(), name='callback'),
     path('test-drive/', TestDriveView.as_view(), name='test-drive'),
+    path('test-drive-request/', TestDriveFormView.as_view(), name='test-drive-request'),
     path('trim-levels/', CompletionComparisonView.as_view(), name='trim-levels'),
     path('offers/', SpecialOfferView.as_view(), name='offers'),
     path('corporate/', CorporateClientsView.as_view(), name='corporate'),
