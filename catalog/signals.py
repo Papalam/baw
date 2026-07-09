@@ -5,9 +5,9 @@ from django.dispatch import receiver
 from catalog.models import ConfigurationImage, CarImage, CarAdvantages, DealershipImage
 from content.models import CardConfigurationImage, BawComparison, BawTestingImage, VideoCardContent, \
     TechnologyBlockContent, NewsArticle, History, Society, Banner, OurAdventure, NewsVideo, HistoryBaw, Question, \
-    CallbackRequest
+    CallbackRequest, CarApplication, TestDriveRequest
 from catalog.utils import generate_webp
-from content.tasks import send_callback_to_amocrm
+from content.tasks import send_callback_to_amocrm, send_car_application_to_amocrm, send_test_drive_to_amocrm
 
 
 @receiver(pre_save, sender=CardConfigurationImage)
@@ -103,6 +103,17 @@ def update_search_vector(sender, instance, **kwargs):
 
 @receiver(post_save, sender=CallbackRequest)
 def on_callback_created(sender, instance: CallbackRequest, created: bool, **kwargs):
-    """Запускает Celery-задачу только при создании новой записи."""
     if created and not instance.is_sent_to_crm:
         send_callback_to_amocrm.delay(instance.pk)
+
+
+@receiver(post_save, sender=CarApplication)
+def on_car_application_created(sender, instance: CarApplication, created: bool, **kwargs):
+    if created and not instance.is_sent_to_crm:
+        send_car_application_to_amocrm.delay(instance.pk)
+
+
+@receiver(post_save, sender=TestDriveRequest)
+def on_test_drive_created(sender, instance: TestDriveRequest, created: bool, **kwargs):
+    if created and not instance.is_sent_to_crm:
+        send_test_drive_to_amocrm.delay(instance.pk)

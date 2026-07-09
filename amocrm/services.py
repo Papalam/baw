@@ -1,5 +1,5 @@
 import logging
-from datetime import timedelta
+from datetime import date, time, timedelta
 
 import requests
 from django.conf import settings
@@ -15,6 +15,8 @@ class AmoCRMTokenError(Exception):
 class AmoCRMService:
     BASE_URL = f"https://{settings.AMOCRM_SUBDOMAIN}.amocrm.ru/api/v4"
     TOKEN_LIFETIME_HOURS = 23
+
+    FIELD_TEST_DRIVE_DATE = 1492447  # "План. дата. тест. драйв", тип date_time
 
     def __init__(self):
         self._token_obj = None
@@ -92,12 +94,99 @@ class AmoCRMService:
         return AmoCRMToken.objects.get(pk=token.pk)  # свежий объект с updated_at
 
     # ─────────────────────────────────────────
-    # Публичный метод — точка входа из задачи
+    # Публичные методы — точки входа из задач
     # ─────────────────────────────────────────
 
     def sync_callback(self, name: str, phone: str, comment: str) -> dict:
+        note_lines = [
+            "Новый запрос обратного звонка",
+            f"Имя: {name}",
+            f"Телефон: {phone}",
+        ]
+        if comment:
+            note_lines.append(f"Комментарий: {comment}")
+
+        return self._sync_lead(
+            contact_name=name,
+            phone=phone,
+            phone_enum="MOB",
+            lead_name=f"Обратный звонок — {name}",
+            note_lines=note_lines,
+            task_text=f"Перезвонить: {name} / {phone}",
+        )
+
+    def sync_car_application(
+        self,
+        first_name: str,
+        last_name: str,
+        phone: str,
+        comment: str,
+        dealer: str,
+        configuration: str,
+    ) -> dict:
+        full_name = f"{first_name} {last_name}".strip()
+        note_lines = [
+            "Новая заявка на автомобиль",
+            f"Дилер: {dealer}",
+            f"Комплектация: {configuration}",
+        ]
+        if comment:
+            note_lines.append(f"Комментарий: {comment}")
+
+        return self._sync_lead(
+            contact_name=full_name,
+            phone=phone,
+            phone_enum="WORK",
+            lead_name=f"Заявка на автомобиль — {full_name}",
+            note_lines=note_lines,
+            task_text=f"Перезвонить: {full_name} / {phone}",
+        )
+
+    def sync_test_drive(
+        self,
+        first_name: str,
+        last_name: str,
+        phone: str,
+        comment: str,
+        desired_date: date | None,
+        desired_time: time | None,
+    ) -> dict:
+        full_name = f"{first_name} {last_name}".strip()
+        note_lines = ["Новая заявка на тест-драйв"]
+        if desired_date:
+            note_lines.append(f"Дата: {desired_date.strftime('%d.%m.%Y')}")
+        if desired_time:
+            note_lines.append(f"Время: {desired_time.strftime('%H:%M')}")
+        if comment:
+            note_lines.append(f"Комментарий: {comment}")
+
+        custom_fields = self._build_test_drive_date_field(desired_date, desired_time)
+
+        return self._sync_lead(
+            contact_name=full_name,
+            phone=phone,
+            phone_enum="WORK",
+            lead_name=f"Тест-драйв — {full_name}",
+            note_lines=note_lines,
+            task_text=f"Перезвонить: {full_name} / {phone}",
+            lead_custom_fields=custom_fields,
+        )
+
+    # ─────────────────────────────────────────
+    # Общая логика синхронизации
+    # ─────────────────────────────────────────
+
+    def _sync_lead(
+        self,
+        contact_name: str,
+        phone: str,
+        phone_enum: str,
+        lead_name: str,
+        note_lines: list[str],
+        task_text: str,
+        lead_custom_fields: list | None = None,
+    ) -> dict:
         """
-        Основной метод:
         1. Ищет контакт по номеру телефона.
         2. Если есть открытая сделка — дописывает примечание.
         3. Если открытой сделки нет — создаёт новую.
@@ -110,24 +199,25 @@ class AmoCRMService:
             logger.info("Найден существующий контакт #%s", contact_id)
             open_lead = self._find_open_lead_by_contact(contact_id)
         else:
-            contact_id = self._create_contact(name, phone)
+            contact_id = self._create_contact(contact_name, phone, phone_enum)
             logger.info("Создан новый контакт #%s", contact_id)
             open_lead = None
+
+        note_text = "\n".join(note_lines)
 
         if open_lead:
             lead_id = open_lead["id"]
             logger.info("Найдена открытая сделка #%s — добавляем примечание", lead_id)
-            self._add_note_to_lead(lead_id, name, phone, comment)
+            self._add_note_to_lead(lead_id, note_text)
             action = "note_added"
         else:
-            lead_id = self._create_lead(name, comment, contact_id)
+            lead_id = self._create_lead(
+                lead_name, contact_id, note_text, lead_custom_fields
+            )
             logger.info("Создана новая сделка #%s", lead_id)
             action = "lead_created"
 
-        task_id = self._add_task_to_lead(
-            lead_id,
-            text=f"Перезвонить: {name} / {phone}",
-        )
+        task_id = self._add_task_to_lead(lead_id, text=task_text)
 
         return {
             "contact_id": contact_id,
@@ -142,7 +232,6 @@ class AmoCRMService:
 
     def _find_contact_by_phone(self, phone: str) -> dict | None:
         """Ищет контакт по номеру телефона через поиск AmoCRM."""
-        # Нормализуем: оставляем только цифры для надёжного поиска
         normalized = "".join(filter(str.isdigit, phone))
 
         response = requests.get(
@@ -152,21 +241,21 @@ class AmoCRMService:
             timeout=10,
         )
 
-        if response.status_code == 204:  # не найдено
+        if response.status_code == 204:
             return None
 
         response.raise_for_status()
         contacts = response.json().get("_embedded", {}).get("contacts", [])
         return contacts[0] if contacts else None
 
-    def _create_contact(self, name: str, phone: str) -> int:
+    def _create_contact(self, name: str, phone: str, phone_enum: str = "MOB") -> int:
         payload = [
             {
                 "name": name,
                 "custom_fields_values": [
                     {
                         "field_code": "PHONE",
-                        "values": [{"value": phone, "enum_code": "MOB"}],
+                        "values": [{"value": phone, "enum_code": phone_enum}],
                     }
                 ],
             }
@@ -212,35 +301,40 @@ class AmoCRMService:
             if lead.get("status_id") not in CLOSED_STATUSES
         ]
 
-        # Берём самую свежую открытую сделку
         if open_leads:
             return max(open_leads, key=lambda lead: lead.get("updated_at", 0))
 
         return None
 
-    def _create_lead(self, name: str, comment: str, contact_id: int) -> int:
-        payload = [
-            {
-                "name": f"Обратный звонок — {name}",
-                "pipeline_id": int(settings.AMOCRM_PIPELINE_ID),
-                "status_id": int(settings.AMOCRM_STATUS_ID),
-                "_embedded": {
-                    "contacts": [{"id": contact_id}],
-                },
-            }
-        ]
+    def _create_lead(
+        self,
+        name: str,
+        contact_id: int,
+        note_text: str,
+        custom_fields: list | None = None,
+    ) -> int:
+        lead: dict = {
+            "name": name,
+            "pipeline_id": int(settings.AMOCRM_PIPELINE_ID),
+            "status_id": int(settings.AMOCRM_STATUS_ID),
+            "_embedded": {
+                "contacts": [{"id": contact_id}],
+            },
+        }
+        if custom_fields:
+            lead["custom_fields_values"] = custom_fields
+
         response = requests.post(
             f"{self.BASE_URL}/leads",
-            json=payload,
+            json=[lead],
             headers=self.headers,
             timeout=10,
         )
         self._raise_for_status(response)
         lead_id = response.json()["_embedded"]["leads"][0]["id"]
 
-        # Добавляем комментарий сразу к новой сделке
-        if comment:
-            self._add_note_to_lead(lead_id, name, "", comment)
+        if note_text:
+            self._add_note_to_lead(lead_id, note_text)
 
         return lead_id
 
@@ -248,21 +342,12 @@ class AmoCRMService:
     # Примечания
     # ─────────────────────────────────────────
 
-    def _add_note_to_lead(self, lead_id: int, name: str, phone: str, comment: str) -> None:
-        """Добавляет примечание к сделке с данными из заявки."""
-        lines = ["Новый запрос обратного звонка"]
-        if name:
-            lines.append(f"Имя: {name}")
-        if phone:
-            lines.append(f"Телефон: {phone}")
-        if comment:
-            lines.append(f"Комментарий: {comment}")
-
+    def _add_note_to_lead(self, lead_id: int, text: str) -> None:
         payload = [
             {
                 "entity_id": lead_id,
                 "note_type": "common",
-                "params": {"text": "\n".join(lines)},
+                "params": {"text": text},
             }
         ]
         response = requests.post(
@@ -280,25 +365,16 @@ class AmoCRMService:
     def _add_task_to_lead(
         self,
         lead_id: int,
-        text: str = "Обработать заявку обратного звонка",
+        text: str = "Обработать заявку",
         responsible_user_id: int | None = None,
         complete_till_hours: int = 24,
     ) -> int:
-        """
-        Создаёт задачу типа «Позвонить» к сделке.
-
-        :param lead_id: ID сделки
-        :param text: текст задачи
-        :param responsible_user_id: ответственный (None → наследует от сделки)
-        :param complete_till_hours: срок выполнения в часах от текущего момента
-        :return: ID созданной задачи
-        """
         complete_till = int(
             (timezone.now() + timedelta(hours=complete_till_hours)).timestamp()
         )
 
         task: dict = {
-            "task_type_id": 1,          # 1 — «Позвонить» (стандартный тип AmoCRM)
+            "task_type_id": 1,  # 1 — «Позвонить»
             "text": text,
             "complete_till": complete_till,
             "entity_type": "leads",
@@ -319,3 +395,32 @@ class AmoCRMService:
         task_id = response.json()["_embedded"]["tasks"][0]["id"]
         logger.info("Создана задача #%s к сделке #%s", task_id, lead_id)
         return task_id
+
+    # ─────────────────────────────────────────
+    # Вспомогательные методы
+    # ─────────────────────────────────────────
+
+    def _build_test_drive_date_field(
+        self, desired_date: date | None, desired_time: time | None
+    ) -> list:
+        """Формирует custom_fields_values для поля 'План. дата. тест. драйв'."""
+        if not desired_date:
+            return []
+
+        from datetime import datetime
+        import pytz
+
+        dt = datetime.combine(
+            desired_date,
+            desired_time if desired_time else time(0, 0),
+        )
+        tz = pytz.timezone(settings.TIME_ZONE)
+        dt_aware = tz.localize(dt)
+        timestamp = int(dt_aware.timestamp())
+
+        return [
+            {
+                "field_id": self.FIELD_TEST_DRIVE_DATE,
+                "values": [{"value": timestamp}],
+            }
+        ]
