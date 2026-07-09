@@ -77,6 +77,7 @@ TEMPLATES = [
                 "content.context_processors.static_version",
                 "content.context_processors.header_menu",
                 "content.context_processors.footer_menu",
+                "content.context_processors.yandex_metrika",
             ],
         },
     },
@@ -177,6 +178,7 @@ STATICFILES_VERSION = env('STATICFILES_VERSION')
 
 # Яндекс Карты
 YANDEX_MAPS_API_KEY = env('YANDEX_MAPS_API_KEY')
+YANDEX_METRIKA_ID = env('YANDEX_METRIKA_ID', default='')
 
 # AmoCRM
 AMOCRM_SUBDOMAIN = env('AMOCRM_SUBDOMAIN')

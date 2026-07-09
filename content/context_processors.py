@@ -51,3 +51,9 @@ def static_version(request):
     return {
         'staticfiles_version': getattr(settings, 'STATICFILES_VERSION', '1.0'),
     }
+
+
+def yandex_metrika(request):
+    return {
+        'YANDEX_METRIKA_ID': getattr(settings, 'YANDEX_METRIKA_ID', ''),
+    }
