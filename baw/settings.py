@@ -247,6 +247,14 @@ LOGGING = {
             'formatter': 'verbose',
             'level': 'DEBUG',
         },
+        'file_amocrm': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': LOGS_DIR / 'amocrm.log',
+            'maxBytes': 10 * 1024 * 1024,
+            'backupCount': 5,
+            'formatter': 'verbose',
+            'level': 'DEBUG',
+        },
     },
     'loggers': {
         'django': {
@@ -271,6 +279,16 @@ LOGGING = {
         },
         'catalog': {
             'handlers': ['console', 'file_app'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'amocrm': {
+            'handlers': ['console', 'file_amocrm'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'content.tasks': {
+            'handlers': ['console', 'file_amocrm'],
             'level': 'DEBUG',
             'propagate': False,
         },

@@ -408,15 +408,14 @@ class AmoCRMService:
             return []
 
         from datetime import datetime
-        import pytz
+        from zoneinfo import ZoneInfo
 
         dt = datetime.combine(
             desired_date,
             desired_time if desired_time else time(0, 0),
+            tzinfo=ZoneInfo(settings.TIME_ZONE),
         )
-        tz = pytz.timezone(settings.TIME_ZONE)
-        dt_aware = tz.localize(dt)
-        timestamp = int(dt_aware.timestamp())
+        timestamp = int(dt.timestamp())
 
         return [
             {
